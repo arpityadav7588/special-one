@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Countdown to November 9, 2026 at midnight." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23090207'/><path d='M50 30 C35 15 15 35 35 60 L50 78 L65 60 C85 35 65 15 50 30 Z' fill='%23c9184a'/></svg>" />
+    <link rel="stylesheet" href="theme.css" />
     <title>09 · 11 · 2026 — Birthday Countdown</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,11 +16,11 @@
     <style>
         :root {
             --bg: #1b1411;
-            --ivory: #f2e8d8;
+            --ivory: var(--champagne, #d4b483);
             --muted: #95826e;
             --dim: #5d4f42;
             --coral: #ff6a52;
-            --line: rgba(242, 232, 216, .16);
+            --line: rgba(212, 180, 131, .16);
         }
 
         * {
@@ -356,6 +359,7 @@
     </div>
 
     <div class="corner br">
+        <a href="index.html" style="text-decoration:none;"><button type="button">← The Gift Box</button></a>
         <button id="btnSound" type="button" aria-pressed="false">Sound · Off</button>
         <button id="btnPeek" type="button">Peek at the moment</button>
         <button id="btnReset" type="button">Reset view</button>

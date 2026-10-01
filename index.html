@@ -7,6 +7,8 @@
     <meta name="color-scheme" content="dark" />
     <meta name="description" content="A nocturnal botanical keepsake and countdown to November 9, 2026. Handcrafted in red & black." />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23090207'/><path d='M50 30 C35 15 15 35 35 60 L50 78 L65 60 C85 35 65 15 50 30 Z' fill='%23c9184a'/></svg>" />
+    <link rel="stylesheet" href="theme.css" />
+    <script src="motifs.js"></script>
     <title>Happy Birthday · For You (Unwrapped)</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +23,7 @@
             --surface-card: rgba(20, 5, 16, 0.94);
             --surface-glass: rgba(22, 6, 18, 0.90);
             --surface-alt: #1a0815;
-            --ink: #ede3d8;
+            --ink: var(--champagne, #d4b483);
             --ink-bright: #ffffff;
             --muted: #a88d9b;
             --faint: #6c475a;
@@ -30,11 +32,12 @@
             --crimson: #9e2230;
             --crimson-glow: rgba(158, 34, 48, 0.45);
             --neon-pink: #9e2230;
-            --neon-magenta: #ede3d8;
-            --ivory: #ede3d8;
+            --neon-magenta: var(--champagne, #d4b483);
+            --ivory: var(--champagne, #d4b483);
+            --champagne: #d4b483;
             --lava-orange: #b34426;
-            --gold: #c5a059;
-            --gold-dim: rgba(197, 160, 89, 0.28);
+            --gold: var(--champagne, #d4b483);
+            --gold-dim: rgba(212, 180, 131, 0.28);
             --border: rgba(158, 34, 48, 0.32);
             --border-glow: rgba(158, 34, 48, 0.6);
             --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
@@ -1613,6 +1616,11 @@
             <span class="meta-sub-tag">// TRACK 01</span>
         </div>
         <div class="title-wrapper">
+            <div class="heading-botanical-watermark" aria-hidden="true">
+                <svg viewBox="0 0 100 100" width="100%" height="100%" style="fill:none;stroke:var(--champagne,#d4b483);stroke-width:0.85;stroke-linecap:round;stroke-linejoin:round;">
+                    <path d="M50,24 C44,24 40,28 42,34 C44,38 52,38 54,32 C55,27 48,25 45,28 C42,31 43,37 48,39 C54,41 58,35 56,30 M39,33 C34,40 37,48 45,52 C53,54 62,48 61,38 C60,32 54,30 50,30 M32,40 C28,50 34,62 48,65 C60,66 69,56 68,44 C67,36 60,33 54,33 M50,65 Q50,78 50,90 M49,74 Q38,70 34,78 Q42,80 49,76 M51,80 Q62,76 66,84 Q58,86 51,82" />
+                </svg>
+            </div>
             <h1 id="pageTitle" class="chroma-hover">For <em>You</em></h1>
             <div class="scribble-doodle">
                 <svg viewBox="0 0 40 24">
@@ -1922,7 +1930,7 @@
             soundEnabled: false,
             nowSec: 0,
             hasOpened: false,
-            albumUnlocked: (new Date() >= new Date(UNLOCK_TIMESTAMP)),
+            albumUnlocked: (localStorage.getItem('album_unlocked') === 'true' || new Date() >= new Date(UNLOCK_TIMESTAMP)),
         };
 
         /* ==========================================================================
@@ -2152,7 +2160,7 @@
         const sparkleCanvas = document.getElementById('sparkleCanvas');
         const sparkleCtx = sparkleCanvas.getContext('2d');
         const sparkles = [];
-        const SPARKLE_COLORS = ['#9e2230', '#c5a059', '#ede3d8', '#ffffff'];
+        const SPARKLE_COLORS = ['#9e2230', '#c5a059', '#d4b483', '#ffffff'];
 
         function resizeSparkleCanvas() {
             sparkleCanvas.width = window.innerWidth;
@@ -3568,6 +3576,7 @@
 
         function unlockAlbumCeremony() {
             STATE.albumUnlocked = true;
+            try { localStorage.setItem('album_unlocked', 'true'); } catch (e) {}
             companionCrackSvg.style.opacity = '1';
             const paths = companionCrackSvg.querySelectorAll('path');
             paths.forEach((p, idx) => {

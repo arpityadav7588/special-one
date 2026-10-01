@@ -7,6 +7,8 @@
     <meta name="color-scheme" content="dark" />
     <meta name="description" content="Make a wish before midnight — A constellation of wishes written to the dark." />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23070407'/><path d='M50 30 C35 15 15 35 35 60 L50 78 L65 60 C85 35 65 15 50 30 Z' fill='%23c42432'/></svg>" />
+    <link rel="stylesheet" href="theme.css" />
+    <script src="motifs.js"></script>
     <title>Make a Wish Before Midnight · A Gift in Red &amp; Black</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -681,11 +683,12 @@
         requestAnimationFrame(renderShootingStars);
 
         // ==========================================
-        // STARFIELD BACKGROUND
+        // STARFIELD BACKGROUND & FLOATING BOTANICAL PETALS
         // ==========================================
         const skyCanvas = document.getElementById("skyCanvas");
         const skyCtx = skyCanvas.getContext("2d");
         let skyStars = [];
+        let driftingPetals = [];
 
         function resizeSky() {
             skyCanvas.width = window.innerWidth;
@@ -702,19 +705,65 @@
                     phase: Math.random() * Math.PI * 2
                 });
             }
+
+            driftingPetals = [];
+            const petalCount = Math.min(22, Math.max(10, Math.floor(skyCanvas.width / 85)));
+            for (let i = 0; i < petalCount; i++) {
+                driftingPetals.push({
+                    x: Math.random() * skyCanvas.width,
+                    y: Math.random() * skyCanvas.height,
+                    type: i % 2 === 0 ? 'rosePetal' : 'lilyPetal', // Alternates between rose-petal and lily-petal silhouette shapes
+                    size: Math.random() * 8 + 14,
+                    vy: Math.random() * 0.4 + 0.25,
+                    vx: Math.random() * 0.2 - 0.1,
+                    swaySpeed: Math.random() * 0.0015 + 0.001,
+                    swayOffset: Math.random() * Math.PI * 2,
+                    angle: Math.random() * Math.PI * 2,
+                    vAngle: (Math.random() - 0.5) * 0.006,
+                    opacity: Math.random() * 0.06 + 0.07 // 7% to 13% opacity (subtle, non-distracting)
+                });
+            }
         }
         window.addEventListener("resize", resizeSky);
         resizeSky();
 
         function renderSky(t) {
             skyCtx.clearRect(0, 0, skyCanvas.width, skyCanvas.height);
+
+            // Stars
             for (let s of skyStars) {
                 const a = s.baseAlpha + Math.sin(t * 0.001 * s.speed * 60 + s.phase) * 0.25;
-                skyCtx.fillStyle = `rgba(243, 229, 223, ${Math.max(0.05, Math.min(1, a))})`;
+                skyCtx.fillStyle = `rgba(212, 180, 131, ${Math.max(0.04, Math.min(0.75, a * 0.8))})`;
                 skyCtx.beginPath();
                 skyCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
                 skyCtx.fill();
             }
+
+            // Floating botanical petals (alternating rose-petal and lily-petal silhouettes)
+            if (window.MOTIFS) {
+                for (let p of driftingPetals) {
+                    p.y += p.vy;
+                    p.x += p.vx + Math.sin(t * p.swaySpeed + p.swayOffset) * 0.25;
+                    p.angle += p.vAngle;
+
+                    if (p.y > skyCanvas.height + 35) {
+                        p.y = -35;
+                        p.x = Math.random() * skyCanvas.width;
+                    }
+                    if (p.x < -40) p.x = skyCanvas.width + 35;
+                    if (p.x > skyCanvas.width + 40) p.x = -35;
+
+                    const stroke = `rgba(212, 180, 131, ${p.opacity.toFixed(3)})`;
+                    const fill = `rgba(158, 34, 48, ${(p.opacity * 0.35).toFixed(3)})`;
+
+                    if (p.type === 'rosePetal') {
+                        MOTIFS.drawRosePetal(skyCtx, p.x, p.y, p.size, p.angle, stroke, fill);
+                    } else {
+                        MOTIFS.drawLilyPetal(skyCtx, p.x, p.y, p.size, p.angle, stroke, fill);
+                    }
+                }
+            }
+
             requestAnimationFrame(renderSky);
         }
         requestAnimationFrame(renderSky);
