@@ -1,0 +1,3901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="A nocturnal botanical keepsake and countdown to November 9, 2026. Handcrafted in red & black." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23090207'/><path d='M50 30 C35 15 15 35 35 60 L50 78 L65 60 C85 35 65 15 50 30 Z' fill='%23c9184a'/></svg>" />
+    <title>Happy Birthday · For You (Unwrapped)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800&family=Karla:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090207;
+            --surface: #140510;
+            --surface-card: rgba(20, 5, 16, 0.94);
+            --surface-glass: rgba(22, 6, 18, 0.90);
+            --surface-alt: #1a0815;
+            --ink: #ede3d8;
+            --ink-bright: #ffffff;
+            --muted: #a88d9b;
+            --faint: #6c475a;
+            --maroon: #2d071d;
+            --plum: #420b2d;
+            --crimson: #9e2230;
+            --crimson-glow: rgba(158, 34, 48, 0.45);
+            --neon-pink: #9e2230;
+            --neon-magenta: #ede3d8;
+            --ivory: #ede3d8;
+            --lava-orange: #b34426;
+            --gold: #c5a059;
+            --gold-dim: rgba(197, 160, 89, 0.28);
+            --border: rgba(158, 34, 48, 0.32);
+            --border-glow: rgba(158, 34, 48, 0.6);
+            --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+            --font-mono: 'Space Mono', monospace;
+            --font-hand: 'Caveat', cursive;
+            --font-sans: 'Karla', sans-serif;
+            --transition-speed: 0.35s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        /* 3D WebGL Canvas Layer */
+        #stage {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+
+        #stage canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Stage background illumination handled natively by 3D lighting */
+
+        /* Vignette with plum/maroon undertones */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 50% 46%, transparent 42%, rgba(7, 1, 6, 0.82) 100%);
+        }
+
+        /* Authentic Film-Grain Texture */
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 4;
+            pointer-events: none;
+            opacity: 0.058;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+            animation: grainShift 0.7s steps(4) infinite;
+        }
+
+        @keyframes grainShift {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-2%, 2%); }
+            50% { transform: translate(2%, -1%); }
+            75% { transform: translate(-1%, -2%); }
+            100% { transform: translate(1%, 1%); }
+        }
+
+        /* Subtle Scanline Texture (Imperfect Analog Touch) */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(0, 0, 0, 0.22) 4px
+            );
+            mix-blend-mode: multiply;
+            opacity: 0.45;
+        }
+
+        /* Interactive Cursor Sparkle Canvas */
+        #sparkleCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 18;
+            pointer-events: none;
+        }
+
+        /* Washi Tape Accent */
+        .washi-tape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(4px);
+            border-left: 2px dashed rgba(255, 255, 255, 0.28);
+            border-right: 2px dashed rgba(255, 255, 255, 0.28);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Micro-Interaction: Hover Wobble */
+        @keyframes hoverWobble {
+            0% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.05) rotate(-2.8deg); }
+            45% { transform: scale(1.04) rotate(2.2deg); }
+            70% { transform: scale(1.05) rotate(-1.2deg); }
+            100% { transform: scale(1.04) rotate(0deg); }
+        }
+
+        .hover-wobble {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hover-wobble:hover {
+            animation: hoverWobble 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Chromatic Aberration on Hover */
+        .chroma-hover {
+            transition: text-shadow 0.25s ease, color 0.25s ease;
+        }
+
+        .chroma-hover:hover {
+            text-shadow: 2px 0 rgba(255, 27, 123, 0.85), -2px 0 rgba(0, 240, 255, 0.8), 0 0 14px rgba(255, 27, 123, 0.5);
+        }
+
+        /* HUD & Headers */
+        .hud {
+            position: fixed;
+            z-index: 12;
+            pointer-events: none;
+        }
+
+        /* Top-Left Header: Curated Chaos, Layered Typography */
+        .tl {
+            top: 28px;
+            left: 32px;
+            max-width: min(58vw, 620px);
+            animation: fadeInDown 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .meta-strip {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 4px 10px;
+            background: rgba(22, 6, 18, 0.65);
+            border: 1px solid rgba(255, 27, 123, 0.32);
+            border-radius: 2px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+            transform: rotate(-1deg);
+        }
+
+        .meta-tag {
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--neon-pink);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rec-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+            animation: pulseRec 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulseRec {
+            0%, 100% { opacity: 0.35; transform: scale(0.85); }
+            50% { opacity: 1; transform: scale(1.25); }
+        }
+
+        .meta-sub-tag {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .title-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 600;
+            font-size: clamp(34px, 4.8vw, 56px);
+            line-height: 1.05;
+            color: var(--ink-bright);
+            margin-bottom: 8px;
+            text-shadow: 0 2px 24px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 27, 123, 0.22);
+            letter-spacing: -0.01em;
+        }
+
+        h1 em {
+            color: var(--neon-pink);
+            font-style: italic;
+            position: relative;
+        }
+
+        /* Handwritten Scribble Doodle */
+        .scribble-doodle {
+            position: absolute;
+            top: -12px;
+            right: -80px;
+            font-family: var(--font-hand);
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffd166;
+            transform: rotate(7deg);
+            white-space: nowrap;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            opacity: 0.92;
+        }
+
+        .scribble-doodle svg {
+            width: 28px;
+            height: 18px;
+            stroke: #ffd166;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        .sub {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: clamp(15px, 1.8vw, 19px);
+            line-height: 1.4;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .recipient-pill {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .name-input {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 600;
+            font-size: inherit;
+            color: var(--ink-bright);
+            background: rgba(255, 27, 123, 0.12);
+            border: 1px dashed rgba(255, 27, 123, 0.6);
+            outline: none;
+            padding: 2px 10px;
+            min-width: 100px;
+            width: 14ch;
+            border-radius: 3px;
+            transition: all 0.3s;
+            box-shadow: 0 0 12px rgba(255, 27, 123, 0.15);
+        }
+
+        .name-input:focus {
+            background: rgba(255, 27, 123, 0.22);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 18px rgba(255, 27, 123, 0.4);
+        }
+
+        /* Offset Countdown HUD: Tilted Scrapbook Badge */
+        .tr {
+            top: 28px;
+            right: 32px;
+            text-align: right;
+            animation: fadeInDown 1.1s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+            pointer-events: auto;
+        }
+
+        .countdown-scrapbook {
+            position: relative;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            padding: 14px 22px 13px;
+            border-radius: 4px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 27, 123, 0.15);
+            transform: rotate(-1.6deg);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .countdown-scrapbook:hover {
+            transform: rotate(0deg) scale(1.02);
+            border-color: var(--border-glow);
+        }
+
+        .countdown-scrapbook .washi-tape {
+            top: -9px;
+            left: 28%;
+            width: 58px;
+            height: 18px;
+            transform: rotate(2deg);
+        }
+
+        .cd-target-label {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--lava-orange);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .countdown-readout {
+            font-family: var(--font-mono);
+            font-size: clamp(19px, 2.4vw, 29px);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--ink-bright);
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 6px;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 27, 123, 0.35);
+        }
+
+        .countdown-readout .seg {
+            display: inline-flex;
+            align-items: baseline;
+        }
+
+        .countdown-readout .seg b {
+            font-weight: 700;
+            color: var(--ink-bright);
+            min-width: 1.4ch;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .countdown-readout .seg i {
+            font-style: normal;
+            font-size: 0.48em;
+            font-weight: 700;
+            color: var(--neon-pink);
+            margin-left: 2px;
+            letter-spacing: 0.02em;
+        }
+
+        .countdown-readout .sep {
+            color: var(--faint);
+            margin: 0 2px;
+        }
+
+        .cd-subtext {
+            font-family: var(--font-mono);
+            font-size: 8.5px;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Floating Scrapbook Aesthetic Sticker (Broken Symmetry) */
+        .aesthetic-pin {
+            position: fixed;
+            top: 240px;
+            right: 36px;
+            z-index: 10;
+            background: rgba(30, 8, 23, 0.72);
+            border: 1px solid rgba(255, 96, 38, 0.35);
+            padding: 10px 14px;
+            border-radius: 3px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            transform: rotate(3deg);
+            pointer-events: auto;
+            max-width: 170px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeInDown 1.2s 0.4s both;
+        }
+
+        .aesthetic-pin:hover {
+            transform: rotate(0deg) scale(1.05);
+            border-color: var(--lava-orange);
+        }
+
+        .aesthetic-pin .washi-tape {
+            top: -8px;
+            right: 20%;
+            width: 44px;
+            height: 15px;
+            transform: rotate(-3deg);
+        }
+
+        .pin-kicker {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--lava-orange);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .pin-text {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.35;
+            color: var(--ink);
+        }
+
+        .pin-text em {
+            color: var(--neon-pink);
+            font-style: normal;
+        }
+
+        /* Center Call to Action: Gen-Z Copy & Holographic Edge */
+        #ctaCenter {
+            position: fixed;
+            bottom: 86px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 14;
+            text-align: center;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: auto;
+        }
+
+        #ctaCenter.hidden {
+            opacity: 0;
+            transform: translateX(-50%) translateY(16px);
+            pointer-events: none;
+        }
+
+        .btn-open-gift {
+            background: linear-gradient(135deg, rgba(45, 7, 29, 0.9), rgba(20, 4, 15, 0.95));
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            color: #ffffff;
+            font-family: var(--font-serif);
+            font-size: clamp(16px, 2.2vw, 20px);
+            font-style: italic;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: lowercase;
+            padding: 14px 38px 13px 40px;
+            cursor: pointer;
+            border-radius: 2px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.75), 0 0 20px rgba(158, 34, 48, 0.25);
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.35s ease;
+        }
+
+        .btn-open-gift::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 2px;
+            background: linear-gradient(135deg, #9e2230 0%, #4a0d15 100%);
+            z-index: -1;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+        }
+
+        .btn-open-gift:hover {
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.85), 0 0 25px rgba(158, 34, 48, 0.45);
+            transform: translateY(-2px);
+        }
+
+        .btn-open-gift:hover::before {
+            opacity: 1;
+            filter: blur(1px);
+        }
+
+        .btn-open-gift:active {
+            transform: translateY(1px);
+        }
+
+        .btn-sparkle {
+            font-size: 15px;
+            color: #ffd166;
+            animation: pulseRec 1.8s infinite;
+        }
+
+        .hint-text {
+            display: block;
+            margin-top: 10px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Wax-Sealed Companion: The Camera Roll / Vault */
+        #lockedAlbumCompanion {
+            position: fixed;
+            bottom: 92px;
+            left: 32px;
+            z-index: 14;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 10px 18px 10px 14px;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeInUp 1.1s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+            user-select: none;
+            transform: rotate(-1.2deg);
+        }
+
+        #lockedAlbumCompanion:hover {
+            border-color: var(--neon-pink);
+            transform: rotate(0deg) translateY(-2px);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 27, 123, 0.35);
+        }
+
+        .companion-seal {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 32%, #d9154a 0%, #63081e 65%, #2a030b 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 170, 150, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex: none;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a0205;
+        }
+
+        .companion-crack-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .companion-crack-svg path {
+            stroke: #ffd166;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            fill: none;
+            filter: drop-shadow(0 0 4px #ffd166);
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+        }
+
+        .companion-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .companion-title {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink-bright);
+            line-height: 1.1;
+        }
+
+        .companion-sub {
+            font-family: var(--font-mono);
+            font-size: 8.5px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .companion-tooltip {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: rgba(18, 5, 15, 0.95);
+            border: 1px solid var(--neon-pink);
+            color: #fff;
+            padding: 6px 14px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            border-radius: 3px;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8), 0 0 14px rgba(255, 27, 123, 0.4);
+            z-index: 15;
+        }
+
+        .companion-tooltip.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .companion-shake {
+            animation: sealWobble 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        @keyframes sealWobble {
+            10%, 90% { transform: translate3d(-2px, 0, 0) rotate(-2deg); }
+            20%, 80% { transform: translate3d(3px, 0, 0) rotate(2.5deg); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotate(-2deg); }
+            40%, 60% { transform: translate3d(4px, 0, 0) rotate(2deg); }
+        }
+
+        /* Asymmetric Bottom Control Bar */
+        #bottomBar {
+            position: fixed;
+            bottom: 24px;
+            right: 32px;
+            z-index: 14;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeInUp 1.1s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .btn-action {
+            background: var(--surface-glass);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: lowercase;
+            padding: 9px 15px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border-radius: 2px;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .btn-action:hover {
+            border-color: var(--neon-pink);
+            color: var(--ink-bright);
+            background: rgba(45, 9, 32, 0.85);
+            box-shadow: 0 0 12px rgba(158, 34, 48, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-action.active {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            background: rgba(55, 10, 38, 0.9);
+        }
+
+        /* Sound Bars Animated Equalizer */
+        .sound-bars {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 11px;
+        }
+
+        .sound-bars span {
+            width: 2px;
+            background: var(--muted);
+            height: 3px;
+            border-radius: 1px;
+            transition: height 0.2s, background 0.2s;
+        }
+
+        .btn-sound.playing .sound-bars span {
+            background: var(--neon-pink);
+            animation: soundBounce 1s ease-in-out infinite alternate;
+        }
+
+        .btn-sound.playing .sound-bars span:nth-child(1) { animation-delay: 0.1s; }
+        .btn-sound.playing .sound-bars span:nth-child(2) { animation-delay: 0.35s; }
+        .btn-sound.playing .sound-bars span:nth-child(3) { animation-delay: 0.2s; }
+        .btn-sound.playing .sound-bars span:nth-child(4) { animation-delay: 0.45s; }
+
+        @keyframes soundBounce {
+            0% { height: 3px; }
+            50% { height: 11px; }
+            100% { height: 4px; }
+        }
+
+        /* Legend (Bottom Left) */
+        .legend {
+            bottom: 24px;
+            left: 32px;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            animation: fadeInUp 1.1s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .legend .li {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--faint);
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .legend svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--faint);
+            fill: none;
+            stroke-width: 1.3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ==========================================================================
+           SPOTIFY WRAPPED ENDING REVEAL EXPERIENCE
+           ========================================================================== */
+        #wrappedExperience {
+            position: fixed;
+            inset: 0;
+            z-index: 35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #wrappedExperience.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .wrapped-backdrop {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 50% 30%, rgba(255, 27, 123, 0.22) 0%, transparent 60%),
+                radial-gradient(circle at 20% 80%, rgba(255, 96, 38, 0.18) 0%, transparent 50%),
+                rgba(8, 2, 7, 0.82);
+            backdrop-filter: blur(16px);
+        }
+
+        .wrapped-story-card {
+            position: relative;
+            width: min(540px, 92vw);
+            min-height: min(600px, 86vh);
+            background: linear-gradient(175deg, rgba(32, 8, 26, 0.94) 0%, rgba(14, 3, 12, 0.98) 100%);
+            border: 1px solid rgba(255, 27, 123, 0.4);
+            border-radius: 8px;
+            box-shadow: 0 25px 90px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 27, 123, 0.25);
+            padding: 32px 36px 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            transform: scale(0.96) translateY(18px);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #wrappedExperience.active .wrapped-story-card {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Top Progress Segments (Instagram / Spotify Stories style) */
+        .story-progress {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .story-bar {
+            flex: 1;
+            height: 3.5px;
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .story-fill {
+            height: 100%;
+            width: 0%;
+            background: #9e2230;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .story-bar.completed .story-fill {
+            width: 100%;
+        }
+
+        /* Story Top Header */
+        .story-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .story-meta-badge {
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--neon-pink);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .story-close-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--muted);
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            padding: 4px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .story-close-btn:hover {
+            color: #fff;
+            border-color: var(--neon-pink);
+            background: rgba(255, 27, 123, 0.15);
+        }
+
+        /* Slide Body & Transitions */
+        .story-slides-container {
+            flex: 1;
+            position: relative;
+            min-height: 380px;
+            display: flex;
+            align-items: center;
+        }
+
+        .story-slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(20px) scale(0.98);
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .story-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0) scale(1);
+        }
+
+        .giant-statement {
+            font-family: var(--font-serif);
+            font-size: clamp(24px, 3.8vw, 38px);
+            font-weight: 600;
+            line-height: 1.25;
+            color: var(--ink-bright);
+            margin-bottom: 22px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .giant-statement em {
+            color: var(--neon-pink);
+            font-style: italic;
+        }
+
+        .wrapped-stat-card {
+            background: rgba(18, 4, 15, 0.75);
+            border: 1px solid rgba(255, 27, 123, 0.35);
+            border-radius: 6px;
+            padding: 20px 22px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .stat-num {
+            font-family: var(--font-serif);
+            font-size: clamp(38px, 6vw, 56px);
+            font-weight: 700;
+            color: #ffd166;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(255, 209, 102, 0.4);
+        }
+
+        .stat-desc {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            line-height: 1.6;
+            color: var(--ink);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .stat-desc span {
+            color: var(--neon-pink);
+            font-weight: 700;
+        }
+
+        .wrapped-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .stat-pill {
+            background: rgba(22, 5, 18, 0.7);
+            border: 1px solid rgba(255, 96, 38, 0.35);
+            padding: 12px 18px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            letter-spacing: 0.1em;
+            color: var(--ink);
+        }
+
+        .stat-pill b {
+            color: var(--lava-orange);
+            font-size: 13px;
+            margin-right: 6px;
+        }
+
+        .handwritten-sticker {
+            font-family: var(--font-hand);
+            font-size: 26px;
+            color: #ffd166;
+            transform: rotate(-3deg);
+            margin-top: 18px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Slide 4 Finale Typography */
+        .wrapped-hbd-title {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: clamp(28px, 4.2vw, 42px);
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--ink-bright);
+            margin-bottom: 18px;
+        }
+
+        .wrapped-hbd-title span {
+            color: var(--neon-pink);
+            font-style: normal;
+        }
+
+        .wrapped-letter-body {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: clamp(16px, 2vw, 20px);
+            line-height: 1.65;
+            color: #f7e6eb;
+            margin-bottom: 20px;
+        }
+
+        .wrapped-letter-body .reveal-line {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: lineFadeUp 0.8s ease forwards;
+        }
+
+        .wrapped-letter-body .reveal-line:nth-child(1) { animation-delay: 0.2s; }
+        .wrapped-letter-body .reveal-line:nth-child(2) { animation-delay: 0.6s; }
+        .wrapped-letter-body .reveal-line:nth-child(3) { animation-delay: 1.0s; }
+        .wrapped-letter-body .reveal-line:nth-child(4) { animation-delay: 1.4s; }
+
+        @keyframes lineFadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .wrapped-sig {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 18px;
+            color: var(--neon-pink);
+            margin-bottom: 24px;
+        }
+
+        .wrapped-action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-wrapped-action {
+            flex: 1;
+            min-width: 140px;
+            background: linear-gradient(135deg, rgba(201, 24, 74, 0.8), rgba(120, 10, 40, 0.9));
+            border: 1px solid var(--neon-pink);
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 13px 18px;
+            border-radius: 2px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(158, 34, 48, 0.3);
+            transition: all 0.25s ease;
+        }
+
+        .btn-wrapped-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 24px rgba(158, 34, 48, 0.55);
+            background: linear-gradient(135deg, #9e2230, #5e111a);
+        }
+
+        .btn-wrapped-action.alt {
+            background: rgba(22, 6, 18, 0.8);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-wrapped-action.alt:hover {
+            border-color: #ffd166;
+            background: rgba(45, 12, 35, 0.9);
+        }
+
+        /* Tap Navigation Zones (Story-style left/right tap) */
+        .story-tap-zones {
+            position: absolute;
+            inset: 60px 0 0 0;
+            display: flex;
+            z-index: 4;
+            pointer-events: auto;
+        }
+
+        .tap-zone-left {
+            width: 32%;
+            height: 100%;
+            cursor: w-resize;
+        }
+
+        .tap-zone-right {
+            width: 68%;
+            height: 100%;
+            cursor: e-resize;
+        }
+
+        .story-tap-hint {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--faint);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-top: 14px;
+            text-align: center;
+        }
+
+        /* Make a Wish Modal */
+        #makeWishModal {
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #makeWishModal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .wish-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(6, 1, 5, 0.78);
+            backdrop-filter: blur(10px);
+        }
+
+        .make-wish-card {
+            position: relative;
+            width: min(520px, 92vw);
+            background: linear-gradient(180deg, rgba(28, 7, 22, 0.95) 0%, rgba(13, 3, 11, 0.98) 100%);
+            border: 1px solid rgba(255, 27, 123, 0.4);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 40px rgba(255, 27, 123, 0.25);
+            padding: 40px 38px 34px;
+            border-radius: 6px;
+            backdrop-filter: blur(14px);
+            transform: translateY(16px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #makeWishModal.show .make-wish-card {
+            transform: translateY(0);
+        }
+
+        .card-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .card-badge-row .star-icon {
+            color: #ffd166;
+            font-size: 16px;
+        }
+
+        .card-badge-row span {
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--neon-pink);
+        }
+
+        .wish-title {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 600;
+            font-size: clamp(26px, 3.8vw, 36px);
+            line-height: 1.15;
+            color: var(--ink-bright);
+            margin-bottom: 10px;
+        }
+
+        .wish-title em {
+            color: var(--neon-pink);
+            font-style: normal;
+        }
+
+        .wish-sub-prompt {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 16px;
+            line-height: 1.45;
+            color: var(--muted);
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--lava-orange);
+            margin-bottom: 8px;
+        }
+
+        .input-text,
+        .input-textarea {
+            width: 100%;
+            background: rgba(12, 3, 10, 0.8);
+            border: 1px solid rgba(255, 27, 123, 0.32);
+            border-radius: 4px;
+            padding: 12px 14px;
+            color: var(--ink-bright);
+            font-family: var(--font-serif);
+            font-size: 17px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-text:focus,
+        .input-textarea:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 16px rgba(255, 27, 123, 0.3);
+            background: rgba(22, 6, 18, 0.9);
+        }
+
+        .input-textarea {
+            min-height: 96px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .char-counter {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--faint);
+        }
+
+        .btn-submit-wish {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(201, 24, 74, 0.9), rgba(120, 10, 40, 0.98));
+            border: 1px solid var(--neon-pink);
+            color: #ffffff;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            padding: 14px 24px;
+            cursor: pointer;
+            border-radius: 2px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(158, 34, 48, 0.35);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit-wish:hover:not(:disabled) {
+            background: linear-gradient(135deg, #9e2230, #5e111a);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 24px rgba(158, 34, 48, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit-wish:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status-msg {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            display: none;
+            text-align: center;
+        }
+
+        .status-msg.success {
+            display: block;
+            background: rgba(30, 8, 22, 0.85);
+            border: 1px solid var(--gold);
+            color: #ffd166;
+        }
+
+        .status-msg.error {
+            display: block;
+            background: rgba(45, 6, 18, 0.85);
+            border: 1px solid var(--neon-pink);
+            color: #ff99bb;
+        }
+
+        /* Shooting Star Canvas Overlay */
+        #skyStarCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 45;
+            pointer-events: none;
+        }
+
+        /* Personal Letter Note Modal ("The Receipt") */
+        #noteModal {
+            position: fixed;
+            inset: 0;
+            z-index: 32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #noteModal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .receipt-card {
+            position: relative;
+            width: min(500px, 90vw);
+            background: linear-gradient(180deg, rgba(28, 7, 22, 0.96) 0%, rgba(14, 3, 11, 0.98) 100%);
+            border: 1px solid rgba(255, 27, 123, 0.38);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 35px rgba(255, 27, 123, 0.2);
+            padding: 42px 38px 34px;
+            border-radius: 6px;
+            transform: translateY(18px) rotate(-0.8deg);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #noteModal.show .receipt-card {
+            transform: translateY(0) rotate(-0.8deg);
+        }
+
+        .receipt-card .washi-tape {
+            top: -10px;
+            left: 35%;
+            width: 70px;
+            height: 20px;
+            transform: rotate(-2deg);
+        }
+
+        .receipt-header-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-seal {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #d9154a 0%, #63081e 70%, #2a030b 100%);
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 22px;
+            font-style: italic;
+            font-weight: 700;
+            color: #1a0205;
+            box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.6), inset 0 3px 5px rgba(255, 140, 120, 0.35);
+        }
+
+        .receipt-meta {
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            letter-spacing: 0.25em;
+            color: var(--neon-pink);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .modal-x {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px 8px;
+            transition: color 0.2s;
+        }
+
+        .modal-x:hover {
+            color: var(--ink-bright);
+        }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            transition: opacity 0.8s ease;
+        }
+
+        #loader.done {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-rose {
+            width: 42px;
+            height: 42px;
+            stroke: var(--neon-pink);
+            fill: none;
+            stroke-width: 1.3;
+            animation: spinSlow 12s linear infinite;
+        }
+
+        .loader-text {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--muted);
+            animation: loadPulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes loadPulse {
+            0%, 100% { color: #5a263e; }
+            50% { color: var(--neon-pink); }
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .tl {
+                top: 18px;
+                left: 18px;
+                max-width: calc(100vw - 36px);
+            }
+
+            .tr {
+                top: auto;
+                bottom: 86px;
+                right: 18px;
+                left: 18px;
+                text-align: center;
+            }
+
+            .countdown-scrapbook {
+                transform: rotate(0deg);
+            }
+
+            .countdown-readout {
+                justify-content: center;
+            }
+
+            .aesthetic-pin {
+                display: none;
+            }
+
+            .legend {
+                display: none;
+            }
+
+            #ctaCenter {
+                bottom: 162px;
+            }
+
+            #lockedAlbumCompanion {
+                bottom: 220px;
+                left: 18px;
+            }
+
+            #bottomBar {
+                left: 14px;
+                right: 14px;
+                bottom: 18px;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .btn-action {
+                padding: 8px 12px;
+                font-size: 9px;
+            }
+
+            .scribble-doodle {
+                display: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media print {
+            #stage, .vignette, .grain, .hud-top, .hud-bottom, #loader, .modal-backdrop { display: none !important; }
+            body { background: #fff !important; color: #000 !important; overflow: visible !important; }
+            #noteModal { display: block !important; position: static !important; }
+            .note-modal-card { display: block !important; position: static !important; transform: none !important; background: none !important; color: #111 !important; box-shadow: none !important; border: none !important; }
+            .btn-action, #btnNoteDone, #btnCopyNote, #noteCloseX { display: none !important; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="stage"></div>
+    <canvas id="skyStarCanvas"></canvas>
+    <canvas id="sparkleCanvas"></canvas>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+    <div class="scanlines"></div>
+
+    <!-- Wax-Sealed Locked Album Companion ("The Camera Roll") -->
+    <div id="lockedAlbumCompanion" class="hover-wobble" role="button" tabindex="0" aria-label="Wax-Sealed Botanical Album. Sealed until November 9, 2026.">
+        <div class="companion-seal" id="companionSeal">
+            <span>R</span>
+            <svg class="companion-crack-svg" id="companionCrackSvg" viewBox="0 0 100 100">
+                <path d="M50 10 L48 40 L35 50 L18 70" />
+                <path d="M48 40 L65 55 L85 65" />
+                <path d="M65 55 L55 80 L52 95" />
+            </svg>
+        </div>
+        <div class="companion-info">
+            <div class="companion-title">The Camera Roll</div>
+            <div class="companion-sub" id="companionStatus">Archive · Sealed 🔒</div>
+        </div>
+        <div class="companion-tooltip" id="companionTooltip" role="status" aria-live="polite">
+            vault locked until nov 9, 2026 🔒
+        </div>
+    </div>
+
+    <!-- HUD Header (Gen-Z Layered Aesthetics) -->
+    <header class="hud tl">
+        <div class="meta-strip">
+            <span class="meta-tag"><span class="rec-dot"></span>REC ● 2026.11.09</span>
+            <span class="meta-sub-tag">// TRACK 01</span>
+        </div>
+        <div class="title-wrapper">
+            <h1 id="pageTitle" class="chroma-hover">For <em>You</em></h1>
+            <div class="scribble-doodle">
+                <svg viewBox="0 0 40 24">
+                    <path d="M4 14 Q 20 2, 34 10 M 34 10 L 26 8 M 34 10 L 30 16" />
+                </svg>
+                yes you ♡
+            </div>
+        </div>
+        <div class="sub">
+            <span>to</span>
+            <span class="recipient-pill">
+                <input class="name-input" id="nameInput" spellcheck="false" maxlength="24" value="My Dearest"
+                    title="Click to personalize name" aria-label="Recipient Name" />
+            </span>
+            <span>— eleven blooms in velvet crimson &amp; midnight silk</span>
+        </div>
+    </header>
+
+    <!-- Asymmetrical Scrapbook Pin (Pinterest Aesthetics) -->
+    <div class="aesthetic-pin hover-wobble" id="aestheticPin">
+        <div class="washi-tape"></div>
+        <div class="pin-kicker">[ VIBE CHECK ]</div>
+        <div class="pin-text">
+            <b>100% NO WHITE FLOWERS</b> 🚫🤍<br>
+            <em>strictly velvet crimson &amp; midnight silk</em>
+        </div>
+    </div>
+
+    <!-- Countdown Timer HUD (Offset Tilted Scrapbook Badge) -->
+    <div class="hud tr" id="countdownHUD">
+        <div class="countdown-scrapbook hover-wobble">
+            <div class="washi-tape"></div>
+            <div class="cd-target-label" id="targetLabel">
+                <span>[ LIVE METRIC // HOURS TILL MIDNIGHT ]</span>
+            </div>
+            <div class="countdown-readout" id="countdownReadout">
+                <span class="seg"><b id="cdDays">000</b><i>d</i></span>
+                <span class="sep">·</span>
+                <span class="seg"><b id="cdHours">00</b><i>h</i></span>
+                <span class="sep">·</span>
+                <span class="seg"><b id="cdMins">00</b><i>m</i></span>
+                <span class="sep">·</span>
+                <span class="seg"><b id="cdSecs">00.0</b><i>s</i></span>
+            </div>
+            <div class="cd-subtext">// countdown to your sacred moment</div>
+        </div>
+    </div>
+
+    <!-- Center Call to Action -->
+    <div id="ctaCenter">
+        <button class="btn-open-gift hover-wobble chroma-hover" id="btnOpenGift" type="button">
+            <span>unwrap this rn</span>
+            <span class="btn-sparkle">✦</span>
+        </button>
+        <span class="hint-text" id="ctaHint">tap the box or button · no peeking early</span>
+    </div>
+
+    <!-- Interactive Bottom Bar -->
+    <div id="bottomBar">
+        <button class="btn-action btn-sound" id="btnSound" type="button" aria-pressed="false">
+            <span class="sound-bars">
+                <span></span><span></span><span></span><span></span>
+            </span>
+            <span id="soundLabel">lo-fi tape · off</span>
+        </button>
+        <button class="btn-action" id="btnMakeWish" type="button">drop a wish ✨</button>
+        <a class="btn-action" id="btnAlbumNav" href="album.html" style="text-decoration:none;">the camera roll 🔒</a>
+        <a class="btn-action" href="wish.html" style="text-decoration:none;">wishes wall ✦</a>
+        <button class="btn-action" id="btnNote" type="button">the receipt 💌</button>
+        <button class="btn-action" id="btnPetals" type="button">falling petals · on</button>
+        <button class="btn-action" id="btnReplay" type="button">rewind ↺</button>
+    </div>
+
+    <!-- SPOTIFY WRAPPED ENDING REVEAL EXPERIENCE -->
+    <div id="wrappedExperience" role="dialog" aria-modal="true" aria-labelledby="wrappedTitle">
+        <div class="wrapped-backdrop" id="wrappedBackdrop"></div>
+        <div class="wrapped-story-card">
+            <div class="story-progress" id="storyProgressBar">
+                <div class="story-bar"><div class="story-fill"></div></div>
+                <div class="story-bar"><div class="story-fill"></div></div>
+                <div class="story-bar"><div class="story-fill"></div></div>
+                <div class="story-bar"><div class="story-fill"></div></div>
+            </div>
+
+            <div class="story-header">
+                <div class="story-meta-badge" id="wrappedTitle">
+                    <span class="rec-dot"></span>
+                    <span>2026 WRAPPED · FOR YOU</span>
+                </div>
+                <button class="story-close-btn" id="btnSkipWrapped">close ✕</button>
+            </div>
+
+            <div class="story-slides-container" id="storySlidesContainer">
+                <!-- Slide 0: The Intro Claim -->
+                <div class="story-slide active" data-slide="0">
+                    <div class="meta-strip" style="margin-bottom:16px;">
+                        <span class="meta-tag">[ DEFINITIVE REPORT // TOP MOMENT ]</span>
+                    </div>
+                    <div class="giant-statement">
+                        In a world with 8 billion people...<br>
+                        <em>you were the only one on repeat.</em>
+                    </div>
+                    <div class="wrapped-stat-card">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-desc">
+                            MINUTES SPENT ADMIRING YOU<br>
+                            <span>STATUS: 100% UNMATCHED</span>
+                        </div>
+                    </div>
+                    <div class="story-tap-hint">tap right to continue →</div>
+                </div>
+
+                <!-- Slide 1: Botanical Aesthetic Spec -->
+                <div class="story-slide" data-slide="1">
+                    <div class="meta-strip" style="margin-bottom:16px;">
+                        <span class="meta-tag">[ THE FLOWER COLORWAY MATRIX ]</span>
+                    </div>
+                    <div class="giant-statement">
+                        Your exact aesthetic mandate:<br>
+                        <em>"Mostly black, deep red, no white flowers."</em>
+                    </div>
+                    <div class="wrapped-stat-grid">
+                        <div class="stat-pill"><b>11</b> RARE BLOOMS SCULPTED</div>
+                        <div class="stat-pill"><b>0.00%</b> WHITE PETALS (STRICTLY FORBIDDEN)</div>
+                        <div class="stat-pill"><b>100%</b> VELVET CRIMSON &amp; MIDNIGHT SILK</div>
+                    </div>
+                    <div class="story-tap-hint">tap right to continue →</div>
+                </div>
+
+                <!-- Slide 2: Time & Dedication -->
+                <div class="story-slide" data-slide="2">
+                    <div class="meta-strip" style="margin-bottom:16px;">
+                        <span class="meta-tag">[ DEVOTION CHRONICLES ]</span>
+                    </div>
+                    <div class="giant-statement">
+                        Some people send generic texts.<br>
+                        <em>This was sculpted stem by stem,</em><br>
+                        waiting for the clock to chime your sacred day.
+                    </div>
+                    <div class="handwritten-sticker">"worth every single second ♡"</div>
+                    <div class="story-tap-hint">tap right to continue →</div>
+                </div>
+
+                <!-- Slide 3: Grand Birthday Payoff Letter -->
+                <div class="story-slide" data-slide="3">
+                    <div class="meta-strip" style="margin-bottom:14px;">
+                        <span class="meta-tag">[ TRACK 01 // THE SACRED MOMENT ]</span>
+                    </div>
+                    <h2 class="wrapped-hbd-title">
+                        Happy Birthday,<br>
+                        <span id="wrappedNameLabel">My Dearest</span>!
+                    </h2>
+                    <div class="wrapped-letter-body">
+                        <p class="reveal-line">On this sacred day, time itself pauses to marvel at your grace.</p>
+                        <p class="reveal-line">May every moment ahead be as rare and exquisite as the black rose,</p>
+                        <p class="reveal-line">as fervent as the crimson lily,</p>
+                        <p class="reveal-line">and as radiant as your heart.</p>
+                    </div>
+                    <div class="wrapped-sig">— with all my love &amp; admiration</div>
+                    <div class="wrapped-action-row">
+                        <button class="btn-wrapped-action" id="btnWrappedExplore">Explore Blooms 🌹</button>
+                        <a class="btn-wrapped-action alt" id="btnWrappedAlbum" href="album.html">The Camera Roll 🔒</a>
+                        <button class="btn-wrapped-action alt" id="btnWrappedReplay">Rewind Story ↺</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Left / Right Tap zones for story advance -->
+            <div class="story-tap-zones">
+                <div class="tap-zone-left" id="storyTapLeft" title="Previous story"></div>
+                <div class="tap-zone-right" id="storyTapRight" title="Next story"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Make a Wish Modal -->
+    <div id="makeWishModal" role="dialog" aria-modal="true" aria-labelledby="makeWishHeading">
+        <div class="wish-backdrop" id="makeWishBackdrop"></div>
+        <div class="make-wish-card">
+            <button class="modal-x" id="makeWishCloseX" aria-label="Close wish dialog">&times;</button>
+            <div class="card-badge-row">
+                <span class="star-icon">✦</span>
+                <span>Drop a wish before midnight</span>
+            </div>
+            <h2 class="wish-title" id="makeWishHeading">Drop a Wish <em>in the Void</em></h2>
+            <p class="wish-sub-prompt">
+                Whisper your wish to the dark. It will be preserved for the blooming hour.
+            </p>
+            <form id="inlineWishForm" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label" for="inlineWishName">Your Name or Monogram</label>
+                    <input class="input-text" type="text" id="inlineWishName" maxlength="60" required
+                        placeholder="e.g. An Admirer, or A Secret Friend" spellcheck="false" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="inlineWishText">Your Birthday Wish</label>
+                    <textarea class="input-textarea" id="inlineWishText" maxlength="280" required
+                        placeholder="What do you wish for them as the clock strikes midnight?..."
+                        spellcheck="true"></textarea>
+                    <div class="char-counter"><span id="inlineCharCount">0</span> / 280</div>
+                </div>
+                <button class="btn-submit-wish" id="btnSubmitInlineWish" type="submit">
+                    <span>Cast Wish into the Sky</span>
+                    <span style="font-size: 16px;">✨</span>
+                </button>
+                <div class="status-msg" id="inlineStatusMsg" role="alert"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mouse / Orbit Legend -->
+    <div class="hud legend">
+        <span class="li">
+            <svg viewBox="0 0 16 16">
+                <path d="M13.5 8A5.5 5.5 0 1 1 8 2.5" />
+                <path d="M8 1l2.5 1.5L8 4" />
+            </svg>drag to orbit
+        </span>
+        <span class="li">
+            <svg viewBox="0 0 16 16">
+                <circle cx="6.8" cy="6.8" r="4.3" />
+                <path d="M10.1 10.1 14 14" />
+                <path d="M5 6.8h3.6M6.8 5v3.6" />
+            </svg>scroll to zoom
+        </span>
+        <span class="li">
+            <svg viewBox="0 0 16 16">
+                <path d="M4.6 2.1 12.5 8.5 9.1 9.2 11 13.1 9.2 13.9 7.3 10 4.6 12.3Z" />
+            </svg>click blooms
+        </span>
+    </div>
+
+    <!-- Personal Letter Note Modal ("The Receipt") -->
+    <div id="noteModal" role="dialog" aria-modal="true" aria-labelledby="noteHeading">
+        <div class="wish-backdrop" id="noteBackdrop"></div>
+        <div class="receipt-card">
+            <div class="washi-tape"></div>
+            <button class="modal-x" id="noteCloseX" aria-label="Close note">&times;</button>
+            <div class="receipt-header-row">
+                <div class="receipt-seal">R</div>
+                <div class="receipt-meta" id="noteHeading">The Aesthetic Receipt // Keepsake</div>
+            </div>
+            <p style="font-family:var(--font-serif); font-style:italic; font-size:20px; line-height:1.55; color:#f5e2ea; margin-bottom:18px;">
+                &ldquo;I prefer red, mostly black &mdash; other colors are also fine, but mostly, I don&rsquo;t like
+                white. I love flowers, especially <em>roses</em>, <em>lilies</em> and <em>tulips</em>.&rdquo;
+            </p>
+            <p style="font-size:13px; line-height:1.7; color:#b891a4; margin-bottom:24px;">
+                So it was made: eleven blooms nestled inside the handcrafted lacquer box, waiting patiently for the
+                clock to chime your day.
+            </p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-family:var(--font-serif); font-style:italic; font-size:18px; color:var(--neon-pink);">— yours, always</div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-action" id="btnCopyNote">copy note</button>
+                    <button class="btn-action" id="btnNoteDone">fold note ✕</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <svg class="loader-rose" viewBox="0 0 20 20">
+            <path d="M10 8.2a1.8 1.8 0 1 0 1.8 1.8" />
+            <path d="M10 5.9a4.1 4.1 0 1 1-4.1 4.1" />
+            <path d="M10 3.4a6.6 6.6 0 1 0 6.6 6.6" />
+        </svg>
+        <span class="loader-text">curating dark blooms &amp; vinyl warmth</span>
+    </div>
+
+    <!-- Three.js Import Map -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+        import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+        /* ==========================================================================
+           1. CONFIGURATION & STATE
+           ========================================================================== */
+        const UNLOCK_TIMESTAMP = "2026-11-09T00:00:00";
+
+        const CONFIG = {
+            unlockTimestamp: UNLOCK_TIMESTAMP,
+            targetDate: new Date(UNLOCK_TIMESTAMP), // November 9, 2026 00:00:00 local time
+            defaultName: 'My Dearest',
+            poemMessage: "On this sacred day, time itself pauses to marvel at your grace. May every moment ahead be as rare and exquisite as the black rose, as fervent as the crimson lily, and as radiant as your heart.",
+        };
+
+        const STATE = {
+            mode: 'countdown', // 'countdown' | 'opening' | 'bloomed'
+            name: CONFIG.defaultName,
+            petalsEnabled: true,
+            soundEnabled: false,
+            nowSec: 0,
+            hasOpened: false,
+            albumUnlocked: (new Date() >= new Date(UNLOCK_TIMESTAMP)),
+        };
+
+        /* ==========================================================================
+           2. TWEEN & EASING SYSTEM
+           ========================================================================== */
+        const tweens = [];
+        const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+        const lerp = (a, b, t) => a + (b - a) * t;
+        const easeInOutCubic = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+        const easeInCubic = t => t * t * t;
+        const easeBackSoft = t => { const c = 1.15; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+        const easeOutBounce = t => {
+            const n = 7.5625, d = 2.75;
+            if (t < 1 / d) return n * t * t;
+            if (t < 2 / d) return n * (t -= 1.5 / d) * t + .75;
+            if (t < 2.5 / d) return n * (t -= 2.25 / d) * t + .9375;
+            return n * (t -= 2.625 / d) * t + .984375;
+        };
+
+        function addTween(o) {
+            o.t0 = STATE.nowSec + (o.delay || 0);
+            o.ease = o.ease || easeInOutCubic;
+            tweens.push(o);
+            return o;
+        }
+
+        function updateTweens(now) {
+            for (let i = tweens.length - 1; i >= 0; i--) {
+                const tw = tweens[i];
+                const e = (now - tw.t0) / tw.dur;
+                if (e < 0) continue;
+                if (e >= 1) {
+                    tw.update(1);
+                    tweens.splice(i, 1);
+                    if (tw.done) tw.done();
+                } else {
+                    tw.update(tw.ease(e));
+                }
+            }
+        }
+
+        /* ==========================================================================
+           3. AMBIENT LO-FI SYNTH & VINYL ENGINE (Bedroom Pop / Intimate Warmth)
+           ========================================================================== */
+        let audioCtx = null;
+        let lofiTimer = null;
+        let lofiStep = 0;
+        let vinylNode = null;
+        let vinylGain = null;
+
+        // Dreamy Nostalgic Pentatonic / Jazz-Inflected Chords: Dm9 -> Bbmaj7 -> Gm9 -> A7alt
+        const LOFI_CHORDS = [
+            [146.83, 174.61, 220.00, 261.63, 329.63], // D3, F3, A3, C4, E4
+            [116.54, 174.61, 220.00, 293.66, 349.23], // Bb2, F3, A3, D4, F4
+            [98.00, 146.83, 233.08, 293.66, 349.23],  // G2, D3, Bb3, D4, F4
+            [110.00, 164.81, 220.00, 277.18, 349.23], // A2, E3, A3, C#4, F4
+        ];
+
+        // Atmospheric counter-melodies
+        const TOP_NOTES = [587.33, 659.25, 783.99, 880.00, 1046.50, 880.00, 783.99, 659.25];
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Soft Vinyl Surface Dust & Crackle Generator
+        function startVinylNoise() {
+            if (!audioCtx || vinylNode) return;
+            const bufferSize = audioCtx.sampleRate * 4; // 4 seconds buffer
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                // Low-level white/pink floor
+                let val = (Math.random() * 2 - 1) * 0.02;
+                // Random authentic dust pops
+                if (Math.random() < 0.0022) {
+                    val += (Math.random() - 0.5) * 0.35;
+                }
+                data[i] = val;
+            }
+
+            vinylNode = audioCtx.createBufferSource();
+            vinylNode.buffer = buffer;
+            vinylNode.loop = true;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1600;
+            filter.Q.value = 0.8;
+
+            vinylGain = audioCtx.createGain();
+            vinylGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+            vinylGain.gain.linearRampToValueAtTime(0.045, audioCtx.currentTime + 1.2);
+
+            vinylNode.connect(filter);
+            filter.connect(vinylGain);
+            vinylGain.connect(audioCtx.destination);
+            vinylNode.start(0);
+        }
+
+        function stopVinylNoise() {
+            if (vinylGain && audioCtx) {
+                vinylGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+                setTimeout(() => {
+                    if (vinylNode) {
+                        try { vinylNode.stop(); vinylNode.disconnect(); } catch (e) {}
+                        vinylNode = null;
+                    }
+                }, 600);
+            }
+        }
+
+        // Plays a mellow, warm filtered Rhodes chord
+        function playLofiChord(chordFrequencies) {
+            if (!audioCtx || !STATE.soundEnabled) return;
+            const now = audioCtx.currentTime;
+
+            // Master chord filter (submerged bedroom pop lowpass)
+            const masterFilter = audioCtx.createBiquadFilter();
+            masterFilter.type = 'lowpass';
+            masterFilter.frequency.setValueAtTime(680, now);
+            masterFilter.Q.setValueAtTime(1.5, now);
+
+            // Subtle wow-flutter pitch drift LFO
+            const lfo = audioCtx.createOscillator();
+            lfo.frequency.value = 0.35; // gentle wow
+            const lfoGain = audioCtx.createGain();
+            lfoGain.gain.value = 1.8;
+            lfo.connect(lfoGain);
+
+            chordFrequencies.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                osc.type = idx === 0 ? 'sine' : 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+                lfoGain.connect(osc.frequency);
+
+                const noteGain = audioCtx.createGain();
+                const attack = 0.035 + idx * 0.015;
+                noteGain.gain.setValueAtTime(0.0001, now);
+                noteGain.gain.linearRampToValueAtTime(0.065 / (idx === 0 ? 1 : 1.5), now + attack);
+                noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.8);
+
+                osc.connect(noteGain);
+                noteGain.connect(masterFilter);
+
+                osc.start(now + idx * 0.012);
+                osc.stop(now + 4.0);
+            });
+
+            masterFilter.connect(audioCtx.destination);
+            lfo.start(now);
+            lfo.stop(now + 4.0);
+        }
+
+        // Play gentle bell chime accent
+        function playChimeAccent(freq) {
+            if (!audioCtx || !STATE.soundEnabled) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.025, now + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 1.9);
+        }
+
+        function startMusicLoop() {
+            if (lofiTimer) clearInterval(lofiTimer);
+            startVinylNoise();
+            lofiStep = 0;
+
+            const tick = () => {
+                if (STATE.soundEnabled && audioCtx) {
+                    const chord = LOFI_CHORDS[lofiStep % LOFI_CHORDS.length];
+                    playLofiChord(chord);
+
+                    // Delicate high chimes on half-beats
+                    setTimeout(() => {
+                        if (STATE.soundEnabled && audioCtx) {
+                            const topNote = TOP_NOTES[(lofiStep * 2) % TOP_NOTES.length];
+                            playChimeAccent(topNote);
+                        }
+                    }, 900);
+
+                    setTimeout(() => {
+                        if (STATE.soundEnabled && audioCtx) {
+                            const topNote = TOP_NOTES[(lofiStep * 2 + 1) % TOP_NOTES.length];
+                            playChimeAccent(topNote * 1.25);
+                        }
+                    }, 1800);
+
+                    lofiStep++;
+                }
+            };
+
+            tick();
+            lofiTimer = setInterval(tick, 3400);
+        }
+
+        function stopMusicLoop() {
+            if (lofiTimer) {
+                clearInterval(lofiTimer);
+                lofiTimer = null;
+            }
+            stopVinylNoise();
+        }
+
+        /* ==========================================================================
+           CURSOR TRAIL SPARKLES & PARALLAX ENGINE
+           ========================================================================== */
+        const sparkleCanvas = document.getElementById('sparkleCanvas');
+        const sparkleCtx = sparkleCanvas.getContext('2d');
+        const sparkles = [];
+        const SPARKLE_COLORS = ['#9e2230', '#c5a059', '#ede3d8', '#ffffff'];
+
+        function resizeSparkleCanvas() {
+            sparkleCanvas.width = window.innerWidth;
+            sparkleCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeSparkleCanvas);
+        resizeSparkleCanvas();
+
+        let lastPointerPos = { x: -100, y: -100 };
+        const mouseParallax = { targetX: 0, targetY: 0, currentX: 0, currentY: 0 };
+        let scrollImpulse = 0;
+
+        window.addEventListener('wheel', e => {
+            scrollImpulse += Math.min(Math.abs(e.deltaY) * 0.004, 0.35);
+        }, { passive: true });
+
+        window.addEventListener('touchmove', () => {
+            scrollImpulse += 0.08;
+        }, { passive: true });
+
+        window.addEventListener('pointermove', e => {
+            const dx = e.clientX - lastPointerPos.x;
+            const dy = e.clientY - lastPointerPos.y;
+            const dist = Math.hypot(dx, dy);
+
+            // Parallax target (-1 to 1)
+            mouseParallax.targetX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+            mouseParallax.targetY = (e.clientY / window.innerHeight - 0.5) * 0.4;
+
+            // Spawn trail sparkles when cursor moves
+            if (dist > 8 && sparkles.length < 42) {
+                lastPointerPos = { x: e.clientX, y: e.clientY };
+                const count = Math.random() < 0.6 ? 2 : 1;
+                for (let k = 0; k < count; k++) {
+                    sparkles.push({
+                        x: e.clientX + (Math.random() - 0.5) * 12,
+                        y: e.clientY + (Math.random() - 0.5) * 12,
+                        vx: (Math.random() - 0.5) * 1.5,
+                        vy: (Math.random() - 0.5) * 1.5 - 0.6,
+                        size: Math.random() * 8 + 5,
+                        alpha: 1,
+                        rot: Math.random() * Math.PI,
+                        dRot: (Math.random() - 0.5) * 0.15,
+                        color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
+                        shape: Math.random() < 0.75 ? 'star' : 'dot'
+                    });
+                }
+            }
+        });
+
+        function renderSparkles() {
+            sparkleCtx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
+            for (let i = sparkles.length - 1; i >= 0; i--) {
+                const sp = sparkles[i];
+                sp.x += sp.vx;
+                sp.y += sp.vy;
+                sp.rot += sp.dRot;
+                sp.alpha -= 0.024;
+
+                if (sp.alpha <= 0) {
+                    sparkles.splice(i, 1);
+                    continue;
+                }
+
+                sparkleCtx.save();
+                sparkleCtx.translate(sp.x, sp.y);
+                sparkleCtx.rotate(sp.rot);
+                sparkleCtx.globalAlpha = Math.max(0, sp.alpha);
+
+                if (sp.shape === 'star') {
+                    // Draw glowing 4-point star
+                    sparkleCtx.fillStyle = sp.color;
+                    sparkleCtx.shadowColor = sp.color;
+                    sparkleCtx.shadowBlur = 8;
+                    const r = sp.size;
+                    sparkleCtx.beginPath();
+                    sparkleCtx.moveTo(0, -r);
+                    sparkleCtx.quadraticCurveTo(0, 0, r, 0);
+                    sparkleCtx.quadraticCurveTo(0, 0, 0, r);
+                    sparkleCtx.quadraticCurveTo(0, 0, -r, 0);
+                    sparkleCtx.quadraticCurveTo(0, 0, 0, -r);
+                    sparkleCtx.closePath();
+                    sparkleCtx.fill();
+                } else {
+                    sparkleCtx.fillStyle = sp.color;
+                    sparkleCtx.beginPath();
+                    sparkleCtx.arc(0, 0, sp.size * 0.35, 0, Math.PI * 2);
+                    sparkleCtx.fill();
+                }
+
+                sparkleCtx.restore();
+            }
+        }
+
+
+        /* ==========================================================================
+           4. THREE.JS SCENE, LIGHTS & POST-PROCESSING
+           ========================================================================== */
+        const stageEl = document.getElementById('stage');
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.14;
+        stageEl.appendChild(renderer.domElement);
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x090207);
+        scene.fog = new THREE.FogExp2(0x090207, 0.024);
+
+        const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 100);
+        const camCountdownPos = new THREE.Vector3(7.4, 5.2, 9.4);
+        const camBloomedPos = new THREE.Vector3(6.2, 4.4, 7.8);
+        camera.position.copy(camCountdownPos);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 1.6, 0);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.enablePan = false;
+        controls.minDistance = 3.2;
+        controls.maxDistance = 22;
+        controls.maxPolarAngle = 1.52;
+        controls.minPolarAngle = 0.08;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+
+        let autoRotateResumeTimer = null;
+        controls.addEventListener('start', () => {
+            controls.autoRotate = false;
+            clearTimeout(autoRotateResumeTimer);
+        });
+        controls.addEventListener('end', () => {
+            clearTimeout(autoRotateResumeTimer);
+            autoRotateResumeTimer = setTimeout(() => controls.autoRotate = true, 3000);
+        });
+
+        const pmrem = new THREE.PMREMGenerator(renderer);
+        scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+        pmrem.dispose();
+
+        /* Lighting with Moody Maroon, Electric Pink & Lava Orange Highlights */
+        scene.add(new THREE.HemisphereLight(0x420b2d, 0x070105, 0.75));
+
+        const keyLight = new THREE.SpotLight(0xffecd6, 560, 48, Math.PI * 0.24, 0.78, 2);
+        keyLight.position.set(5.8, 10.5, 5.2);
+        keyLight.castShadow = true;
+        keyLight.shadow.mapSize.set(2048, 2048);
+        keyLight.shadow.bias = -0.0003;
+        keyLight.shadow.normalBias = 0.02;
+        keyLight.shadow.camera.near = 3;
+        keyLight.shadow.camera.far = 30;
+        const keyTarget = new THREE.Object3D();
+        keyTarget.position.set(0, 1.4, 0);
+        scene.add(keyTarget);
+        keyLight.target = keyTarget;
+        scene.add(keyLight);
+
+        const fillLight = new THREE.DirectionalLight(0xb58da2, 0.5);
+        fillLight.position.set(-6, 5, -5);
+        scene.add(fillLight);
+
+        // Vintage Crimson Vermilion Rim Light
+        const rimLight = new THREE.PointLight(0x9e2230, 70, 26, 2);
+        rimLight.position.set(-5.2, 3.4, -4.6);
+        scene.add(rimLight);
+
+        // Warm Amber/Gold Secondary Rim
+        const rimLight2 = new THREE.PointLight(0xc5a059, 45, 22, 2);
+        rimLight2.position.set(5.5, 2.8, -4.2);
+        scene.add(rimLight2);
+
+        // Internal gift light that radiates electric magenta/lava warmth upon opening
+        const glowLight = new THREE.PointLight(0xff2a75, 0, 9, 2);
+        glowLight.position.set(0, 1.75, 0);
+        scene.add(glowLight);
+
+        /* ==========================================================================
+           5. PROCEDURAL TEXTURES (Floral Canvas, Medallion & Gift Tag)
+           ========================================================================== */
+        function canvasTexture(w, h, drawFn) {
+            const c = document.createElement('canvas');
+            c.width = w; c.height = h;
+            drawFn(c.getContext('2d'), w, h);
+            const t = new THREE.CanvasTexture(c);
+            t.colorSpace = THREE.SRGBColorSpace;
+            t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            return t;
+        }
+
+        // Flower drawing primitives for lacquer box pattern
+        function drawTulipMark(g, x, y, s, color) {
+            g.save(); g.translate(x, y); g.scale(s, s);
+            g.fillStyle = color; g.strokeStyle = color; g.lineCap = 'round'; g.lineWidth = 0.045;
+            g.beginPath();
+            g.moveTo(-0.24, 0.30);
+            g.bezierCurveTo(-0.34, 0.10, -0.33, -0.12, -0.26, -0.35);
+            g.bezierCurveTo(-0.19, -0.24, -0.07, -0.26, 0, -0.46);
+            g.bezierCurveTo(0.07, -0.26, 0.19, -0.24, 0.26, -0.35);
+            g.bezierCurveTo(0.33, -0.12, 0.34, 0.10, 0.24, 0.30);
+            g.bezierCurveTo(0.10, 0.38, -0.10, 0.38, -0.24, 0.30);
+            g.closePath(); g.fill();
+            g.beginPath(); g.moveTo(0, 0.32); g.quadraticCurveTo(0.03, 0.65, 0, 1.0); g.stroke();
+            g.beginPath(); g.moveTo(0, 0.72); g.quadraticCurveTo(-0.30, 0.60, -0.40, 0.28); g.quadraticCurveTo(-0.12, 0.42, 0, 0.72); g.closePath(); g.fill();
+            g.beginPath(); g.moveTo(0, 0.86); g.quadraticCurveTo(0.30, 0.72, 0.40, 0.40); g.quadraticCurveTo(0.12, 0.55, 0, 0.86); g.closePath(); g.fill();
+            g.restore();
+        }
+
+        function drawLilyMark(g, x, y, s, color) {
+            g.save(); g.translate(x, y); g.scale(s, s);
+            g.fillStyle = color;
+            for (let i = 0; i < 6; i++) {
+                g.save(); g.rotate(i * Math.PI / 3);
+                g.beginPath();
+                g.moveTo(0, 0.05);
+                g.bezierCurveTo(0.10, -0.10, 0.08, -0.32, 0, -0.48);
+                g.bezierCurveTo(-0.08, -0.32, -0.10, -0.10, 0, 0.05);
+                g.closePath(); g.fill();
+                g.restore();
+            }
+            g.beginPath(); g.arc(0, 0, 0.06, 0, 6.283); g.fill();
+            for (let i = 0; i < 6; i++) {
+                const a = i * Math.PI / 3 + Math.PI / 6;
+                g.beginPath(); g.arc(Math.cos(a) * 0.17, Math.sin(a) * 0.17, 0.028, 0, 6.283); g.fill();
+            }
+            g.restore();
+        }
+
+        function drawRoseMark(g, x, y, s, color) {
+            g.save(); g.translate(x, y); g.scale(s, s);
+            g.strokeStyle = color; g.fillStyle = color; g.lineCap = 'round';
+            g.lineWidth = 0.13; g.beginPath(); g.arc(0, 0, 0.26, 0.6, 5.4); g.stroke();
+            g.lineWidth = 0.11; g.beginPath(); g.arc(0, 0, 0.55, 2.5, 6.1); g.stroke();
+            g.lineWidth = 0.09; g.beginPath(); g.arc(0, 0, 0.85, 4.3, 8.1); g.stroke();
+            g.beginPath(); g.arc(0, 0, 0.06, 0, 6.283); g.fill();
+            g.restore();
+        }
+
+        function circularText(g, text, cx, cy, r, font, color) {
+            g.save(); g.font = font; g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle';
+            const chars = [...text];
+            const widths = chars.map(c => g.measureText(c).width);
+            const sum = widths.reduce((a, b) => a + b, 0);
+            const C = 2 * Math.PI * r;
+            const ls = Math.max(1, (C - sum) / chars.length);
+            let theta = 0;
+            for (let i = 0; i < chars.length; i++) {
+                const half = (widths[i] + ls) / 2 / r;
+                theta += half;
+                g.save();
+                g.translate(cx + Math.sin(theta) * r, cy - Math.cos(theta) * r);
+                g.rotate(theta);
+                g.fillText(chars[i], 0, 0);
+                g.restore();
+                theta += half;
+            }
+            g.restore();
+        }
+
+        // 1. Box Lacquer Floral Pattern
+        const floralBaseTex = canvasTexture(512, 512, (g, w, h) => {
+            g.fillStyle = '#9d1c28';
+            g.fillRect(0, 0, w, h);
+            for (let i = 0; i < 1100; i++) {
+                g.fillStyle = `rgba(20,2,6,${Math.random() * 0.07})`;
+                const s = Math.random() * 2 + 0.5;
+                g.fillRect(Math.random() * w, Math.random() * h, s, s);
+            }
+            const ink = 'rgba(26,4,10,0.42)';
+            drawTulipMark(g, 256, 206, 84, ink);
+            [[0, 0], [512, 0], [0, 512], [512, 512]].forEach(p => drawLilyMark(g, p[0], p[1], 60, ink));
+            [[256, 0], [256, 512], [0, 256], [512, 256]].forEach(p => drawRoseMark(g, p[0], p[1], 34, ink));
+            [[128, 128], [384, 128], [128, 384], [384, 384]].forEach(p => drawRoseMark(g, p[0], p[1], 20, ink));
+        });
+        floralBaseTex.wrapS = floralBaseTex.wrapT = THREE.RepeatWrapping;
+
+        const floralTile = (rx, ry) => {
+            const t = floralBaseTex.clone();
+            t.repeat.set(rx, ry);
+            return t;
+        };
+
+        // 2. Interior Floor Medallion
+        const medTex = canvasTexture(512, 512, (g, w, h) => {
+            g.fillStyle = '#141013';
+            g.fillRect(0, 0, w, h);
+            const rg = g.createRadialGradient(256, 256, 60, 256, 256, 256);
+            rg.addColorStop(0, 'rgba(0,0,0,0)');
+            rg.addColorStop(1, 'rgba(0,0,0,0.5)');
+            g.fillStyle = rg; g.fillRect(0, 0, w, h);
+            g.strokeStyle = '#3f1d23'; g.lineWidth = 3;
+            g.beginPath(); g.arc(256, 256, 204, 0, 6.283); g.stroke();
+            g.strokeStyle = '#2c1317'; g.lineWidth = 1.5;
+            g.beginPath(); g.arc(256, 256, 186, 0, 6.283); g.stroke();
+            g.beginPath(); g.arc(256, 256, 216, 0, 6.283); g.stroke();
+            circularText(g, 'ROSES · LILIES · TULIPS · ROSES · LILIES · TULIPS · ', 256, 256, 160,
+                '500 25px "Cormorant Garamond", Georgia, serif', 'rgba(106,46,54,0.85)');
+            drawRoseMark(g, 256, 256, 56, 'rgba(92,38,45,0.95)');
+            const trio = [[drawTulipMark, -90], [drawLilyMark, 30], [drawRoseMark, 150]];
+            trio.forEach(([fn, deg]) => {
+                const a = deg * Math.PI / 180;
+                fn(g, 256 + Math.cos(a) * 116, 256 + Math.sin(a) * 116, 24, 'rgba(88,32,39,0.88)');
+            });
+        });
+
+        // 3. Flower Petal Procedural Textures
+        const lilyTex = canvasTexture(256, 512, (x, w, h) => {
+            const g = x.createLinearGradient(0, 0, 0, h);
+            g.addColorStop(0, '#b22534'); g.addColorStop(0.4, '#8c1424');
+            g.addColorStop(0.75, '#4a0d1a'); g.addColorStop(1, '#1c050c');
+            x.fillStyle = g; x.fillRect(0, 0, w, h);
+            const m = x.createLinearGradient(w * 0.42, 0, w * 0.58, 0);
+            m.addColorStop(0, 'rgba(20,3,8,0)'); m.addColorStop(.5, 'rgba(20,3,8,.4)'); m.addColorStop(1, 'rgba(20,3,8,0)');
+            x.fillStyle = m; x.fillRect(w * 0.42, 0, w * 0.16, h);
+            x.fillStyle = 'rgba(24,4,10,0.8)';
+            for (let i = 0; i < 90; i++) {
+                x.beginPath();
+                x.arc(w * 0.15 + Math.random() * w * 0.7, h * 0.5 + Math.random() * h * 0.48, 1.5 + Math.random() * 4, 0, 7);
+                x.fill();
+            }
+        });
+
+        const tulipRedTex = canvasTexture(256, 512, (x, w, h) => {
+            const g = x.createLinearGradient(0, 0, 0, h);
+            g.addColorStop(0, '#c22534'); g.addColorStop(0.45, '#a01828');
+            g.addColorStop(0.8, '#5c0e1c'); g.addColorStop(1, '#2a060f');
+            x.fillStyle = g; x.fillRect(0, 0, w, h);
+            const c = x.createLinearGradient(w * 0.3, 0, w * 0.7, 0);
+            c.addColorStop(0, 'rgba(230,90,80,0)'); c.addColorStop(.5, 'rgba(230,90,80,.16)'); c.addColorStop(1, 'rgba(230,90,80,0)');
+            x.fillStyle = c; x.fillRect(w * 0.3, 0, w * 0.4, h);
+            x.fillStyle = 'rgba(30,4,10,0.08)';
+            for (let i = 0; i < 14; i++) x.fillRect(Math.random() * w, 0, 1.5 + Math.random() * 3, h);
+        });
+
+        const tulipNoirTex = canvasTexture(256, 512, (x, w, h) => {
+            const g = x.createLinearGradient(0, 0, 0, h);
+            g.addColorStop(0, '#4a2740'); g.addColorStop(0.45, '#39203b');
+            g.addColorStop(0.8, '#241228'); g.addColorStop(1, '#150717');
+            x.fillStyle = g; x.fillRect(0, 0, w, h);
+            const c = x.createLinearGradient(w * 0.3, 0, w * 0.7, 0);
+            c.addColorStop(0, 'rgba(150,50,70,0)'); c.addColorStop(.5, 'rgba(150,50,70,.14)'); c.addColorStop(1, 'rgba(150,50,70,0)');
+            x.fillStyle = c; x.fillRect(w * 0.3, 0, w * 0.4, h);
+        });
+
+        // 4. Gift Tag Texture
+        const tagCanvas = document.createElement('canvas');
+        tagCanvas.width = 256; tagCanvas.height = 158;
+        const tagTex = new THREE.CanvasTexture(tagCanvas);
+        tagTex.colorSpace = THREE.SRGBColorSpace;
+        tagTex.anisotropy = 4;
+        function updateTagText() {
+            const x = tagCanvas.getContext('2d'), w = 256, h = 158;
+            x.fillStyle = '#160b0e'; x.fillRect(0, 0, w, h);
+            x.strokeStyle = 'rgba(196,60,52,0.55)'; x.lineWidth = 2.5; x.strokeRect(10, 10, w - 20, h - 20);
+            x.strokeStyle = 'rgba(196,60,52,0.22)'; x.lineWidth = 1; x.strokeRect(17, 17, w - 34, h - 34);
+            x.beginPath(); x.arc(32, 30, 6, 0, 7); x.fillStyle = '#060203'; x.fill();
+            x.strokeStyle = 'rgba(230,130,115,0.5)'; x.lineWidth = 1.5; x.stroke();
+            x.textAlign = 'center';
+            x.fillStyle = '#e8cfc7';
+            x.font = 'italic 600 38px "Cormorant Garamond", Georgia, serif';
+            x.fillText('For ' + STATE.name, w / 2 + 8, 86);
+            x.fillStyle = '#9c6b62';
+            x.font = 'italic 18px "Cormorant Garamond", Georgia, serif';
+            x.fillText('\u2014 in red & black \u2014', w / 2 + 8, 118);
+            tagTex.needsUpdate = true;
+        }
+        updateTagText();
+
+        /* ==========================================================================
+           6. MATERIALS
+           ========================================================================== */
+        const matWallX = new THREE.MeshStandardMaterial({ map: floralTile(2, 1.24), roughness: .5, metalness: .05, envMapIntensity: .3 });
+        const matWallZ = new THREE.MeshStandardMaterial({ map: floralTile(1.85, 1.24), roughness: .5, metalness: .05, envMapIntensity: .3 });
+        const matLidTop = new THREE.MeshStandardMaterial({ map: floralTile(2.29, 2.29), roughness: .5, metalness: .05, envMapIntensity: .3 });
+        const matRed = new THREE.MeshStandardMaterial({ color: 0xa01f2c, roughness: .5, metalness: .05, envMapIntensity: .3 });
+        const matIn = new THREE.MeshStandardMaterial({ color: 0x141013, roughness: .72, metalness: .06, envMapIntensity: .4 });
+        const matEdge = new THREE.MeshStandardMaterial({ color: 0x230a0f, roughness: .62, envMapIntensity: .25 });
+        const matRibbon = new THREE.MeshPhysicalMaterial({ color: 0x0d0c0e, roughness: .35, metalness: .18, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: .65, side: THREE.DoubleSide });
+        const matSilkRibbon = new THREE.MeshPhysicalMaterial({ color: 0x9a101f, roughness: 0.35, sheen: 1, sheenColor: 0xff6a55, sheenRoughness: 0.3, clearcoat: 0.5, clearcoatRoughness: 0.3, envMapIntensity: 0.7, side: THREE.DoubleSide });
+        const matRoseBlack = new THREE.MeshPhysicalMaterial({ color: 0x140e12, roughness: .32, metalness: .12, clearcoat: .8, clearcoatRoughness: .28, envMapIntensity: .85 });
+        const matLeaf = new THREE.MeshStandardMaterial({ color: 0x1d2b21, roughness: .55, metalness: .04, envMapIntensity: .35, side: THREE.DoubleSide });
+        const matLeafOx = new THREE.MeshStandardMaterial({ color: 0x48141f, roughness: .5, metalness: .05, envMapIntensity: .35, side: THREE.DoubleSide });
+
+        // Bouquet flower materials
+        const matRoseIn = new THREE.MeshPhysicalMaterial({ color: 0x4d0812, roughness: 0.55, sheen: 1, sheenColor: 0x7e1622, side: THREE.DoubleSide, envMapIntensity: 0.25 });
+        const matRoseMid = new THREE.MeshPhysicalMaterial({ color: 0x8c1222, roughness: 0.55, sheen: 1, sheenColor: 0xc03038, side: THREE.DoubleSide, envMapIntensity: 0.25 });
+        const matRoseOut = new THREE.MeshPhysicalMaterial({ color: 0xb01226, roughness: 0.55, sheen: 1, sheenColor: 0xff5040, side: THREE.DoubleSide, envMapIntensity: 0.25 });
+        const matLily = new THREE.MeshPhysicalMaterial({ map: lilyTex, roughness: 0.45, sheen: 0.6, sheenColor: 0xff6a58, side: THREE.DoubleSide, envMapIntensity: 0.3 });
+        const matTulipR = new THREE.MeshPhysicalMaterial({ map: tulipRedTex, roughness: 0.38, sheen: 0.9, sheenColor: 0xff7a60, side: THREE.DoubleSide, envMapIntensity: 0.35 });
+        const matTulipN = new THREE.MeshPhysicalMaterial({ map: tulipNoirTex, roughness: 0.42, sheen: 1, sheenColor: 0x8a4258, side: THREE.DoubleSide, envMapIntensity: 0.4 });
+        const matPaper = new THREE.MeshPhysicalMaterial({ color: 0x161119, roughness: 0.85, sheen: 0.5, sheenColor: 0x471219, side: THREE.DoubleSide, envMapIntensity: 0.18 });
+        const matLiner = new THREE.MeshPhysicalMaterial({ color: 0x6b1019, roughness: 0.9, side: THREE.BackSide, envMapIntensity: 0.15 });
+        const matStem = new THREE.MeshStandardMaterial({ color: 0x16321f, roughness: 0.85 });
+        const matAnther = new THREE.MeshStandardMaterial({ color: 0x301016, roughness: 0.5 });
+        const matFil = new THREE.MeshStandardMaterial({ color: 0x6e2430, roughness: 0.6 });
+        const matTag = new THREE.MeshPhysicalMaterial({ map: tagTex, roughness: 0.85, side: THREE.DoubleSide, envMapIntensity: 0.2 });
+        const matFloor = new THREE.MeshStandardMaterial({ color: 0x130e11, roughness: .94, metalness: 0.1, envMapIntensity: .2 });
+
+        /* ==========================================================================
+           7. GEOMETRY GENERATORS (Petals, Leaves & Morphing Wrap)
+           ========================================================================== */
+        function extrudedPetalGeo(len, w, curl, cup) {
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0);
+            shape.bezierCurveTo(w * 0.5, len * 0.07, w * 0.55, len * 0.58, w * 0.12, len * 0.90);
+            shape.quadraticCurveTo(0, len * 1.03, -w * 0.12, len * 0.90);
+            shape.bezierCurveTo(-w * 0.55, len * 0.58, -w * 0.5, len * 0.07, 0, 0);
+            let geo = new THREE.ExtrudeGeometry(shape, {
+                depth: .028, bevelEnabled: true, bevelThickness: .045, bevelSize: .04, bevelSegments: 3, curveSegments: 10
+            });
+            geo = mergeVertices(geo, 1e-4);
+            const p = geo.attributes.position;
+            for (let i = 0; i < p.count; i++) {
+                const x = p.getX(i), y = p.getY(i);
+                const u = Math.min(1, Math.max(0, y / len));
+                const v = x / (w * 0.5);
+                p.setZ(i, p.getZ(i) + curl * u * u * len * 0.33 + cup * v * v * len * 0.18);
+            }
+            geo.computeVertexNormals();
+            return geo;
+        }
+
+        function extrudedLeafGeo(len, w) {
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0);
+            shape.bezierCurveTo(w * 0.5, len * 0.15, w * 0.55, len * 0.55, 0, len);
+            shape.bezierCurveTo(-w * 0.55, len * 0.55, -w * 0.5, len * 0.15, 0, 0);
+            let geo = new THREE.ExtrudeGeometry(shape, {
+                depth: .02, bevelEnabled: true, bevelThickness: .022, bevelSize: .02, bevelSegments: 2, curveSegments: 8
+            });
+            geo = mergeVertices(geo, 1e-4);
+            const p = geo.attributes.position;
+            for (let i = 0; i < p.count; i++) {
+                const u = Math.min(1, Math.max(0, p.getY(i) / len));
+                p.setZ(i, p.getZ(i) + 0.2 * u * u * len);
+            }
+            geo.computeVertexNormals();
+            return geo;
+        }
+
+        function parametricPetalGeo(o) {
+            const { w, h, wSeg = 6, lSeg = 10, profile, cup = 0.1, curl = 0, ruffle = 0, rf = 3 } = o;
+            const pos = [], uv = [], idx = [];
+            for (let j = 0; j <= lSeg; j++) {
+                const v = j / lSeg, hw = (w / 2) * profile(v);
+                for (let i = 0; i <= wSeg; i++) {
+                    const u = (i / wSeg) * 2 - 1;
+                    pos.push(
+                        u * hw,
+                        v * h,
+                        cup * u * u * (0.35 + 0.65 * (1 - v)) - curl * Math.pow(v, 2.2) + ruffle * Math.sin(u * rf + v * 5) * v * v
+                    );
+                    uv.push(i / wSeg, v);
+                }
+            }
+            for (let j = 0; j < lSeg; j++) for (let i = 0; i < wSeg; i++) {
+                const a = j * (wSeg + 1) + i, b = a + 1, c = a + wSeg + 1, d = c + 1;
+                idx.push(a, c, b, b, c, d);
+            }
+            const g = new THREE.BufferGeometry();
+            g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+            g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+            g.setIndex(idx);
+            g.computeVertexNormals();
+            return g;
+        }
+
+        const mRose = v => (0.30 + 0.70 * Math.sin(Math.PI * Math.min(v / 0.55, 1) * 0.5)) * (v > 0.55 ? 1 - 0.25 * Math.pow((v - 0.55) / 0.45, 1.5) : 1);
+        const mLily = v => (0.16 + 0.84 * Math.sin(Math.PI * Math.min(v / 0.7, 1) * 0.5)) * (v > 0.7 ? 1 - 0.9 * Math.pow((v - 0.7) / 0.3, 1.2) : 1);
+        const mTulip = v => (0.42 + 0.58 * Math.sin(Math.PI * Math.min(v / 0.5, 1) * 0.5)) * (v > 0.5 ? 1 - 0.35 * Math.pow((v - 0.5) / 0.5, 1.6) : 1);
+        const mLeaf = v => 0.18 + 0.82 * Math.sin(Math.PI * (0.15 + 0.85 * v));
+
+        const geoRosePetal = parametricPetalGeo({ w: 0.62, h: 1, wSeg: 7, lSeg: 11, profile: mRose, cup: 0.10, curl: 0.24, ruffle: 0.06, rf: 3.4 });
+        const geoLilyPetal = parametricPetalGeo({ w: 0.40, h: 1, wSeg: 5, lSeg: 12, profile: mLily, cup: 0.07, curl: 0.55, ruffle: 0.03, rf: 2.2 });
+        const geoTulipPetal = parametricPetalGeo({ w: 0.46, h: 1, wSeg: 6, lSeg: 10, profile: mTulip, cup: 0.16, curl: 0.05, ruffle: 0.02, rf: 2 });
+        const geoBouquetLeaf = parametricPetalGeo({ w: 0.18, h: 1, wSeg: 4, lSeg: 10, profile: mLeaf, cup: 0.04, curl: 0.30, ruffle: 0.03, rf: 2 });
+        const geoTail = parametricPetalGeo({ w: 0.30, h: 0.8, wSeg: 5, lSeg: 8, profile: mRose, cup: 0.05, curl: 0.2, ruffle: 0.05, rf: 2.5 });
+        const geoDrift = parametricPetalGeo({ w: 0.20, h: 0.30, wSeg: 5, lSeg: 7, profile: mRose, cup: 0.06, curl: 0.12, ruffle: 0.05, rf: 3 });
+
+        /* Satin Ribbon Bow */
+        function buildBow(material) {
+            const g = new THREE.Group();
+            const pts = [[0.04, 0, 0], [0.34, 0.15, 0.10], [0.72, 0.09, -0.06], [0.9, -0.03, 0], [0.72, -0.15, 0.02], [0.34, -0.12, 0.09], [0.04, 0, 0.01]];
+            const loopGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => V3(...p)), true), 40, 0.082, 10, true);
+            loopGeo.scale(1, 1, 0.55);
+            const l1 = new THREE.Mesh(loopGeo, material);
+            const l2 = new THREE.Mesh(loopGeo, material); l2.scale.x = -1;
+            const knot = new THREE.Mesh(new THREE.SphereGeometry(0.15, 14, 10), material);
+            knot.scale.set(1, 0.78, 0.7);
+            const t1 = new THREE.Mesh(geoTail, material);
+            t1.position.set(0.09, -0.05, 0.05); t1.rotation.set(0.1, 0.3, Math.PI + 0.26);
+            const t2 = new THREE.Mesh(geoTail, material);
+            t2.position.set(-0.09, -0.05, 0.05); t2.rotation.set(0.1, -0.3, Math.PI - 0.26);
+            g.add(l1, l2, knot, t1, t2);
+            return g;
+        }
+
+        /* ==========================================================================
+           8. THE MAIN BOX (Authentic Red Lacquer & 3D Black Rose from box.html)
+           ========================================================================== */
+        const BW = 4.2, BH = 2.6, BT = 0.16;
+        const Y0 = 0.07;
+        const WALL_Y0 = Y0 + 0.2;     // 0.27
+        const WALL_Y1 = WALL_Y0 + BH; // 2.87
+        const LID_Y = WALL_Y1 + 0.11; // 2.98
+
+        const boxGroup = new THREE.Group();
+        scene.add(boxGroup);
+
+        function createBoxMesh(geo, mats, x, y, z, parent) {
+            const m = new THREE.Mesh(geo, mats);
+            m.position.set(x, y, z);
+            m.castShadow = true;
+            m.receiveShadow = true;
+            (parent || boxGroup).add(m);
+            return m;
+        }
+
+        // Hollow lacquer walls
+        const wallGeoX = new THREE.BoxGeometry(BT, BH, BW);
+        const wallGeoZ = new THREE.BoxGeometry(BW - 2 * BT, BH, BT);
+        createBoxMesh(wallGeoX, [matWallX, matIn, matEdge, matEdge, matRed, matRed], (BW - BT) / 2, WALL_Y0 + BH / 2, 0);
+        createBoxMesh(wallGeoX, [matIn, matWallX, matEdge, matEdge, matRed, matRed], -(BW - BT) / 2, WALL_Y0 + BH / 2, 0);
+        createBoxMesh(wallGeoZ, [matRed, matRed, matEdge, matEdge, matWallZ, matIn], 0, WALL_Y0 + BH / 2, (BW - BT) / 2);
+        createBoxMesh(wallGeoZ, [matRed, matRed, matEdge, matEdge, matIn, matWallZ], 0, WALL_Y0 + BH / 2, -(BW - BT) / 2);
+
+        // Bottom slab
+        createBoxMesh(new THREE.BoxGeometry(BW, 0.2, BW), [matRed, matRed, matIn, matRed, matRed, matRed], 0, Y0 + 0.1, 0);
+
+        // Floor medallion inside the box
+        const medMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(BW - 2 * BT, BW - 2 * BT),
+            new THREE.MeshStandardMaterial({ map: medTex, roughness: .85, metalness: .04, envMapIntensity: .25 })
+        );
+        medMesh.rotation.x = -Math.PI / 2;
+        medMesh.position.y = WALL_Y0 + 0.006;
+        medMesh.receiveShadow = true;
+        boxGroup.add(medMesh);
+
+        // Satin-black ribbon bands wrapping around the base
+        createBoxMesh(new THREE.BoxGeometry(0.07, 2.8, 0.62), matRibbon, (BW / 2 + 0.035), 1.47, 0);
+        createBoxMesh(new THREE.BoxGeometry(0.07, 2.8, 0.62), matRibbon, -(BW / 2 + 0.035), 1.47, 0);
+        createBoxMesh(new THREE.BoxGeometry(0.62, 2.8, 0.07), matRibbon, 0, 1.47, (BW / 2 + 0.035));
+        createBoxMesh(new THREE.BoxGeometry(0.62, 2.8, 0.07), matRibbon, 0, 1.47, -(BW / 2 + 0.035));
+        createBoxMesh(new THREE.BoxGeometry(BW + 0.14, 0.07, 0.62), matRibbon, 0, 0.035, 0);
+        createBoxMesh(new THREE.BoxGeometry(0.62, 0.075, BW + 0.14), matRibbon, 0, 0.0375, 0);
+
+        // The Lid (Snug & Removable)
+        const lidGroup = new THREE.Group();
+        lidGroup.position.set(0, LID_Y, 0);
+        scene.add(lidGroup);
+
+        createBoxMesh(new THREE.BoxGeometry(4.8, 0.22, 4.8), [matRed, matRed, matLidTop, matIn, matRed, matRed], 0, 0, 0, lidGroup);
+
+        // Inner rim sliding over the box walls
+        const rimX = new THREE.BoxGeometry(0.13, 0.55, 4.8);
+        const rimZ = new THREE.BoxGeometry(4.54, 0.55, 0.13);
+        createBoxMesh(rimX, [matRed, matIn, matRed, matEdge, matRed, matRed], 2.275, -0.385, 0, lidGroup);
+        createBoxMesh(rimX, [matIn, matRed, matRed, matEdge, matRed, matRed], -2.275, -0.385, 0, lidGroup);
+        createBoxMesh(rimZ, [matRed, matRed, matRed, matEdge, matRed, matIn], 0, -0.385, 2.275, lidGroup);
+        createBoxMesh(rimZ, [matRed, matRed, matRed, matEdge, matIn, matRed], 0, -0.385, -2.275, lidGroup);
+
+        // Lid ribbon continuing over top
+        createBoxMesh(new THREE.BoxGeometry(0.07, 0.55, 0.62), matRibbon, 2.375, -0.385, 0, lidGroup);
+        createBoxMesh(new THREE.BoxGeometry(0.07, 0.55, 0.62), matRibbon, -2.375, -0.385, 0, lidGroup);
+        createBoxMesh(new THREE.BoxGeometry(0.62, 0.55, 0.07), matRibbon, 0, -0.385, 2.375, lidGroup);
+        createBoxMesh(new THREE.BoxGeometry(0.62, 0.55, 0.07), matRibbon, 0, -0.385, -2.375, lidGroup);
+        createBoxMesh(new THREE.BoxGeometry(4.86, 0.06, 0.62), matRibbon, 0, 0.14, 0, lidGroup);
+        createBoxMesh(new THREE.BoxGeometry(0.62, 0.06, 4.86), matRibbon, 0, 0.15, 0, lidGroup);
+
+        // Procedural 3D Black Rose with Leaves on the Lid Top
+        function buildLidBlackRose() {
+            const rose = new THREE.Group();
+            const rings = [
+                { n: 3, len: .34, w: .26, tilt: .18, r: .02, y: .03 },
+                { n: 5, len: .44, w: .32, tilt: .46, r: .10, y: .05 },
+                { n: 7, len: .52, w: .38, tilt: .82, r: .24, y: .07 },
+                { n: 9, len: .58, w: .42, tilt: 1.14, r: .40, y: .09 },
+                { n: 11, len: .60, w: .44, tilt: 1.38, r: .56, y: .10 },
+            ];
+            rings.forEach((ring, k) => {
+                const geo = extrudedPetalGeo(ring.len, ring.w, .45, .3);
+                for (let j = 0; j < ring.n; j++) {
+                    const holder = new THREE.Object3D();
+                    holder.rotation.y = j / ring.n * Math.PI * 2 + k * 0.65;
+                    const mesh = new THREE.Mesh(geo, matRoseBlack);
+                    mesh.rotation.x = ring.tilt;
+                    mesh.position.set(0, ring.y, ring.r);
+                    mesh.scale.setScalar(.96);
+                    mesh.castShadow = mesh.receiveShadow = true;
+                    holder.add(mesh);
+                    rose.add(holder);
+                }
+            });
+            const core = new THREE.Mesh(new THREE.IcosahedronGeometry(.16, 1), matRoseBlack);
+            core.position.y = .1; core.castShadow = true;
+            rose.add(core);
+
+            const leafGeo = extrudedLeafGeo(.9, .42);
+            const leaves = [
+                { a: .35, m: matLeaf, s: 1.20 }, { a: 1.50, m: matLeaf, s: 1.35 },
+                { a: 2.55, m: matLeafOx, s: 1.05 }, { a: 3.80, m: matLeaf, s: 1.25 },
+                { a: 5.00, m: matLeafOx, s: 1.00 },
+            ];
+            leaves.forEach(L => {
+                const holder = new THREE.Object3D();
+                holder.rotation.y = L.a;
+                const mesh = new THREE.Mesh(leafGeo, L.m);
+                mesh.rotation.x = 1.28;
+                mesh.position.set(0, .02, .44);
+                mesh.scale.setScalar(L.s);
+                mesh.castShadow = mesh.receiveShadow = true;
+                holder.add(mesh);
+                rose.add(holder);
+            });
+            rose.scale.setScalar(.68);
+            return rose;
+        }
+        const lidRose = buildLidBlackRose();
+        lidRose.position.set(0, 0.19, 0);
+        lidGroup.add(lidRose);
+
+        // Stage Floor & Ornamental Concentric Inlay Rings
+        const floorMesh = new THREE.Mesh(new THREE.CircleGeometry(26, 64).rotateX(-Math.PI / 2), matFloor);
+        floorMesh.receiveShadow = true;
+        scene.add(floorMesh);
+
+        const ring1 = new THREE.Mesh(new THREE.RingGeometry(4.35, 4.5, 96).rotateX(-Math.PI / 2),
+            new THREE.MeshStandardMaterial({ color: 0x4a1018, roughness: .85, envMapIntensity: .25 }));
+        ring1.position.y = 0.012; ring1.receiveShadow = true;
+        scene.add(ring1);
+
+        const ring2 = new THREE.Mesh(new THREE.RingGeometry(6.5, 6.58, 96).rotateX(-Math.PI / 2),
+            new THREE.MeshStandardMaterial({ color: 0x230b0e, roughness: .9, envMapIntensity: .2 }));
+        ring2.position.y = 0.018; ring2.receiveShadow = true;
+        scene.add(ring2);
+
+        /* 3D Wax-Sealed Album Model (Beside the Lacquer Box) */
+        const album3DGroup = new THREE.Group();
+        const bookCoverMat = new THREE.MeshStandardMaterial({
+            color: 0x16080e,
+            roughness: 0.55,
+            metalness: 0.15
+        });
+        const bookPagesMat = new THREE.MeshStandardMaterial({
+            color: 0xf5ede6,
+            roughness: 0.9,
+            metalness: 0.02
+        });
+        const bookCoverMesh = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.38, 3.0), bookCoverMat);
+        bookCoverMesh.castShadow = true;
+        bookCoverMesh.receiveShadow = true;
+        album3DGroup.add(bookCoverMesh);
+
+        const bookPagesMesh = new THREE.Mesh(new THREE.BoxGeometry(2.08, 0.28, 2.88), bookPagesMat);
+        bookPagesMesh.position.set(0.08, 0, 0);
+        album3DGroup.add(bookPagesMesh);
+
+        // Gold foil spine rim
+        const goldSpineMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(0.06, 0.4, 3.02),
+            new THREE.MeshStandardMaterial({ color: 0xd4a373, metalness: 0.7, roughness: 0.3 })
+        );
+        goldSpineMesh.position.x = -1.1;
+        album3DGroup.add(goldSpineMesh);
+
+        // Wax Seal on cover
+        const sealDiscMesh = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.38, 0.38, 0.08, 24),
+            new THREE.MeshStandardMaterial({ color: 0x9c1b28, roughness: 0.38, metalness: 0.22 })
+        );
+        sealDiscMesh.position.set(0, 0.22, 0);
+        album3DGroup.add(sealDiscMesh);
+
+        album3DGroup.position.set(-3.9, 0.2, 0.9);
+        album3DGroup.rotation.set(0, 0.34, 0);
+        scene.add(album3DGroup);
+
+        /* ==========================================================================
+           9. THE BOUQUET (Paper Wrap, Stems & 11 Blooms from bouquet.html)
+           ========================================================================== */
+        const bouquetGroup = new THREE.Group();
+        bouquetGroup.position.set(0, 0.35, 0); // Nestled inside hollow box
+        scene.add(bouquetGroup);
+
+        const wrapGroup = new THREE.Group();
+        wrapGroup.scale.setScalar(0.25);
+        bouquetGroup.add(wrapGroup);
+
+        const OPEN_P = [[0.46, 0.55], [0.38, 0.78], [0.26, 1.08], [0.20, 1.35], [0.32, 1.55], [0.66, 1.76], [0.92, 1.87], [1.02, 1.94]];
+        const CLOSED_P = [[0.46, 0.55], [0.40, 1.00], [0.35, 1.65], [0.32, 2.45], [0.32, 3.10], [0.33, 3.40], [0.345, 3.62], [0.36, 3.75]];
+
+        function makeMorphLathe(openP, closedP, material, seg) {
+            const P = openP.length;
+            const pos = new Float32Array((seg + 1) * P * 3);
+            const uv = new Float32Array((seg + 1) * P * 2);
+            const idx = [];
+            for (let i = 0; i <= seg; i++) for (let j = 0; j < P; j++) {
+                uv[i * P * 2 + j * 2] = i / seg; uv[i * P * 2 + j * 2 + 1] = j / (P - 1);
+                if (i < seg && j < P - 1) {
+                    const a = i * P + j, b = (i + 1) * P + j;
+                    idx.push(a, b, a + 1, a + 1, b, b + 1);
+                }
+            }
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+            geo.setIndex(idx);
+            const mesh = new THREE.Mesh(geo, material);
+
+            function update(k) {
+                for (let i = 0; i <= seg; i++) {
+                    const th = i / seg * Math.PI * 2, sn = Math.sin(th), cs = Math.cos(th);
+                    for (let j = 0; j < P; j++) {
+                        const r = lerp(closedP[j][0], openP[j][0], k);
+                        const y = lerp(closedP[j][1], openP[j][1], k);
+                        const amp = 0.018 + 0.085 * Math.min(Math.max((r - 0.22) / 0.7, 0), 1);
+                        const rr = r + amp * Math.sin(th * 16 + 2.1);
+                        const n = (i * P + j) * 3;
+                        pos[n] = rr * sn; pos[n + 1] = y; pos[n + 2] = rr * cs;
+                    }
+                }
+                geo.attributes.position.needsUpdate = true;
+                geo.computeVertexNormals();
+                geo.computeBoundingSphere();
+            }
+            update(0);
+            return { mesh, update };
+        }
+
+        const wrap = makeMorphLathe(OPEN_P, CLOSED_P, matPaper, 72);
+        wrapGroup.add(wrap.mesh);
+
+        const liner = makeMorphLathe(
+            OPEN_P.map(p => [Math.max(p[0] - 0.035, 0.12), p[1]]),
+            CLOSED_P.map(p => [Math.max(p[0] - 0.035, 0.12), p[1]]),
+            matLiner, 48
+        );
+        wrapGroup.add(liner.mesh);
+
+        const wrapBand = new THREE.Mesh(new THREE.CylinderGeometry(0.23, 0.23, 0.14, 48, 1, true), matSilkRibbon);
+        wrapBand.position.y = 1.34; wrapBand.scale.set(1.74, 1, 1.74); wrapGroup.add(wrapBand);
+
+        const wrapBow = buildBow(matSilkRibbon);
+        wrapBow.scale.setScalar(0.3); wrapBow.position.set(0, 1.36, 0.22); wrapBow.rotation.y = -0.12;
+        wrapGroup.add(wrapBow);
+
+        // Hanging Gift Tag
+        const tagGroup = new THREE.Group(); tagGroup.position.set(0.06, 1.33, 0.24); wrapGroup.add(tagGroup);
+        const tagThread = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.17, 6), matSilkRibbon);
+        tagThread.position.set(0, -0.085, 0.01); tagGroup.add(tagThread);
+        const tagMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.21), matTag);
+        tagMesh.position.set(0.07, -0.26, 0.02); tagMesh.rotation.set(0.1, -0.3, 0);
+        tagGroup.add(tagMesh);
+
+        /* Flower Construction */
+        function buildBouquetRose(R) {
+            const g = new THREE.Group(), petals = [], meshes = [];
+            const count = Math.round(18 + R * 30), GA = Math.PI * (3 - Math.sqrt(5));
+            const mats = [matRoseIn, matRoseMid, matRoseOut];
+            for (let i = 0; i < count; i++) {
+                const t = i / (count - 1), a = i * GA;
+                const rad = R * (0.16 + 0.9 * Math.pow(t, 0.85));
+                const yO = R * (0.72 - 0.22 * t);
+                const len = R * (0.62 + 0.85 * t) * (0.95 + Math.random() * 0.1);
+                const mesh = new THREE.Mesh(geoRosePetal, mats[t < 0.33 ? 0 : t < 0.7 ? 1 : 2]);
+                const pv = new THREE.Object3D(); pv.rotation.order = 'YXZ';
+                pv.add(mesh); g.add(pv);
+                petals.push({
+                    pivot: pv, a, yaw: a + Math.PI + (Math.random() - 0.5) * 0.18, len, wk: 1 + (Math.random() - 0.5) * 0.12,
+                    delay: (1 - t) * 0.5, dur: 0.5, cRad: rad * 0.45, oRad: rad, cY: yO * 0.95, oY: yO,
+                    cX: 0.72 - 0.25 * t, oX: 0.25 - 1.55 * Math.pow(t, 1.25),
+                    cZ: (Math.random() - 0.5) * 0.3, oZ: (Math.random() - 0.5) * 0.35,
+                    cS: 0.55 + 0.2 * t, oS: 1
+                });
+                meshes.push(mesh);
+            }
+            const core = new THREE.Mesh(new THREE.ConeGeometry(R * 0.22, R * 0.5, 10), matRoseIn);
+            core.position.y = R * 0.5; g.add(core); meshes.push(core);
+            for (let i = 0; i < 5; i++) {
+                const s = new THREE.Mesh(geoBouquetLeaf, matLeaf);
+                s.rotation.order = 'YXZ'; s.rotation.set(2.55, i * Math.PI * 2 / 5, 0);
+                s.scale.set(R * 1.1, R * 1.35, R * 1.1); s.position.y = 0.02;
+                g.add(s); meshes.push(s);
+            }
+            const rec = new THREE.Mesh(new THREE.ConeGeometry(R * 0.4, R * 0.5, 10), matStem);
+            rec.rotation.x = Math.PI; rec.position.y = -R * 0.2; g.add(rec); meshes.push(rec);
+            return { group: g, petals, meshes };
+        }
+
+        function buildBouquetLily(L) {
+            const g = new THREE.Group(), petals = [], meshes = [];
+            for (let i = 0; i < 6; i++) {
+                const a = i * Math.PI / 3 + 0.26;
+                const mesh = new THREE.Mesh(geoLilyPetal, matLily);
+                const pv = new THREE.Object3D(); pv.rotation.order = 'YXZ';
+                pv.add(mesh); g.add(pv);
+                petals.push({
+                    pivot: pv, a, yaw: a + Math.PI, len: L, wk: 1,
+                    delay: (i % 2) * 0.1 + Math.random() * 0.06, dur: 0.55,
+                    cRad: 0.02, oRad: 0.06, cY: 0.04, oY: 0.04,
+                    cX: 0.62, oX: -1.05, cZ: (Math.random() - 0.5) * 0.1, oZ: (Math.random() - 0.5) * 0.12,
+                    cS: 0.42, oS: 1
+                });
+                meshes.push(mesh);
+            }
+            for (let i = 0; i < 6; i++) {
+                const a = i * Math.PI / 3 + 0.55;
+                const pv = new THREE.Object3D(); pv.rotation.order = 'YXZ'; g.add(pv);
+                const pts = [[0, 0.05, 0], [0, 0.3, 0.05], [0, 0.5, 0.18], [0, 0.56, 0.4]].map(p => V3(p[0] * L, p[1] * L, p[2] * L));
+                const fil = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 10, 0.011 * L + 0.004, 5), matFil);
+                const ant = new THREE.Mesh(new THREE.CapsuleGeometry(0.026 * L, 0.14 * L, 4, 8), matAnther);
+                ant.position.copy(pts[3]); ant.rotation.x = 1.15;
+                pv.add(fil, ant); meshes.push(fil, ant);
+                petals.push({
+                    pivot: pv, a, yaw: a, len: 1, wk: 1, delay: 0.42, dur: 0.45,
+                    cRad: 0.01, oRad: 0.02, cY: 0.02, oY: 0.02, cX: -0.55, oX: 0.02, cZ: 0, oZ: 0, cS: 0.5, oS: 1
+                });
+            }
+            const pvP = new THREE.Object3D(); pvP.rotation.order = 'YXZ'; g.add(pvP);
+            const pist = new THREE.Mesh(new THREE.CylinderGeometry(0.013 * L, 0.02 * L, 0.7 * L, 8), matFil);
+            pist.position.y = 0.35 * L;
+            const stig = new THREE.Mesh(new THREE.SphereGeometry(0.037 * L, 10, 8), matAnther);
+            stig.position.y = 0.72 * L;
+            pvP.add(pist, stig); meshes.push(pist, stig);
+            petals.push({ pivot: pvP, a: 0, yaw: 0, len: 1, wk: 1, delay: 0.35, dur: 0.45, cRad: 0, oRad: 0, cY: 0.02, oY: 0.02, cX: 0.12, oX: 0, cZ: 0, oZ: 0, cS: 0.45, oS: 1 });
+            const ov = new THREE.Mesh(new THREE.CylinderGeometry(0.045 * L, 0.06 * L, 0.16 * L, 8), matStem);
+            ov.position.y = -0.07 * L; g.add(ov); meshes.push(ov);
+            return { group: g, petals, meshes };
+        }
+
+        function buildBouquetTulip(L, material) {
+            const g = new THREE.Group(), petals = [], meshes = [];
+            for (let i = 0; i < 6; i++) {
+                const inner = i >= 3;
+                const a = (inner ? (i - 3) : i) * Math.PI * 2 / 3 + (inner ? Math.PI / 3 : 0);
+                const mesh = new THREE.Mesh(geoTulipPetal, material);
+                const pv = new THREE.Object3D(); pv.rotation.order = 'YXZ';
+                pv.add(mesh); g.add(pv);
+                petals.push({
+                    pivot: pv, a, yaw: a + Math.PI, len: inner ? L * 1.08 : L, wk: 1,
+                    delay: (i % 2) * 0.1 + Math.random() * 0.05, dur: 0.7,
+                    cRad: 0.05 * L, oRad: (inner ? 0.05 : 0.13) * L, cY: 0.03, oY: 0.03,
+                    cX: 0.55, oX: inner ? -0.15 : -0.26,
+                    cZ: (Math.random() - 0.5) * 0.08, oZ: (Math.random() - 0.5) * 0.08,
+                    cS: 0.42, oS: 1
+                });
+                meshes.push(mesh);
+            }
+            const ov = new THREE.Mesh(new THREE.CylinderGeometry(0.05 * L, 0.065 * L, 0.2 * L, 10), matStem);
+            ov.position.y = -0.1 * L; g.add(ov); meshes.push(ov);
+            return { group: g, petals, meshes };
+        }
+
+        function buildStem(headPos, radius, lean) {
+            const base = V3((Math.random() - 0.5) * 0.07, 0.06, (Math.random() - 0.5) * 0.07);
+            const out = V3(headPos.x, 0, headPos.z).normalize().multiplyScalar(lean);
+            const p1 = base.clone().lerp(headPos, 0.32).add(V3(0, 0.25, 0));
+            const p2 = base.clone().lerp(headPos, 0.72).add(out);
+            const curve = new THREE.CatmullRomCurve3([base, p1, p2, headPos.clone()]);
+            return { mesh: new THREE.Mesh(new THREE.TubeGeometry(curve, 22, radius, 6), matStem), curve };
+        }
+
+        // 11 Blooms Definitions
+        const FLOWER_DEFS = [
+            { k: 'rose', R: 0.30, pos: [0.30, 2.02, 0.12], bloom: 0.00 },
+            { k: 'rose', R: 0.25, pos: [-0.28, 2.22, -0.10], bloom: 0.15 },
+            { k: 'rose', R: 0.22, pos: [0.02, 2.52, -0.28], bloom: 0.30 },
+            { k: 'lily', L: 0.95, pos: [0.55, 2.78, 0.38], bloom: 0.85 },
+            { k: 'lily', L: 0.85, pos: [-0.58, 2.90, -0.32], bloom: 1.00 },
+            { k: 'lily', L: 0.90, pos: [0.08, 3.18, -0.60], bloom: 1.15 },
+            { k: 'tulip', L: 0.80, mat: 'r', pos: [0.66, 2.18, -0.18], bloom: 0.40 },
+            { k: 'tulip', L: 0.75, mat: 'r', pos: [-0.52, 2.32, 0.42], bloom: 0.52 },
+            { k: 'tulip', L: 0.78, mat: 'r', pos: [-0.18, 2.12, 0.64], bloom: 0.64 },
+            { k: 'tulip', L: 0.72, mat: 'r', pos: [0.42, 2.62, 0.55], bloom: 0.76 },
+            { k: 'tulip', L: 0.76, mat: 'n', pos: [-0.05, 2.90, 0.28], bloom: 0.88 },
+        ];
+
+        const flowers = [], flowerMeshes = [];
+        FLOWER_DEFS.forEach(d => {
+            const headPos = V3(d.pos[0], d.pos[1], d.pos[2]);
+            const fp = new THREE.Group(); fp.position.set(0, 0.05, 0); fp.scale.setScalar(0.25);
+            bouquetGroup.add(fp);
+            const stem = buildStem(headPos, d.k === 'rose' ? 0.024 : d.k === 'lily' ? 0.022 : 0.02, d.k === 'lily' ? 0.22 : d.k === 'rose' ? 0.06 : 0.10);
+            fp.add(stem.mesh);
+            const headPivot = new THREE.Group(); headPivot.position.copy(headPos);
+            const tangent = stem.curve.getTangent(1).normalize();
+            headPivot.quaternion.setFromUnitVectors(V3(0, 1, 0), tangent);
+            const sway = new THREE.Group(); headPivot.add(sway);
+            let head;
+            if (d.k === 'rose') head = buildBouquetRose(d.R);
+            else if (d.k === 'lily') head = buildBouquetLily(d.L);
+            else head = buildBouquetTulip(d.L, d.mat === 'n' ? matTulipN : matTulipR);
+            sway.add(head.group);
+            fp.add(headPivot);
+
+            const f = {
+                pivot: fp, headPivot, petals: head.petals, open: 0, pulse: 0, hoverK: 0,
+                phase: Math.random() * 6.28, bloomDelay: d.bloom,
+                update() {
+                    const eff = Math.min(this.open + this.pulse * 0.22 + this.hoverK * 0.05, 1.25);
+                    for (const p of this.petals) {
+                        let lp = (eff - p.delay) / p.dur;
+                        lp = lp < 0 ? 0 : (lp > 1.12 ? 1.12 : lp);
+                        const e = lp * lp * (3 - 2 * lp);
+                        const rad = lerp(p.cRad, p.oRad, e), y = lerp(p.cY, p.oY, e);
+                        p.pivot.position.set(Math.sin(p.a) * rad, y, Math.cos(p.a) * rad);
+                        p.pivot.rotation.set(lerp(p.cX, p.oX, e), p.yaw, lerp(p.cZ, p.oZ, e));
+                        const s = lerp(p.cS, p.oS, e);
+                        p.pivot.scale.set(p.len * p.wk * s, p.len * s, p.len * s);
+                    }
+                }
+            };
+            f.update();
+            head.meshes.forEach(m => { m.userData.flower = f; flowerMeshes.push(m); });
+            flowers.push(f);
+        });
+
+        // Foliage blades between flowers
+        const FOLIAGE_DEFS = [
+            { p: [0.55, 2.00, 0.45], a: 0.8, tilt: -0.75, s: 1.00 },
+            { p: [-0.50, 2.10, 0.55], a: 2.4, tilt: -0.80, s: 0.90 },
+            { p: [0.05, 1.95, -0.70], a: 4.0, tilt: -0.90, s: 1.05 },
+            { p: [0.75, 2.35, -0.25], a: 5.4, tilt: -0.65, s: 0.85 },
+            { p: [-0.70, 2.35, -0.35], a: 3.4, tilt: -0.70, s: 0.80 },
+            { p: [-0.20, 2.45, 0.60], a: 1.7, tilt: -0.60, s: 0.75 },
+            { p: [0.35, 2.50, -0.50], a: 4.6, tilt: -0.55, s: 0.60, burg: true },
+            { p: [-0.40, 2.70, 0.15], a: 1.0, tilt: -0.50, s: 0.55, burg: true },
+        ];
+        const leafPivots = [];
+        FOLIAGE_DEFS.forEach(l => {
+            const pv = new THREE.Group();
+            pv.position.set(l.p[0], l.p[1], l.p[2]);
+            pv.scale.setScalar(0.25);
+            pv.rotation.order = 'YXZ';
+            pv.rotation.set(l.tilt, l.a + Math.PI, (Math.random() - 0.5) * 0.3);
+            const m = new THREE.Mesh(geoBouquetLeaf, l.burg ? matLeafOx : matLeaf);
+            m.scale.setScalar(l.s);
+            pv.add(m); bouquetGroup.add(pv); leafPivots.push(pv);
+        });
+
+        [boxGroup, lidGroup, bouquetGroup].forEach(g => g.traverse(o => { if (o.isMesh) o.castShadow = true; }));
+
+        /* ==========================================================================
+           10. DRIFTING ROSE PETALS & BURSTS
+           ========================================================================== */
+        const drift = [];
+        for (let i = 0; i < 28; i++) {
+            const base = [matRoseOut, matRoseMid, matRoseIn][i % 3];
+            const mat = base.clone(); mat.transparent = true;
+            const mesh = new THREE.Mesh(geoDrift, mat);
+            mesh.visible = false; scene.add(mesh);
+            drift.push({ mesh, mat, active: false, fade: false, fall: 0.35, ph: 0, vx: 0, vz: 0, sx: 0, sy: 0, sz: 0 });
+        }
+
+        const getFreePetal = () => drift.find(p => !p.active);
+        function resetPetal(p, pos, vx, vz) {
+            p.active = true; p.fade = false; p.mesh.visible = true; p.mat.opacity = 0.95;
+            p.mesh.position.copy(pos);
+            p.vx = vx; p.vz = vz; p.fall = 0.32 + Math.random() * 0.3; p.ph = Math.random() * 7;
+            p.sx = (Math.random() - 0.5) * 5; p.sy = (Math.random() - 0.5) * 5; p.sz = (Math.random() - 0.5) * 5;
+            p.mesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+        }
+
+        function spawnAmbientPetal() {
+            if (!STATE.petalsEnabled) return;
+            const p = getFreePetal(); if (!p) return;
+            const a = Math.random() * Math.PI * 2, r = 1.0 + Math.random() * 3.8;
+            resetPetal(p, V3(Math.cos(a) * r, 5.2 + Math.random() * 2.5, Math.sin(a) * r), 0, 0);
+            p.fall = 0.22 + Math.random() * 0.22;
+        }
+
+        function burstPetalsAt(wp, n) {
+            for (let i = 0; i < n; i++) {
+                const p = getFreePetal(); if (!p) break;
+                resetPetal(p,
+                    V3(wp.x + (Math.random() - 0.5) * 0.3, wp.y + (Math.random() - 0.35) * 0.25, wp.z + (Math.random() - 0.5) * 0.3),
+                    (Math.random() - 0.5) * 1.8, (Math.random() - 0.5) * 1.8
+                );
+            }
+        }
+
+        function updateDriftingPetals(dt, t) {
+            for (const p of drift) {
+                if (!p.active) continue;
+                p.vx *= Math.exp(-1.6 * dt); p.vz *= Math.exp(-1.6 * dt);
+                p.mesh.position.x += (p.vx + Math.sin(t * 0.9 + p.ph) * 0.22) * dt;
+                p.mesh.position.z += (p.vz + Math.cos(t * 0.7 + p.ph) * 0.18) * dt;
+                p.mesh.position.y -= p.fall * dt;
+                p.mesh.rotation.x += p.sx * dt; p.mesh.rotation.y += p.sy * dt; p.mesh.rotation.z += p.sz * dt;
+                if (p.mesh.position.y < 0.12 || (!STATE.petalsEnabled && p.mesh.position.y > 1.2)) p.fade = true;
+                if (p.fade) {
+                    p.mat.opacity -= dt * 0.9;
+                    if (p.mat.opacity <= 0) { p.active = false; p.mesh.visible = false; }
+                }
+            }
+        }
+
+        /* ==========================================================================
+           11. MODAL CONTROLLERS & KEEPSAKE NOTE ("THE RECEIPT")
+           ========================================================================== */
+        function openWishModal() {
+            startWrappedReveal();
+        }
+
+        function closeWishModal() {
+            closeWrappedReveal();
+        }
+
+        /* The Keepsake Note Modal ("The Receipt") */
+        const noteModalEl = document.getElementById('noteModal');
+        function openNoteModal() { if (noteModalEl) noteModalEl.classList.add('show'); }
+        function closeNoteModal() { if (noteModalEl) noteModalEl.classList.remove('show'); }
+
+        const btnNote = document.getElementById('btnNote');
+        if (btnNote) btnNote.addEventListener('click', openNoteModal);
+        const btnNoteDone = document.getElementById('btnNoteDone');
+        if (btnNoteDone) btnNoteDone.addEventListener('click', closeNoteModal);
+        const btnCopyNote = document.getElementById('btnCopyNote');
+        if (btnCopyNote) {
+            btnCopyNote.addEventListener('click', () => {
+                const text = document.getElementById('noteModalCard')?.innerText || '';
+                navigator.clipboard.writeText(text).then(() => {
+                    const orig = btnCopyNote.textContent;
+                    btnCopyNote.textContent = 'copied ✓';
+                    setTimeout(() => { btnCopyNote.textContent = orig; }, 1800);
+                });
+            });
+        }
+        const noteBackdrop = document.getElementById('noteBackdrop');
+        if (noteBackdrop) noteBackdrop.addEventListener('click', closeNoteModal);
+        const noteCloseX = document.getElementById('noteCloseX');
+        if (noteCloseX) noteCloseX.addEventListener('click', closeNoteModal);
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                closeWrappedReveal();
+                closeNoteModal();
+            }
+        });
+
+        /* ==========================================================================
+           SPOTIFY WRAPPED REVEAL STORY CONTROLLER
+           ========================================================================== */
+        const wrappedExpEl = document.getElementById('wrappedExperience');
+        const storySlides = document.querySelectorAll('.story-slide');
+        const storyBars = document.querySelectorAll('.story-bar');
+        const camWrappedZoomPos = new THREE.Vector3(4.8, 3.2, 5.8);
+
+        let currentStorySlide = 0;
+        let storyProgressTimer = null;
+        let storyProgressVal = 0;
+        const SLIDE_DURATION_MS = 6200;
+
+        function updateStoryUI(slideIdx) {
+            currentStorySlide = slideIdx;
+            storySlides.forEach((s, idx) => {
+                s.classList.toggle('active', idx === slideIdx);
+            });
+
+            storyBars.forEach((bar, idx) => {
+                const fill = bar.querySelector('.story-fill');
+                if (idx < slideIdx) {
+                    bar.classList.add('completed');
+                    fill.style.width = '100%';
+                } else if (idx === slideIdx) {
+                    bar.classList.remove('completed');
+                    fill.style.width = '0%';
+                } else {
+                    bar.classList.remove('completed');
+                    fill.style.width = '0%';
+                }
+            });
+
+            // If final slide, trigger confetti and dynamic name
+            if (slideIdx === 3) {
+                document.getElementById('wrappedNameLabel').textContent = STATE.name;
+                burstPetalsAt(new THREE.Vector3(0, 3.8, 0), 16);
+            }
+        }
+
+        function stepStoryTimer() {
+            if (storyProgressTimer) clearInterval(storyProgressTimer);
+            storyProgressVal = 0;
+            const stepMs = 50;
+            const increment = (stepMs / SLIDE_DURATION_MS) * 100;
+
+            storyProgressTimer = setInterval(() => {
+                storyProgressVal += increment;
+                const activeBar = storyBars[currentStorySlide];
+                if (activeBar) {
+                    const fill = activeBar.querySelector('.story-fill');
+                    if (fill) fill.style.width = Math.min(storyProgressVal, 100) + '%';
+                }
+
+                if (storyProgressVal >= 100) {
+                    if (currentStorySlide < storySlides.length - 1) {
+                        goToStorySlide(currentStorySlide + 1);
+                    } else {
+                        clearInterval(storyProgressTimer);
+                        storyProgressTimer = null;
+                    }
+                }
+            }, stepMs);
+        }
+
+        function goToStorySlide(idx) {
+            if (idx < 0) idx = 0;
+            if (idx >= storySlides.length) idx = storySlides.length - 1;
+            updateStoryUI(idx);
+            stepStoryTimer();
+        }
+
+        function startWrappedReveal() {
+            document.getElementById('wrappedNameLabel').textContent = STATE.name;
+            wrappedExpEl.classList.add('active');
+
+            // Soft camera zoom into the illuminated bouquet
+            addTween({
+                dur: 3.2, ease: easeInOutCubic,
+                update: k => {
+                    camera.position.lerpVectors(camBloomedPos, camWrappedZoomPos, k);
+                    controls.target.y = lerp(2.35, 2.58, k);
+                }
+            });
+
+            goToStorySlide(0);
+        }
+
+        function closeWrappedReveal() {
+            wrappedExpEl.classList.remove('active');
+            if (storyProgressTimer) clearInterval(storyProgressTimer);
+
+            // Reframe camera back to orbit distance so user can freely interact
+            addTween({
+                dur: 1.8, ease: easeOutCubic,
+                update: k => {
+                    camera.position.lerpVectors(camWrappedZoomPos, camBloomedPos, k);
+                    controls.target.y = lerp(2.58, 2.35, k);
+                }
+            });
+        }
+
+        // Tap story navigation
+        document.getElementById('storyTapRight').addEventListener('click', () => {
+            if (currentStorySlide < storySlides.length - 1) {
+                goToStorySlide(currentStorySlide + 1);
+            }
+        });
+
+        document.getElementById('storyTapLeft').addEventListener('click', () => {
+            if (currentStorySlide > 0) {
+                goToStorySlide(currentStorySlide - 1);
+            }
+        });
+
+        document.getElementById('btnSkipWrapped').addEventListener('click', closeWrappedReveal);
+        document.getElementById('wrappedBackdrop').addEventListener('click', closeWrappedReveal);
+        document.getElementById('btnWrappedExplore').addEventListener('click', closeWrappedReveal);
+        document.getElementById('btnWrappedReplay').addEventListener('click', () => {
+            goToStorySlide(0);
+        });
+
+
+        /* ==========================================================================
+           12. UNWRAPPING & OPENING CHOREOGRAPHY
+           ========================================================================== */
+        function growPivot(obj, delay) {
+            addTween({ dur: 1.1, delay, ease: easeOutCubic, update: k => obj.scale.y = lerp(0.25, 1, k) });
+            addTween({
+                dur: 1.1, delay: delay + 0.28, ease: easeOutCubic,
+                update: k => { obj.scale.x = lerp(0.25, 1, k); obj.scale.z = lerp(0.25, 1, k); }
+            });
+        }
+
+        function openGiftBox() {
+            if (STATE.mode !== 'countdown') return;
+            STATE.mode = 'opening';
+            STATE.hasOpened = true;
+
+            initAudio();
+            if (STATE.soundEnabled) startMusicLoop();
+
+            document.getElementById('ctaCenter').classList.add('hidden');
+            document.getElementById('countdownHUD').style.opacity = '0.4';
+
+            // 1. Warm glow awakens inside the box
+            addTween({ dur: 1.2, delay: 0.3, ease: easeOutCubic, update: k => glowLight.intensity = 18 * k });
+
+            // 2. Lid lifts up gracefully, drifts to the right and rests tilted beside box
+            addTween({
+                dur: 0.8, delay: 0.2, ease: easeOutCubic, update: k => {
+                    lidGroup.position.y = lerp(LID_Y, 5.8, k);
+                    lidGroup.rotation.y = 0.45 * k;
+                    lidGroup.rotation.z = 0.08 * k;
+                }
+            });
+            addTween({
+                dur: 0.65, delay: 0.95, ease: easeInOutCubic, update: k => {
+                    lidGroup.position.lerpVectors(V3(0, 5.8, 0), V3(3.8, 3.8, 1.4), k);
+                    lidGroup.rotation.y = lerp(0.45, 1.6, k);
+                }
+            });
+            addTween({
+                dur: 0.85, delay: 1.55, ease: easeOutBounce, update: k => {
+                    lidGroup.position.lerpVectors(V3(3.8, 3.8, 1.4), V3(4.1, 0.28, 1.5), k);
+                    lidGroup.rotation.set(0.04 * k, lerp(1.6, 2.1, k), lerp(0.08, 0.04, k));
+                }
+            });
+
+            // 3. Bouquet rises up from the hollow box interior
+            addTween({
+                dur: 1.6, delay: 1.2, ease: easeInOutCubic, update: k => {
+                    bouquetGroup.position.y = lerp(0.35, 1.45, k);
+                    wrapGroup.scale.setScalar(lerp(0.25, 1, k));
+                }
+            });
+
+            // Camera smoothly reframes upward to showcase the rising bouquet
+            addTween({
+                dur: 2.2, delay: 1.2, ease: easeInOutCubic, update: k => {
+                    controls.target.y = lerp(1.6, 2.35, k);
+                    camera.position.lerpVectors(camCountdownPos, camBloomedPos, k);
+                }
+            });
+
+            // 4. Midnight paper wrap and liner unfold into flared trumpet
+            addTween({ dur: 1.2, delay: 2.5, ease: easeBackSoft, update: k => { wrap.update(k); liner.update(k); } });
+            addTween({
+                dur: 1.1, delay: 2.5, ease: easeOutCubic, update: k => {
+                    wrapBand.scale.x = lerp(1.74, 1, k);
+                    wrapBand.scale.z = wrapBand.scale.x;
+                }
+            });
+
+            // 5. Stems elevate out of the paper wrap
+            const growOrder = [...flowers].sort((a, b) => b.headPivot.position.y - a.headPivot.position.y);
+            growOrder.forEach((f, i) => growPivot(f.pivot, 3.1 + i * 0.12));
+            leafPivots.forEach((l, i) => growPivot(l, 3.3 + i * 0.08));
+
+            // 6. Each flower blooms sequentially with a petal burst
+            flowers.forEach(f => {
+                addTween({
+                    dur: 1.6, delay: 3.7 + f.bloomDelay, ease: easeOutCubic, update: k => f.open = k,
+                    done: () => burstPetalsAt(f.headPivot.getWorldPosition(new THREE.Vector3()), 2)
+                });
+            });
+
+            // 7. Reveal Spotify Wrapped Experience & unlock album
+            addTween({
+                dur: 0.1, delay: 6.6, ease: t => t, update: () => { }, done: () => {
+                    STATE.mode = 'bloomed';
+                    burstPetalsAt(new THREE.Vector3(0, 3.8, 0), 14);
+                    startWrappedReveal();
+                    unlockAlbumCeremony();
+                }
+            });
+        }
+
+        function resetGiftBox() {
+            tweens.length = 0;
+            STATE.mode = 'countdown';
+            closeWishModal();
+            closeNoteModal();
+            closeWrappedReveal();
+
+            lidGroup.position.set(0, LID_Y, 0);
+            lidGroup.rotation.set(0, 0, 0);
+
+            glowLight.intensity = 0;
+            bouquetGroup.position.set(0, 0.35, 0);
+            wrapGroup.scale.setScalar(0.25);
+            wrap.update(0);
+            liner.update(0);
+            wrapBand.scale.set(1.74, 1, 1.74);
+
+            flowers.forEach(f => {
+                f.pivot.scale.setScalar(0.25);
+                f.open = 0; f.pulse = 0; f.hoverK = 0;
+                f.update();
+            });
+            leafPivots.forEach(l => l.scale.setScalar(0.25));
+            drift.forEach(p => { p.active = false; p.mesh.visible = false; });
+
+            controls.target.set(0, 1.6, 0);
+            camera.position.copy(camCountdownPos);
+
+            document.getElementById('ctaCenter').classList.remove('hidden');
+            document.getElementById('countdownHUD').style.opacity = '1';
+        }
+
+        /* ==========================================================================
+           13. INTERACTION & RAYCASTING
+           ========================================================================== */
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2(-2, -2);
+        let pointerDownPos = null;
+
+        function updatePointerPos(e) {
+            const r = renderer.domElement.getBoundingClientRect();
+            pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+            pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+        }
+
+        renderer.domElement.addEventListener('pointermove', updatePointerPos);
+        renderer.domElement.addEventListener('pointerdown', e => { pointerDownPos = [e.clientX, e.clientY]; });
+        renderer.domElement.addEventListener('pointerup', e => {
+            if (!pointerDownPos) return;
+            const dx = e.clientX - pointerDownPos[0], dy = e.clientY - pointerDownPos[1];
+            pointerDownPos = null;
+            if (dx * dx + dy * dy > 49) return; // ignore drags
+
+            updatePointerPos(e);
+            raycaster.setFromCamera(pointer, camera);
+
+            // Check 3D album interaction
+            const albumHits = raycaster.intersectObjects([album3DGroup], true);
+            if (albumHits.length > 0) {
+                handleAlbumInteraction();
+                return;
+            }
+
+            if (STATE.mode === 'countdown') {
+                const hits = raycaster.intersectObjects([boxGroup, lidGroup], true);
+                if (hits.length > 0) openGiftBox();
+            } else if (STATE.mode === 'bloomed') {
+                const hits = raycaster.intersectObjects(flowerMeshes.concat([tagMesh]), false);
+                if (hits.length > 0) {
+                    const obj = hits[0].object;
+                    if (obj === tagMesh) {
+                        openNoteModal();
+                    } else if (obj.userData.flower) {
+                        const fl = obj.userData.flower;
+                        fl.pulse = 1;
+                        burstPetalsAt(fl.headPivot.getWorldPosition(new THREE.Vector3()), 4);
+                        if (audioCtx && STATE.soundEnabled) playMusicBoxNote(1046.5);
+                    }
+                }
+            }
+        });
+
+        // CTA and Control Buttons
+        document.getElementById('btnOpenGift').addEventListener('click', openGiftBox);
+        document.getElementById('btnReplay').addEventListener('click', () => {
+            resetGiftBox();
+            setTimeout(openGiftBox, 800);
+        });
+
+        const btnPetals = document.getElementById('btnPetals');
+        btnPetals.addEventListener('click', () => {
+            STATE.petalsEnabled = !STATE.petalsEnabled;
+            btnPetals.textContent = STATE.petalsEnabled ? 'falling petals · on' : 'falling petals · off';
+            btnPetals.classList.toggle('active', !STATE.petalsEnabled);
+        });
+
+        const btnSound = document.getElementById('btnSound');
+        const soundLabel = document.getElementById('soundLabel');
+        btnSound.addEventListener('click', () => {
+            initAudio();
+            STATE.soundEnabled = !STATE.soundEnabled;
+            soundLabel.textContent = STATE.soundEnabled ? 'lo-fi tape · on' : 'lo-fi tape · off';
+            btnSound.classList.toggle('playing', STATE.soundEnabled);
+            btnSound.classList.toggle('active', STATE.soundEnabled);
+            btnSound.setAttribute('aria-pressed', String(STATE.soundEnabled));
+            if (STATE.soundEnabled) {
+                startMusicLoop();
+            } else {
+                stopMusicLoop();
+            }
+        });
+
+        // Recipient Name Personalization
+        const nameInputEl = document.getElementById('nameInput');
+        const pageTitleEl = document.getElementById('pageTitle');
+        nameInputEl.addEventListener('input', e => {
+            const val = e.target.value.trim() || 'You';
+            STATE.name = val;
+            pageTitleEl.innerHTML = `For <em>${val}</em>`;
+            const wLabel = document.getElementById('wrappedNameLabel');
+            if (wLabel) wLabel.textContent = val;
+            updateTagText();
+        });
+
+        /* ==========================================================================
+           14. LOCKED ALBUM & MAKE A WISH INTERACTIONS
+           ========================================================================== */
+        const lockedAlbumCompanion = document.getElementById('lockedAlbumCompanion');
+        const companionCrackSvg = document.getElementById('companionCrackSvg');
+        const companionTooltip = document.getElementById('companionTooltip');
+        const companionStatus = document.getElementById('companionStatus');
+        const btnAlbumNav = document.getElementById('btnAlbumNav');
+        let albumTooltipTimer = null;
+
+        function showAlbumLockedTooltip() {
+            companionTooltip.classList.add('visible');
+            lockedAlbumCompanion.classList.add('companion-shake');
+            addTween({
+                dur: 0.45, ease: t => t,
+                update: k => {
+                    album3DGroup.rotation.z = Math.sin(k * Math.PI * 4) * 0.06;
+                },
+                done: () => { album3DGroup.rotation.z = 0; }
+            });
+
+            clearTimeout(albumTooltipTimer);
+            albumTooltipTimer = setTimeout(() => {
+                companionTooltip.classList.remove('visible');
+                lockedAlbumCompanion.classList.remove('companion-shake');
+            }, 2600);
+        }
+
+        function unlockAlbumCeremony() {
+            STATE.albumUnlocked = true;
+            companionCrackSvg.style.opacity = '1';
+            const paths = companionCrackSvg.querySelectorAll('path');
+            paths.forEach((p, idx) => {
+                p.style.transition = `stroke-dashoffset 0.6s ${idx * 0.12}s ease`;
+                p.style.strokeDashoffset = '0';
+            });
+            companionStatus.textContent = 'Album Unlocked · 📖';
+            if (btnAlbumNav) btnAlbumNav.textContent = 'Album · 📖';
+
+            // Golden burst over 3D album
+            burstPetalsAt(new THREE.Vector3(-3.9, 0.5, 0.9), 6);
+        }
+
+        function handleAlbumInteraction() {
+            if (!STATE.albumUnlocked && new Date() < new Date(CONFIG.unlockTimestamp)) {
+                showAlbumLockedTooltip();
+            } else {
+                window.location.href = 'album.html';
+            }
+        }
+
+        lockedAlbumCompanion.addEventListener('mouseenter', () => {
+            if (!STATE.albumUnlocked && new Date() < new Date(CONFIG.unlockTimestamp)) {
+                showAlbumLockedTooltip();
+            }
+        });
+
+        lockedAlbumCompanion.addEventListener('click', handleAlbumInteraction);
+
+        // --- Make a Wish Modal & Direct Database Submission ---
+        const btnMakeWish = document.getElementById('btnMakeWish');
+        const makeWishModal = document.getElementById('makeWishModal');
+        const makeWishCloseX = document.getElementById('makeWishCloseX');
+        const makeWishBackdrop = document.getElementById('makeWishBackdrop');
+        const inlineWishForm = document.getElementById('inlineWishForm');
+        const inlineWishName = document.getElementById('inlineWishName');
+        const inlineWishText = document.getElementById('inlineWishText');
+        const inlineCharCount = document.getElementById('inlineCharCount');
+        const btnSubmitInlineWish = document.getElementById('btnSubmitInlineWish');
+        const inlineStatusMsg = document.getElementById('inlineStatusMsg');
+
+        function openMakeWishModal() {
+            makeWishModal.classList.add('show');
+            inlineWishName.focus();
+        }
+
+        function closeMakeWishModal() {
+            makeWishModal.classList.remove('show');
+            inlineStatusMsg.style.display = 'none';
+        }
+
+        btnMakeWish.addEventListener('click', openMakeWishModal);
+        makeWishCloseX.addEventListener('click', closeMakeWishModal);
+        makeWishBackdrop.addEventListener('click', closeMakeWishModal);
+
+        inlineWishText.addEventListener('input', () => {
+            inlineCharCount.textContent = inlineWishText.value.length;
+        });
+
+        function sanitizeText(str) {
+            const div = document.createElement('div');
+            div.textContent = (str || '').trim();
+            return div.innerHTML;
+        }
+
+        // Supabase / LocalStorage Persistence
+        const SUPABASE_URL = window.SUPABASE_URL || "https://your-project.supabase.co";
+        const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "your-anon-key";
+        const STORAGE_KEY = "birthday_wishes_vault";
+
+        async function saveWishDirect(name, wish) {
+            const newWish = { name, wish, created_at: new Date().toISOString() };
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                const list = stored ? JSON.parse(stored) : [];
+                list.unshift(newWish);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            } catch (e) {
+                console.warn(e);
+            }
+
+            if (SUPABASE_URL && !SUPABASE_URL.includes("your-project")) {
+                try {
+                    await fetch(`${SUPABASE_URL}/rest/v1/wishes`, {
+                        method: "POST",
+                        headers: {
+                            "apikey": SUPABASE_ANON_KEY,
+                            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+                            "Content-Type": "application/json",
+                            "Prefer": "return=minimal"
+                        },
+                        body: JSON.stringify(newWish)
+                    });
+                } catch (e) {
+                    console.log("Supabase direct post queued:", e);
+                }
+            }
+            return newWish;
+        }
+
+        // Shooting Star Animation Canvas
+        const starCanvas = document.getElementById('skyStarCanvas');
+        const starCtx = starCanvas.getContext('2d');
+        let shootingStars = [];
+
+        function resizeStarCanvas() {
+            starCanvas.width = window.innerWidth;
+            starCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeStarCanvas);
+        resizeStarCanvas();
+
+        function launchShootingStar() {
+            const w = starCanvas.width, h = starCanvas.height;
+            shootingStars.push({
+                x: Math.random() * (w * 0.35),
+                y: h * 0.85 + Math.random() * (h * 0.1),
+                vx: 18 + Math.random() * 8,
+                vy: -13 - Math.random() * 6,
+                alpha: 1,
+                particles: []
+            });
+        }
+
+        function renderShootingStars() {
+            starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+            for (let i = shootingStars.length - 1; i >= 0; i--) {
+                const s = shootingStars[i];
+                s.x += s.vx;
+                s.y += s.vy;
+                s.alpha -= 0.012;
+
+                if (Math.random() < 0.65) {
+                    s.particles.push({
+                        x: s.x - (Math.random() - 0.5) * 6,
+                        y: s.y - (Math.random() - 0.5) * 6,
+                        r: Math.random() * 2 + 1,
+                        alpha: s.alpha,
+                        color: Math.random() > 0.4 ? '#ffd166' : '#e63946'
+                    });
+                }
+
+                // Draw luminous trail
+                const grad = starCtx.createLinearGradient(s.x, s.y, s.x - s.vx * 6, s.y - s.vy * 6);
+                grad.addColorStop(0, `rgba(255, 209, 102, ${Math.max(0, s.alpha)})`);
+                grad.addColorStop(0.35, `rgba(230, 57, 70, ${Math.max(0, s.alpha * 0.7)})`);
+                grad.addColorStop(1, 'rgba(230, 57, 70, 0)');
+                starCtx.strokeStyle = grad;
+                starCtx.lineWidth = 3;
+                starCtx.beginPath();
+                starCtx.moveTo(s.x, s.y);
+                starCtx.lineTo(s.x - s.vx * 6, s.y - s.vy * 6);
+                starCtx.stroke();
+
+                // Draw paper plane / star head
+                starCtx.save();
+                starCtx.translate(s.x, s.y);
+                starCtx.rotate(Math.atan2(s.vy, s.vx));
+                starCtx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, s.alpha)})`;
+                starCtx.beginPath();
+                starCtx.moveTo(9, 0);
+                starCtx.lineTo(-7, -4);
+                starCtx.lineTo(-3, 0);
+                starCtx.lineTo(-7, 4);
+                starCtx.closePath();
+                starCtx.fill();
+                starCtx.restore();
+
+                // Lingering stardust
+                for (let p of s.particles) {
+                    p.alpha -= 0.02;
+                    if (p.alpha > 0) {
+                        starCtx.fillStyle = p.color;
+                        starCtx.globalAlpha = Math.max(0, p.alpha);
+                        starCtx.beginPath();
+                        starCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        starCtx.fill();
+                        starCtx.globalAlpha = 1;
+                    }
+                }
+
+                if (s.alpha <= 0) shootingStars.splice(i, 1);
+            }
+            requestAnimationFrame(renderShootingStars);
+        }
+        requestAnimationFrame(renderShootingStars);
+
+        inlineWishForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = sanitizeText(inlineWishName.value);
+            const wish = sanitizeText(inlineWishText.value);
+            if (!name || !wish) return;
+
+            btnSubmitInlineWish.disabled = true;
+            btnSubmitInlineWish.innerHTML = '<span>Casting wish into the sky...</span> ✨';
+            inlineStatusMsg.style.display = 'none';
+
+            try {
+                await saveWishDirect(name, wish);
+                launchShootingStar();
+                inlineStatusMsg.className = 'status-msg success';
+                inlineStatusMsg.textContent = '✦ Your wish has taken flight across the midnight sky. It will be kept safe for the blooming moment.';
+                inlineStatusMsg.style.display = 'block';
+
+                inlineWishForm.reset();
+                inlineCharCount.textContent = '0';
+                setTimeout(() => {
+                    closeMakeWishModal();
+                }, 2800);
+            } catch (err) {
+                inlineStatusMsg.className = 'status-msg error';
+                inlineStatusMsg.textContent = 'Could not cast wish right now. Please try again.';
+                inlineStatusMsg.style.display = 'block';
+            } finally {
+                btnSubmitInlineWish.disabled = false;
+                btnSubmitInlineWish.innerHTML = '<span>Cast Wish into the Sky</span> ✨';
+            }
+        });
+
+        /* ==========================================================================
+           15. COUNTDOWN CLOCK TICK
+           ========================================================================== */
+        const elDays = document.getElementById('cdDays');
+        const elHours = document.getElementById('cdHours');
+        const elMins = document.getElementById('cdMins');
+        const elSecs = document.getElementById('cdSecs');
+
+        function updateCountdown() {
+            const diff = CONFIG.targetDate.getTime() - Date.now();
+            if (diff <= 0) {
+                elDays.textContent = '000';
+                elHours.textContent = '00';
+                elMins.textContent = '00';
+                elSecs.textContent = '00.0';
+                document.getElementById('targetLabel').textContent = "It's Your Birthday!";
+                if (!STATE.hasOpened && STATE.mode === 'countdown') {
+                    openGiftBox();
+                }
+                return;
+            }
+
+            const totalSeconds = diff / 1000;
+            const days = Math.floor(totalSeconds / 86400);
+            const hours = Math.floor((totalSeconds % 86400) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            elDays.textContent = String(days).padStart(3, '0');
+            elHours.textContent = String(hours).padStart(2, '0');
+            elMins.textContent = String(minutes).padStart(2, '0');
+            elSecs.textContent = seconds.toFixed(1).padStart(4, '0');
+        }
+
+        /* ==========================================================================
+           15. POST-PROCESSING BLOOM & RENDER LOOP
+           ========================================================================== */
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.32, 0.55, 0.8));
+        composer.addPass(new OutputPass());
+
+        window.addEventListener('resize', () => {
+            camera.aspect = innerWidth / innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(innerWidth, innerHeight);
+            composer.setSize(innerWidth, innerHeight);
+        });
+
+        const clock = new THREE.Clock();
+        let appReady = false;
+
+        renderer.setAnimationLoop(() => {
+            const dt = Math.min(clock.getDelta(), 0.05);
+            STATE.nowSec += dt;
+            updateTweens(STATE.nowSec);
+            updateCountdown();
+            controls.update();
+
+            // Micro-interaction: Mouse Parallax 3D Tilt on Gift Box Scene
+            mouseParallax.currentX = lerp(mouseParallax.currentX, mouseParallax.targetX, 0.06);
+            mouseParallax.currentY = lerp(mouseParallax.currentY, mouseParallax.targetY, 0.06);
+            scene.position.x = mouseParallax.currentX * 0.35;
+            scene.position.y = -mouseParallax.currentY * 0.25;
+            scene.rotation.y = mouseParallax.currentX * 0.14;
+            scene.rotation.x = mouseParallax.currentY * 0.08;
+
+            // Render interactive cursor sparkle trail
+            renderSparkles();
+
+            // Flower Head Pulse & Dynamics
+            for (const f of flowers) {
+                if (f.pulse > 0.001) f.pulse *= Math.exp(-2.5 * dt); else f.pulse = 0;
+                f.update();
+            }
+
+            // Gentle Organic Sway of Blooms & Tag
+            const t = STATE.nowSec;
+            flowers.forEach(f => {
+                const s = f.headPivot.children[0];
+                s.rotation.z = 0.035 * Math.sin(t * 0.85 + f.phase);
+                s.rotation.x = 0.02 * Math.sin(t * 0.65 + f.phase * 1.7);
+            });
+            tagGroup.rotation.z = 0.08 * Math.sin(t * 1.3 + 0.6);
+            tagGroup.rotation.x = 0.04 * Math.sin(t * 1.0 + 1.1);
+
+            // Ambient Petals with Scroll Responsiveness
+            if (STATE.petalsEnabled && Math.random() < (STATE.mode === 'bloomed' ? 0.85 : 0.16) * dt) {
+                spawnAmbientPetal();
+            }
+            updateDriftingPetals(dt, t);
+            if (scrollImpulse > 0.001) {
+                scrollImpulse *= Math.pow(0.92, dt * 60);
+                for (let p of drift) {
+                    if (p.active) {
+                        p.mesh.position.y -= scrollImpulse * 12 * dt;
+                        p.mesh.rotation.z += scrollImpulse * 4 * dt;
+                    }
+                }
+            }
+
+            composer.render();
+
+            if (!appReady) {
+                appReady = true;
+                setTimeout(() => document.getElementById('loader').classList.add('done'), 400);
+            }
+        });
+    </script>
+</body>
+
+</html>

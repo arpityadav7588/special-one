@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>The Empty Box — red &amp; black</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0a09;
+            --ink: #e6d8c6;
+            --muted: #97877a;
+            --accent: #b32330;
+            --faint: #877668;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            overflow: hidden;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+
+        #stage {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+
+        #stage canvas {
+            display: block;
+        }
+
+        .fail {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            font-size: 18px;
+            z-index: 10;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* photographic vignette to hold focus on the box */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 50% 42%, transparent 55%, rgba(4, 2, 2, .5) 100%);
+        }
+
+        .ui {
+            position: fixed;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        header {
+            top: 36px;
+            left: 42px;
+            max-width: 420px;
+        }
+
+        .kicker {
+            font-size: 11px;
+            letter-spacing: .4em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 15px;
+            font-style: italic;
+            font-weight: 500;
+            font-size: clamp(38px, 5.2vw, 62px);
+            line-height: 1.02;
+            color: var(--ink);
+        }
+
+        .sub {
+            margin: 0;
+            font-size: 15.5px;
+            line-height: 1.65;
+            color: var(--muted);
+            max-width: 37ch;
+            transition: opacity .45s ease;
+        }
+
+        #lidBtn {
+            position: fixed;
+            top: 38px;
+            right: 42px;
+            z-index: 7;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(17, 11, 10, .55);
+            border: 1px solid rgba(179, 35, 48, .5);
+            color: #cfbcaa;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 12.5px;
+            letter-spacing: .28em;
+            text-transform: uppercase;
+            padding: 11px 20px 10px 22px;
+            cursor: pointer;
+            backdrop-filter: blur(3px);
+            transition: background .35s, color .35s, border-color .35s;
+        }
+
+        #lidBtn:hover {
+            background: #a01f2c;
+            border-color: #c0303e;
+            color: #17090b;
+        }
+
+        #lidBtn:active {
+            transform: translateY(1px);
+        }
+
+        #lidBtn:focus-visible {
+            outline: 1px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        #lidBtn svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #lidBtn .dn {
+            display: none;
+        }
+
+        #lidBtn.is-open .dn {
+            display: inline;
+        }
+
+        #lidBtn.is-open .up {
+            display: none;
+        }
+
+        .legend {
+            bottom: 36px;
+            left: 42px;
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .legend .li {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--faint);
+            font-size: 11px;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+        }
+
+        .legend svg {
+            width: 15px;
+            height: 15px;
+            stroke: var(--faint);
+            fill: none;
+            stroke-width: 1.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .flowers {
+            bottom: 36px;
+            right: 42px;
+            text-align: right;
+        }
+
+        .flowers .glyphs {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-bottom: 9px;
+        }
+
+        .flowers svg {
+            width: 20px;
+            height: 20px;
+            stroke: #9c2a35;
+            fill: none;
+            stroke-width: 1.1;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .flowers .cap {
+            font-style: italic;
+            font-size: 14.5px;
+            letter-spacing: .14em;
+            color: var(--faint);
+        }
+
+        #hint {
+            position: fixed;
+            left: -999px;
+            top: 0;
+            z-index: 6;
+            pointer-events: none;
+            text-align: center;
+            transform: translate(-50%, -100%);
+            opacity: 0;
+            transition: opacity .6s ease;
+        }
+
+        #hint.show {
+            opacity: 1;
+        }
+
+        #hint span {
+            display: block;
+            color: #d05560;
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: .34em;
+            text-transform: uppercase;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, .9);
+            animation: hintBob 3.4s ease-in-out infinite;
+        }
+
+        #hint::after {
+            content: "";
+            display: block;
+            width: 1px;
+            height: 30px;
+            margin: 7px auto 0;
+            background: rgba(208, 85, 96, .7);
+        }
+
+        @keyframes hintBob {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+        }
+
+        @media (max-width:720px) {
+            header {
+                top: 22px;
+                left: 22px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .sub {
+                font-size: 14px;
+                max-width: 30ch;
+            }
+
+            #lidBtn {
+                top: 22px;
+                right: 22px;
+                padding: 9px 14px 8px 16px;
+                font-size: 11px;
+            }
+
+            .legend {
+                display: none;
+            }
+
+            .flowers {
+                bottom: 22px;
+                right: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="stage"></div>
+    <div class="vignette"></div>
+
+    <header class="ui">
+        <div class="kicker">Gift Nº 001 · Red &amp; Black</div>
+        <h1>The Empty Box</h1>
+        <p class="sub" id="sub">Lacquer-red walls, a satin-black ribbon, a lid that lifts clean away — and nothing
+            inside. The space is the present.</p>
+    </header>
+
+    <button id="lidBtn" type="button" aria-label="Toggle the lid">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="3.1" y="8.9" width="9.8" height="4.6" rx="0.4" />
+            <rect x="1.6" y="6.1" width="12.8" height="2.2" rx="0.4" />
+            <g class="up">
+                <path d="M8 4.5V1.6" />
+                <path d="M6.6 3 8 1.6 9.4 3" />
+            </g>
+            <g class="dn">
+                <path d="M8 1.6v2.9" />
+                <path d="M6.6 3.1 8 4.5 9.4 3.1" />
+            </g>
+        </svg>
+        <span id="lidBtnLabel">remove the lid</span>
+    </button>
+
+    <div class="legend ui">
+        <span class="li"><svg viewBox="0 0 16 16">
+                <path d="M13.5 8A5.5 5.5 0 1 1 8 2.5" />
+                <path d="M8 1l2.5 1.5L8 4" />
+            </svg>drag — orbit</span>
+        <span class="li"><svg viewBox="0 0 16 16">
+                <circle cx="6.8" cy="6.8" r="4.3" />
+                <path d="M10.1 10.1 14 14" />
+                <path d="M5 6.8h3.6M6.8 5v3.6" />
+            </svg>scroll — zoom</span>
+        <span class="li"><svg viewBox="0 0 16 16">
+                <path d="M4.6 2.1 12.5 8.5 9.1 9.2 11 13.1 9.2 13.9 7.3 10 4.6 12.3Z" />
+            </svg>click the lid — open</span>
+    </div>
+
+    <div class="flowers ui">
+        <div class="glyphs">
+            <!-- rose -->
+            <svg viewBox="0 0 20 20">
+                <path d="M10 8.2a1.8 1.8 0 1 0 1.8 1.8" />
+                <path d="M10 5.9a4.1 4.1 0 1 1-4.1 4.1" />
+                <path d="M10 3.4a6.6 6.6 0 1 0 6.6 6.6" />
+                <path d="M10 17.6c-1.9-.3-3.1-1.5-3.4-3 1.8.2 3 1.4 3.4 3Z" />
+                <path d="M10 17.6c1.9-.3 3.1-1.5 3.4-3-1.8.2-3 1.4-3.4 3Z" />
+            </svg>
+            <!-- lily -->
+            <svg viewBox="0 0 20 20">
+                <path d="M10 9.6C9.1 8.3 9.2 6.1 10 4.1c.8 2 .9 4.2 0 5.5Z" />
+                <path d="M10 9.6C9.1 8.3 9.2 6.1 10 4.1c.8 2 .9 4.2 0 5.5Z" transform="rotate(60 10 10)" />
+                <path d="M10 9.6C9.1 8.3 9.2 6.1 10 4.1c.8 2 .9 4.2 0 5.5Z" transform="rotate(120 10 10)" />
+                <path d="M10 9.6C9.1 8.3 9.2 6.1 10 4.1c.8 2 .9 4.2 0 5.5Z" transform="rotate(180 10 10)" />
+                <path d="M10 9.6C9.1 8.3 9.2 6.1 10 4.1c.8 2 .9 4.2 0 5.5Z" transform="rotate(240 10 10)" />
+                <path d="M10 9.6C9.1 8.3 9.2 6.1 10 4.1c.8 2 .9 4.2 0 5.5Z" transform="rotate(300 10 10)" />
+                <circle cx="10" cy="10" r="1.1" />
+            </svg>
+            <!-- tulip -->
+            <svg viewBox="0 0 20 20">
+                <path
+                    d="M10 11.4c-2.4 0-3.6-2.2-3.6-4.4 1.5.9 2.4.8 3.6-.7 1.2 1.5 2.1 1.6 3.6.7 0 2.2-1.2 4.4-3.6 4.4Z" />
+                <path d="M10 11.4v6" />
+                <path d="M10 15c-2.4-.2-3.7-1.9-4-3.3 1.9.3 3.3 1.5 4 3.3Z" />
+            </svg>
+        </div>
+        <div class="cap">roses · lilies · tulips</div>
+    </div>
+
+    <div id="hint"><span>click the lid</span></div>
+
+    <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+        import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+
+        function webglAvailable() {
+            try {
+                const c = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
+            } catch (e) { return false; }
+        }
+
+        if (!webglAvailable()) {
+            document.getElementById('stage').insertAdjacentHTML('beforeend',
+                '<p class="fail">This piece needs WebGL, which your browser has turned off.</p>');
+        } else {
+            main();
+        }
+
+        function main() {
+
+            /* ---------------------------------------------------------- renderer / scene */
+            const stage = document.getElementById('stage');
+            const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+            renderer.setSize(innerWidth, innerHeight);
+            renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.15;
+            stage.appendChild(renderer.domElement);
+
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0d0a09);
+            scene.fog = new THREE.Fog(0x0d0a09, 15, 38);
+
+            const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 120);
+            const camStart = new THREE.Vector3(11.8, 8.6, 14.6);
+            const camEnd = new THREE.Vector3(7.2, 5.0, 9.2);
+            camera.position.copy(camStart);
+
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.target.set(0, 1.5, 0);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.06;
+            controls.minDistance = 5.5;
+            controls.maxDistance = 20;
+            controls.maxPolarAngle = 1.53;
+            controls.minPolarAngle = 0.1;
+            controls.enablePan = false;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.55;
+
+            const pmrem = new THREE.PMREMGenerator(renderer);
+            scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+            pmrem.dispose();
+
+            /* ------------------------------------------------------------------- lights */
+            scene.add(new THREE.HemisphereLight(0x3a322c, 0x0b0807, 0.6));
+
+            const key = new THREE.SpotLight(0xffd9ae, 750, 45, Math.PI * 0.21, 0.7, 2);
+            key.position.set(6.5, 11, 4.5);
+            key.castShadow = true;
+            key.shadow.mapSize.set(2048, 2048);
+            key.shadow.bias = -0.0004;
+            key.shadow.normalBias = 0.02;
+            key.shadow.camera.near = 5;
+            key.shadow.camera.far = 30;
+            const keyTarget = new THREE.Object3D();
+            keyTarget.position.set(0, 1.0, 0);
+            scene.add(keyTarget);
+            key.target = keyTarget;
+            scene.add(key);
+
+            const fill = new THREE.DirectionalLight(0x8fa0b8, 0.5);
+            fill.position.set(-7, 5, -6);
+            scene.add(fill);
+
+            const rim = new THREE.PointLight(0x9a1420, 60, 22, 2);   // red rim from the back-left
+            rim.position.set(-5.5, 2.8, -4.5);
+            scene.add(rim);
+
+            const inner = new THREE.PointLight(0xff9668, 0, 6, 2);   // wakes up when the lid comes off
+            inner.position.set(0, 1.7, 0);
+            scene.add(inner);
+
+            /* --------------------------------------------- canvas painters: the flowers */
+            function drawTulip(g, x, y, s, color) {
+                g.save(); g.translate(x, y); g.scale(s, s);
+                g.fillStyle = color; g.strokeStyle = color; g.lineCap = 'round'; g.lineWidth = 0.045;
+                g.beginPath();
+                g.moveTo(-0.24, 0.30);
+                g.bezierCurveTo(-0.34, 0.10, -0.33, -0.12, -0.26, -0.35);
+                g.bezierCurveTo(-0.19, -0.24, -0.07, -0.26, 0, -0.46);
+                g.bezierCurveTo(0.07, -0.26, 0.19, -0.24, 0.26, -0.35);
+                g.bezierCurveTo(0.33, -0.12, 0.34, 0.10, 0.24, 0.30);
+                g.bezierCurveTo(0.10, 0.38, -0.10, 0.38, -0.24, 0.30);
+                g.closePath(); g.fill();
+                g.beginPath(); g.moveTo(0, 0.32); g.quadraticCurveTo(0.03, 0.65, 0, 1.0); g.stroke();
+                g.beginPath(); g.moveTo(0, 0.72); g.quadraticCurveTo(-0.30, 0.60, -0.40, 0.28); g.quadraticCurveTo(-0.12, 0.42, 0, 0.72); g.closePath(); g.fill();
+                g.beginPath(); g.moveTo(0, 0.86); g.quadraticCurveTo(0.30, 0.72, 0.40, 0.40); g.quadraticCurveTo(0.12, 0.55, 0, 0.86); g.closePath(); g.fill();
+                g.restore();
+            }
+            function drawLily(g, x, y, s, color) {
+                g.save(); g.translate(x, y); g.scale(s, s);
+                g.fillStyle = color;
+                for (let i = 0; i < 6; i++) {
+                    g.save(); g.rotate(i * Math.PI / 3);
+                    g.beginPath();
+                    g.moveTo(0, 0.05);
+                    g.bezierCurveTo(0.10, -0.10, 0.08, -0.32, 0, -0.48);
+                    g.bezierCurveTo(-0.08, -0.32, -0.10, -0.10, 0, 0.05);
+                    g.closePath(); g.fill();
+                    g.restore();
+                }
+                g.beginPath(); g.arc(0, 0, 0.06, 0, 6.283); g.fill();
+                for (let i = 0; i < 6; i++) {
+                    const a = i * Math.PI / 3 + Math.PI / 6;
+                    g.beginPath(); g.arc(Math.cos(a) * 0.17, Math.sin(a) * 0.17, 0.028, 0, 6.283); g.fill();
+                }
+                g.restore();
+            }
+            function drawRoseMark(g, x, y, s, color) {
+                g.save(); g.translate(x, y); g.scale(s, s);
+                g.strokeStyle = color; g.fillStyle = color; g.lineCap = 'round';
+                g.lineWidth = 0.13; g.beginPath(); g.arc(0, 0, 0.26, 0.6, 5.4); g.stroke();
+                g.lineWidth = 0.11; g.beginPath(); g.arc(0, 0, 0.55, 2.5, 6.1); g.stroke();
+                g.lineWidth = 0.09; g.beginPath(); g.arc(0, 0, 0.85, 4.3, 8.1); g.stroke();
+                g.beginPath(); g.arc(0, 0, 0.06, 0, 6.283); g.fill();
+                g.restore();
+            }
+            function circText(g, text, cx, cy, r, font, color) {
+                g.save(); g.font = font; g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle';
+                const chars = [...text];
+                const widths = chars.map(c => g.measureText(c).width);
+                const sum = widths.reduce((a, b) => a + b, 0);
+                const C = 2 * Math.PI * r;
+                const ls = Math.max(1, (C - sum) / chars.length);
+                let theta = 0;
+                for (let i = 0; i < chars.length; i++) {
+                    const half = (widths[i] + ls) / 2 / r;
+                    theta += half;
+                    g.save();
+                    g.translate(cx + Math.sin(theta) * r, cy - Math.cos(theta) * r);
+                    g.rotate(theta);
+                    g.fillText(chars[i], 0, 0);
+                    g.restore();
+                    theta += half;
+                }
+                g.restore();
+            }
+
+            /* ------------------------------------------------------ canvases -> textures */
+            const floralCanvas = document.createElement('canvas');
+            floralCanvas.width = floralCanvas.height = 512;
+            function paintFloral(g) {
+                g.fillStyle = '#9d1c28';
+                g.fillRect(0, 0, 512, 512);
+                for (let i = 0; i < 1100; i++) {          // paper grain
+                    g.fillStyle = `rgba(20,2,6,${Math.random() * 0.07})`;
+                    const s = Math.random() * 2 + 0.5;
+                    g.fillRect(Math.random() * 512, Math.random() * 512, s, s);
+                }
+                const ink = 'rgba(26,4,10,0.42)';
+                drawTulip(g, 256, 206, 84, ink);                                   // centre tulip
+                [[0, 0], [512, 0], [0, 512], [512, 512]].forEach(p => drawLily(g, p[0], p[1], 60, ink));      // corner lilies
+                [[256, 0], [256, 512], [0, 256], [512, 256]].forEach(p => drawRoseMark(g, p[0], p[1], 34, ink)); // edge roses
+                [[128, 128], [384, 128], [128, 384], [384, 384]].forEach(p => drawRoseMark(g, p[0], p[1], 20, ink));
+            }
+            paintFloral(floralCanvas.getContext('2d'));
+
+            function makeTex(c) {
+                const t = new THREE.CanvasTexture(c);
+                t.wrapS = t.wrapT = THREE.RepeatWrapping;
+                t.colorSpace = THREE.SRGBColorSpace;
+                t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+                return t;
+            }
+            const floralBase = makeTex(floralCanvas);
+            const floralTile = (rx, ry) => { const t = floralBase.clone(); t.repeat.set(rx, ry); return t; };
+
+            const medCanvas = document.createElement('canvas');
+            medCanvas.width = medCanvas.height = 512;
+            const medCtx = medCanvas.getContext('2d');
+            function paintMedallion(g) {
+                g.fillStyle = '#141013';
+                g.fillRect(0, 0, 512, 512);
+                const rg = g.createRadialGradient(256, 256, 60, 256, 256, 256);
+                rg.addColorStop(0, 'rgba(0,0,0,0)');
+                rg.addColorStop(1, 'rgba(0,0,0,0.5)');
+                g.fillStyle = rg; g.fillRect(0, 0, 512, 512);
+                g.strokeStyle = '#3f1d23'; g.lineWidth = 3;
+                g.beginPath(); g.arc(256, 256, 204, 0, 6.283); g.stroke();
+                g.strokeStyle = '#2c1317'; g.lineWidth = 1.5;
+                g.beginPath(); g.arc(256, 256, 186, 0, 6.283); g.stroke();
+                g.beginPath(); g.arc(256, 256, 216, 0, 6.283); g.stroke();
+                circText(g, 'ROSES · LILIES · TULIPS · ROSES · LILIES · TULIPS · ', 256, 256, 160,
+                    '500 26px "Cormorant Garamond", Georgia, serif', 'rgba(96,46,54,0.8)');
+                drawRoseMark(g, 256, 256, 56, 'rgba(88,38,45,0.9)');
+                const trio = [[drawTulip, -90], [drawLily, 30], [drawRoseMark, 150]];
+                trio.forEach(([fn, deg]) => {
+                    const a = deg * Math.PI / 180;
+                    fn(g, 256 + Math.cos(a) * 116, 256 + Math.sin(a) * 116, 24, 'rgba(80,32,39,0.85)');
+                });
+            }
+            paintMedallion(medCtx);
+            const medTex = makeTex(medCanvas);
+            medTex.wrapS = medTex.wrapT = THREE.ClampToEdgeWrapping;
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => { paintMedallion(medCtx); medTex.needsUpdate = true; });
+            }
+
+            /* ----------------------------------------------------------------- materials */
+            const matWallX = new THREE.MeshStandardMaterial({ map: floralTile(2, 1.24), roughness: .5, metalness: .05, envMapIntensity: .3 });
+            const matWallZ = new THREE.MeshStandardMaterial({ map: floralTile(1.85, 1.24), roughness: .5, metalness: .05, envMapIntensity: .3 });
+            const matLidTop = new THREE.MeshStandardMaterial({ map: floralTile(2.29, 2.29), roughness: .5, metalness: .05, envMapIntensity: .3 });
+            const matRed = new THREE.MeshStandardMaterial({ color: 0xa01f2c, roughness: .5, metalness: .05, envMapIntensity: .3 });
+            const matIn = new THREE.MeshStandardMaterial({ color: 0x141013, roughness: .72, metalness: .06, envMapIntensity: .4 });
+            const matEdge = new THREE.MeshStandardMaterial({ color: 0x230a0f, roughness: .62, envMapIntensity: .25 });
+            const matRibbon = new THREE.MeshStandardMaterial({ color: 0x0d0c0e, roughness: .34, metalness: .15, envMapIntensity: .55 });
+            const matRose = new THREE.MeshPhysicalMaterial({ color: 0x140e12, roughness: .32, metalness: .12, clearcoat: .8, clearcoatRoughness: .28, envMapIntensity: .85 });
+            const matLeaf = new THREE.MeshStandardMaterial({ color: 0x1d2b21, roughness: .55, metalness: .04, envMapIntensity: .35 });
+            const matLeafOx = new THREE.MeshStandardMaterial({ color: 0x48141f, roughness: .5, metalness: .05, envMapIntensity: .35 });
+
+            /* ---------------------------------------------------------- shaped geometry */
+            function petalGeometry(len, w, curl, cup) {
+                const shape = new THREE.Shape();
+                shape.moveTo(0, 0);
+                shape.bezierCurveTo(w * 0.5, len * 0.07, w * 0.55, len * 0.58, w * 0.12, len * 0.90);
+                shape.quadraticCurveTo(0, len * 1.03, -w * 0.12, len * 0.90);
+                shape.bezierCurveTo(-w * 0.55, len * 0.58, -w * 0.5, len * 0.07, 0, 0);
+                let geo = new THREE.ExtrudeGeometry(shape, {
+                    depth: .028, bevelEnabled: true, bevelThickness: .045, bevelSize: .04, bevelSegments: 3, curveSegments: 10
+                });
+                geo = mergeVertices(geo, 1e-4);
+                const p = geo.attributes.position;
+                for (let i = 0; i < p.count; i++) {
+                    const x = p.getX(i), y = p.getY(i);
+                    const u = Math.min(1, Math.max(0, y / len));   // along length
+                    const v = x / (w * 0.5);                       // across width
+                    p.setZ(i, p.getZ(i) + curl * u * u * len * 0.33 + cup * v * v * len * 0.18);
+                }
+                geo.computeVertexNormals();
+                return geo;
+            }
+            function leafGeometry(len, w) {
+                const shape = new THREE.Shape();
+                shape.moveTo(0, 0);
+                shape.bezierCurveTo(w * 0.5, len * 0.15, w * 0.55, len * 0.55, 0, len);
+                shape.bezierCurveTo(-w * 0.55, len * 0.55, -w * 0.5, len * 0.15, 0, 0);
+                let geo = new THREE.ExtrudeGeometry(shape, {
+                    depth: .02, bevelEnabled: true, bevelThickness: .022, bevelSize: .02, bevelSegments: 2, curveSegments: 8
+                });
+                geo = mergeVertices(geo, 1e-4);
+                const p = geo.attributes.position;
+                for (let i = 0; i < p.count; i++) {
+                    const u = Math.min(1, Math.max(0, p.getY(i) / len));
+                    p.setZ(i, p.getZ(i) + 0.2 * u * u * len);
+                }
+                geo.computeVertexNormals();
+                return geo;
+            }
+
+            /* ------------------------------------------------------ the box (hollow) */
+            const BW = 4.2, BH = 2.6, BT = 0.16;
+            const Y0 = 0.07;                       // ribbon band under the base
+            const WALL_Y0 = Y0 + 0.2;              // 0.27
+            const WALL_Y1 = WALL_Y0 + BH;          // 2.87
+            const LID_Y = WALL_Y1 + 0.11;          // lid slab centre when closed
+
+            const boxGroup = new THREE.Group();
+            scene.add(boxGroup);
+
+            function addMesh(geo, mats, x, y, z, parent) {
+                const m = new THREE.Mesh(geo, mats);
+                m.position.set(x, y, z);
+                m.castShadow = true;
+                m.receiveShadow = true;
+                (parent || boxGroup).add(m);
+                return m;
+            }
+
+            const wallGeoX = new THREE.BoxGeometry(BT, BH, BW);
+            const wallGeoZ = new THREE.BoxGeometry(BW - 2 * BT, BH, BT);
+            addMesh(wallGeoX, [matWallX, matIn, matEdge, matEdge, matRed, matRed], (BW - BT) / 2, WALL_Y0 + BH / 2, 0);
+            addMesh(wallGeoX, [matIn, matWallX, matEdge, matEdge, matRed, matRed], -(BW - BT) / 2, WALL_Y0 + BH / 2, 0);
+            addMesh(wallGeoZ, [matRed, matRed, matEdge, matEdge, matWallZ, matIn], 0, WALL_Y0 + BH / 2, (BW - BT) / 2);
+            addMesh(wallGeoZ, [matRed, matRed, matEdge, matEdge, matIn, matWallZ], 0, WALL_Y0 + BH / 2, -(BW - BT) / 2);
+
+            addMesh(new THREE.BoxGeometry(BW, 0.2, BW),
+                [matRed, matRed, matIn, matRed, matRed, matRed], 0, Y0 + 0.1, 0);
+
+            // engraved medallion on the interior floor — the reward for looking inside
+            const med = new THREE.Mesh(
+                new THREE.PlaneGeometry(BW - 2 * BT, BW - 2 * BT),
+                new THREE.MeshStandardMaterial({ map: medTex, roughness: .85, metalness: .04, envMapIntensity: .25 })
+            );
+            med.rotation.x = -Math.PI / 2;
+            med.position.y = WALL_Y0 + 0.006;
+            med.receiveShadow = true;
+            boxGroup.add(med);
+
+            // satin-black ribbon bands wrapping the base
+            addMesh(new THREE.BoxGeometry(0.07, 2.8, 0.62), matRibbon, (BW / 2 + 0.035), 1.47, 0);
+            addMesh(new THREE.BoxGeometry(0.07, 2.8, 0.62), matRibbon, -(BW / 2 + 0.035), 1.47, 0);
+            addMesh(new THREE.BoxGeometry(0.62, 2.8, 0.07), matRibbon, 0, 1.47, (BW / 2 + 0.035));
+            addMesh(new THREE.BoxGeometry(0.62, 2.8, 0.07), matRibbon, 0, 1.47, -(BW / 2 + 0.035));
+            addMesh(new THREE.BoxGeometry(BW + 0.14, 0.07, 0.62), matRibbon, 0, 0.035, 0);
+            addMesh(new THREE.BoxGeometry(0.62, 0.075, BW + 0.14), matRibbon, 0, 0.0375, 0);
+
+            /* ------------------------------------------------ the lid (snug, removable) */
+            const lidGroup = new THREE.Group();
+            lidGroup.position.set(0, LID_Y, 0);
+            scene.add(lidGroup);
+
+            addMesh(new THREE.BoxGeometry(4.8, 0.22, 4.8),
+                [matRed, matRed, matLidTop, matIn, matRed, matRed], 0, 0, 0, lidGroup);
+
+            // inner rim that slides over the box walls — the "fit"
+            const rimX = new THREE.BoxGeometry(0.13, 0.55, 4.8);
+            const rimZ = new THREE.BoxGeometry(4.54, 0.55, 0.13);
+            addMesh(rimX, [matRed, matIn, matRed, matEdge, matRed, matRed], 2.275, -0.385, 0, lidGroup);
+            addMesh(rimX, [matIn, matRed, matRed, matEdge, matRed, matRed], -2.275, -0.385, 0, lidGroup);
+            addMesh(rimZ, [matRed, matRed, matRed, matEdge, matRed, matIn], 0, -0.385, 2.275, lidGroup);
+            addMesh(rimZ, [matRed, matRed, matRed, matEdge, matIn, matRed], 0, -0.385, -2.275, lidGroup);
+
+            // ribbon continuing over the lid
+            addMesh(new THREE.BoxGeometry(0.07, 0.55, 0.62), matRibbon, 2.375, -0.385, 0, lidGroup);
+            addMesh(new THREE.BoxGeometry(0.07, 0.55, 0.62), matRibbon, -2.375, -0.385, 0, lidGroup);
+            addMesh(new THREE.BoxGeometry(0.62, 0.55, 0.07), matRibbon, 0, -0.385, 2.375, lidGroup);
+            addMesh(new THREE.BoxGeometry(0.62, 0.55, 0.07), matRibbon, 0, -0.385, -2.375, lidGroup);
+            addMesh(new THREE.BoxGeometry(4.86, 0.06, 0.62), matRibbon, 0, 0.14, 0, lidGroup);
+            addMesh(new THREE.BoxGeometry(0.62, 0.06, 4.86), matRibbon, 0, 0.15, 0, lidGroup);
+
+            /* ------------------------------------------------- the black rose on the lid */
+            function buildRose() {
+                const rose = new THREE.Group();
+                const rings = [
+                    { n: 3, len: .34, w: .26, tilt: .18, r: .02, y: .03 },
+                    { n: 5, len: .44, w: .32, tilt: .46, r: .10, y: .05 },
+                    { n: 7, len: .52, w: .38, tilt: .82, r: .24, y: .07 },
+                    { n: 9, len: .58, w: .42, tilt: 1.14, r: .40, y: .09 },
+                    { n: 11, len: .60, w: .44, tilt: 1.38, r: .56, y: .10 },
+                ];
+                rings.forEach((ring, k) => {
+                    const geo = petalGeometry(ring.len, ring.w, .45, .3);
+                    for (let j = 0; j < ring.n; j++) {
+                        const holder = new THREE.Object3D();
+                        holder.rotation.y = j / ring.n * Math.PI * 2 + k * 0.65 + (Math.random() - .5) * .1;
+                        const mesh = new THREE.Mesh(geo, matRose);
+                        mesh.rotation.x = ring.tilt + (Math.random() - .5) * .09;
+                        mesh.rotation.z = (Math.random() - .5) * .2;
+                        mesh.position.set(0, ring.y, ring.r);
+                        mesh.scale.setScalar(.92 + Math.random() * .16);
+                        mesh.castShadow = mesh.receiveShadow = true;
+                        holder.add(mesh);
+                        rose.add(holder);
+                    }
+                });
+                const core = new THREE.Mesh(new THREE.IcosahedronGeometry(.16, 1), matRose);
+                core.position.y = .1; core.castShadow = true;
+                rose.add(core);
+                const calyx = new THREE.Mesh(new THREE.CylinderGeometry(.15, .21, .12, 20), matRose);
+                calyx.position.y = .02;
+                rose.add(calyx);
+
+                const leafGeo = leafGeometry(.9, .42);
+                const leaves = [
+                    { a: .35, m: matLeaf, s: 1.20 }, { a: 1.50, m: matLeaf, s: 1.35 },
+                    { a: 2.55, m: matLeafOx, s: 1.05 }, { a: 3.80, m: matLeaf, s: 1.25 },
+                    { a: 5.00, m: matLeafOx, s: 1.00 },
+                ];
+                leaves.forEach(L => {
+                    const holder = new THREE.Object3D();
+                    holder.rotation.y = L.a;
+                    const mesh = new THREE.Mesh(leafGeo, L.m);
+                    mesh.rotation.x = 1.28 + (Math.random() - .5) * .1;
+                    mesh.position.set(0, .02, .44);
+                    mesh.scale.setScalar(L.s * (0.95 + Math.random() * .1));
+                    mesh.castShadow = mesh.receiveShadow = true;
+                    holder.add(mesh);
+                    rose.add(holder);
+                });
+                rose.scale.setScalar(.68);
+                return rose;
+            }
+            const rose = buildRose();
+            rose.position.set(0, 0.19, 0);
+            lidGroup.add(rose);
+
+            /* -------------------------------------------------------------- stage floor */
+            const floor = new THREE.Mesh(
+                new THREE.CircleGeometry(30, 72).rotateX(-Math.PI / 2),
+                new THREE.MeshStandardMaterial({ color: 0x1a1412, roughness: .94, metalness: 0, envMapIntensity: .2 })
+            );
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            const ring1 = new THREE.Mesh(
+                new THREE.RingGeometry(4.35, 4.5, 96).rotateX(-Math.PI / 2),
+                new THREE.MeshStandardMaterial({ color: 0x4a1018, roughness: .85, envMapIntensity: .25 })
+            );
+            ring1.position.y = 0.012; ring1.receiveShadow = true;
+            scene.add(ring1);
+
+            const ring2 = new THREE.Mesh(
+                new THREE.RingGeometry(6.5, 6.58, 96).rotateX(-Math.PI / 2),
+                new THREE.MeshStandardMaterial({ color: 0x230b0e, roughness: .9, envMapIntensity: .2 })
+            );
+            ring2.position.y = 0.02;
+            scene.add(ring2);
+
+            /* ------------------------------------------------------- drifting red petals */
+            const petGeoSmall = petalGeometry(.17, .13, .6, .15);
+            const petPalette = [0xa3212e, 0x8a1826, 0x5e0f1a, 0x32080e];
+            const petals = [];
+            function respawnPetal(d, init) {
+                d.a = Math.random() * Math.PI * 2;
+                d.r = 3.7 + Math.random() * 5;
+                d.y = init ? 0.4 + Math.random() * 9 : 8.5 + Math.random() * 3.5;
+            }
+            for (let i = 0; i < 24; i++) {
+                const mat = new THREE.MeshStandardMaterial({
+                    color: petPalette[i % 4], roughness: .6, metalness: .05, transparent: true, opacity: 0, envMapIntensity: .3
+                });
+                const mesh = new THREE.Mesh(petGeoSmall, mat);
+                mesh.rotation.set(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28);
+                const d = {
+                    mesh, mat,
+                    speed: .14 + Math.random() * .18,
+                    sway: .25 + Math.random() * .35,
+                    sf: .30 + Math.random() * .45,
+                    ph: Math.random() * 6.283,
+                    rx: (Math.random() - .5) * 1.4, ry: (Math.random() - .5) * 1.8, rz: (Math.random() - .5) * 1.2
+                };
+                respawnPetal(d, true);
+                petals.push(d);
+                scene.add(mesh);
+            }
+
+            /* ------------------------------------------- lid choreography & interaction */
+            const P0 = new THREE.Vector3(0, LID_Y, 0);
+            const P1 = new THREE.Vector3(0, 6.1, 0);
+            const P2 = new THREE.Vector3(2.8, 5.4, 1.6);
+            const P3 = new THREE.Vector3(4.75, 2.1, 2.15);
+            const R0 = [0, 0, 0], R1 = [-0.10, 0.55, 0.12], R2 = [-0.35, 1.25, 0.22], R3 = [-0.55, 0.85, 0.33];
+
+            const bez = (a, b, c, d, t) => { const u = 1 - t; return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d; };
+            const easeIO = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+            let lidState = 'closed', lidP = 0, spin = 0, bobT = Math.random() * 10;
+            let peek = 0, hoverLid = false, hintDismissed = false, openedOnce = false;
+            let introActive = true, introT = 0, lastUser = performance.now();
+
+            const hintEl = document.getElementById('hint');
+            const btn = document.getElementById('lidBtn');
+            const btnLabel = document.getElementById('lidBtnLabel');
+            const subEl = document.getElementById('sub');
+            const hintV = new THREE.Vector3();
+
+            function setBtn(open) {
+                btn.classList.toggle('is-open', open);
+                btnLabel.textContent = open ? 'replace the lid' : 'remove the lid';
+            }
+            function setSub(text) {
+                subEl.style.opacity = 0;
+                setTimeout(() => { subEl.textContent = text; subEl.style.opacity = 1; }, 450);
+            }
+            function toggleLid() {
+                if (lidState === 'opening' || lidState === 'closing') return;
+                if (lidState === 'closed') {
+                    lidState = 'opening';
+                    hintDismissed = true;
+                    setBtn(true);
+                } else {
+                    lidState = 'closing';
+                    setBtn(false);
+                }
+                hintEl.classList.remove('show');
+            }
+            btn.addEventListener('click', toggleLid);
+            window.addEventListener('keydown', e => {
+                if (e.code === 'Space' && !e.repeat) { e.preventDefault(); toggleLid(); }
+            });
+
+            const raycaster = new THREE.Raycaster();
+            const ndc = new THREE.Vector2(10, 10);
+            const cvs = renderer.domElement;
+            let downX = 0, downY = 0, downT = 0;
+
+            cvs.addEventListener('pointermove', e => {
+                ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+            });
+            cvs.addEventListener('pointerdown', e => {
+                downX = e.clientX; downY = e.clientY; downT = performance.now();
+                introActive = false;
+            });
+            cvs.addEventListener('pointerup', e => {
+                if (Math.hypot(e.clientX - downX, e.clientY - downY) < 7 && performance.now() - downT < 600) {
+                    ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+                    raycaster.setFromCamera(ndc, camera);
+                    if (raycaster.intersectObject(lidGroup, true).length) toggleLid();
+                }
+            });
+            controls.addEventListener('start', () => { lastUser = performance.now(); controls.autoRotate = false; introActive = false; });
+            controls.addEventListener('end', () => { lastUser = performance.now(); });
+
+            /* ----------------------------------------------------------------- main loop */
+            const clock = new THREE.Clock();
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const dt = Math.min(clock.getDelta(), 0.05);
+                const et = clock.elapsedTime;
+
+                // cinematic dolly-in on load
+                if (introActive) {
+                    introT = Math.min(1, introT + dt / 2.4);
+                    const e = 1 - Math.pow(1 - introT, 3);
+                    camera.position.lerpVectors(camStart, camEnd, e);
+                    if (introT >= 1) introActive = false;
+                }
+                if (!controls.autoRotate && performance.now() - lastUser > 7000) controls.autoRotate = true;
+
+                // lid state machine
+                if (lidState === 'opening') {
+                    lidP = Math.min(1, lidP + dt / 1.6);
+                    if (lidP >= 1) {
+                        lidState = 'open';
+                        if (!openedOnce) {
+                            openedOnce = true;
+                            setSub('See? Truly empty. Crimson walls, a black interior, and room left over for roses, lilies and tulips.');
+                        }
+                    }
+                } else if (lidState === 'closing') {
+                    lidP = Math.max(0, lidP - dt / 1.6);
+                    if (lidP <= 0) { lidState = 'closed'; spin = 0; }
+                }
+                if (lidState === 'open') { bobT += dt; spin += dt * 0.14; }
+
+                const q = easeIO(lidP);
+                const px = bez(P0.x, P1.x, P2.x, P3.x, q);
+                const py = bez(P0.y, P1.y, P2.y, P3.y, q);
+                const pz = bez(P0.z, P1.z, P2.z, P3.z, q);
+                const rx = bez(R0[0], R1[0], R2[0], R3[0], q);
+                const ry = bez(R0[1], R1[1], R2[1], R3[1], q);
+                const rz = bez(R0[2], R1[2], R2[2], R3[2], q);
+
+                // hover: peek + pointer cursor
+                if (lidState === 'closed' || lidState === 'open') {
+                    raycaster.setFromCamera(ndc, camera);
+                    hoverLid = raycaster.intersectObject(lidGroup, true).length > 0;
+                } else hoverLid = false;
+                cvs.style.cursor = hoverLid ? 'pointer' : 'grab';
+                const peekTarget = (lidState === 'closed' && hoverLid) ? 0.16 : 0;
+                peek += (peekTarget - peek) * Math.min(1, dt * 9);
+
+                const bobY = Math.sin(bobT * 1.25) * 0.085 * q;
+                const sway = Math.sin(bobT * 0.7) * 0.03 * q;
+                lidGroup.position.set(px, py + bobY + peek * (1 - q), pz);
+                lidGroup.rotation.set(rx, ry + spin * q, rz + sway);
+                inner.intensity = 3.4 * q;   // soft light wakes up inside as the lid leaves
+
+                // floating "click the lid" affordance
+                const showHint = lidState === 'closed' && !hintDismissed && (introT > 0.6 || !introActive);
+                if (showHint) {
+                    hintV.set(0, 4.15, 0).project(camera);
+                    if (hintV.z < 1) {
+                        hintEl.style.left = ((hintV.x * 0.5 + 0.5) * innerWidth) + 'px';
+                        hintEl.style.top = ((-hintV.y * 0.5 + 0.5) * innerHeight) + 'px';
+                        hintEl.classList.add('show');
+                    } else hintEl.classList.remove('show');
+                } else hintEl.classList.remove('show');
+
+                // drifting petals
+                for (const d of petals) {
+                    d.y -= d.speed * dt;
+                    if (d.y < 0.02) respawnPetal(d, false);
+                    const sx = Math.cos(d.a) * d.r + Math.sin(et * d.sf + d.ph) * d.sway;
+                    const sz = Math.sin(d.a) * d.r + Math.cos(et * d.sf * 0.83 + d.ph * 1.7) * d.sway;
+                    d.mesh.position.set(sx, d.y, sz);
+                    d.mesh.rotation.x += d.rx * dt;
+                    d.mesh.rotation.y += d.ry * dt;
+                    d.mesh.rotation.z += d.rz * dt;
+                    let op = THREE.MathUtils.clamp((d.y - 0.04) / 0.6, 0, 1);
+                    if (lidState !== 'closed') {
+                        op *= THREE.MathUtils.smoothstep(d.mesh.position.distanceTo(lidGroup.position), 2.2, 3.5);
+                    }
+                    d.mat.opacity = op * 0.95;
+                }
+
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = innerWidth / innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(innerWidth, innerHeight);
+            });
+
+        } // main
+    </script>
+</body>
+
+</html>

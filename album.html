@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="The Night Garden — A private botanical album and memories in red and black." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23070407'/><path d='M50 30 C35 15 15 35 35 60 L50 78 L65 60 C85 35 65 15 50 30 Z' fill='%23c42432'/></svg>" />
+    <title>The Night Garden · Botanical Album &amp; Memories</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #070407;
+            --surface: #12090d;
+            --surface-card: rgba(18, 9, 13, 0.94);
+            --ink: #f3e5df;
+            --ink-bright: #ffffff;
+            --muted: #a0817c;
+            --faint: #6e524d;
+            --crimson: #c42432;
+            --crimson-glow: #e63946;
+            --crimson-dark: #6e0f1a;
+            --gold: #d4a373;
+            --gold-bright: #f3c78e;
+            --gold-dim: rgba(212, 163, 115, 0.28);
+            --border: rgba(196, 36, 50, 0.32);
+            --paper-bg: #f8f1ea;
+            --paper-ink: #201316;
+            --paper-sub: #6c4e53;
+            --page-width: min(440px, 44vw);
+            --page-height: min(620px, 68vh);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Karla', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        /* Ambient Starry Canvas */
+        #bgCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(3, 1, 3, 0.82) 100%);
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 24px;
+            left: 32px;
+            right: 32px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--ink);
+        }
+
+        .brand-seal {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #b51a2b, #590913);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 17px;
+            font-weight: 700;
+            font-style: italic;
+            color: #1a0407;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 140, 120, 0.4);
+        }
+
+        .brand-text h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 20px;
+            font-style: italic;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            line-height: 1.1;
+            color: var(--ink-bright);
+        }
+
+        .brand-text span {
+            font-size: 9.5px;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--crimson-glow);
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            background: rgba(18, 9, 13, 0.7);
+            border: 1px solid rgba(196, 36, 50, 0.35);
+            color: var(--muted);
+            font-family: 'Karla', sans-serif;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            border-radius: 2px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-nav:hover {
+            border-color: var(--crimson-glow);
+            color: var(--ink-bright);
+            background: rgba(35, 12, 18, 0.85);
+            transform: translateY(-1px);
+        }
+
+        /* App Container */
+        #albumApp {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==================== STATE: LOCKED ==================== */
+        #lockedView {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #lockedView.hidden {
+            opacity: 0;
+            transform: scale(0.92);
+            pointer-events: none;
+        }
+
+        .album-closed-wrapper {
+            position: relative;
+            width: min(340px, 80vw);
+            height: min(460px, 58vh);
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+        .album-book-closed {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #18090f 0%, #0d0407 100%);
+            border-radius: 6px 14px 14px 6px;
+            box-shadow: -10px 0 20px rgba(0, 0, 0, 0.8),
+                        18px 24px 60px rgba(0, 0, 0, 0.9),
+                        0 0 35px rgba(196, 36, 50, 0.22);
+            border: 1.5px solid rgba(196, 36, 50, 0.38);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+
+        .album-book-closed::before {
+            /* Spine ribbing */
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 26px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(196,36,50,0.15) 50%, transparent 100%);
+            border-right: 1px solid rgba(212, 163, 115, 0.2);
+            border-radius: 6px 0 0 6px;
+        }
+
+        .album-book-closed::after {
+            /* Gold foil border line */
+            content: "";
+            position: absolute;
+            inset: 14px 14px 14px 34px;
+            border: 1px solid rgba(212, 163, 115, 0.3);
+            border-radius: 3px;
+            pointer-events: none;
+        }
+
+        .album-cover-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(22px, 3.2vw, 30px);
+            font-weight: 600;
+            color: var(--ink-bright);
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+        }
+
+        .album-cover-sub {
+            font-size: 9.5px;
+            letter-spacing: 0.36em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 28px;
+        }
+
+        /* Wax Seal Component */
+        .wax-seal-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+
+        .wax-seal {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 32%, #c92434 0%, #7e0e19 65%, #46060c 100%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8),
+                        inset 0 -8px 14px rgba(0, 0, 0, 0.6),
+                        inset 0 4px 8px rgba(255, 170, 150, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+        }
+
+        .wax-seal-inner {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(255, 180, 160, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .wax-seal-monogram {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 38px;
+            font-weight: 700;
+            color: #240407;
+            text-shadow: 0 1px 2px rgba(255, 160, 150, 0.3);
+            line-height: 1;
+        }
+
+        .seal-crack-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .seal-crack-svg path {
+            stroke: #ffe6a7;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            filter: drop-shadow(0 0 6px #ffd166);
+            stroke-dasharray: 60;
+            stroke-dashoffset: 60;
+        }
+
+        /* Shake animation when hovered or clicked while locked */
+        .seal-shake {
+            animation: sealWobble 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        @keyframes sealWobble {
+            10%, 90% { transform: translate3d(-2px, 0, 0) rotate(-1.5deg); }
+            20%, 80% { transform: translate3d(3px, 0, 0) rotate(2deg); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotate(-2deg); }
+            40%, 60% { transform: translate3d(4px, 0, 0) rotate(2deg); }
+        }
+
+        /* Seal tooltip */
+        .seal-tooltip {
+            position: absolute;
+            bottom: -46px;
+            left: 50%;
+            transform: translateX(-50%) translateY(6px);
+            background: rgba(14, 6, 10, 0.94);
+            border: 1px solid rgba(230, 57, 70, 0.6);
+            color: #fff;
+            padding: 7px 16px;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            border-radius: 3px;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(196, 36, 50, 0.35);
+            z-index: 15;
+        }
+
+        .seal-tooltip::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid rgba(230, 57, 70, 0.6);
+        }
+
+        .seal-tooltip.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Seal ribbon */
+        .seal-ribbon {
+            position: absolute;
+            width: 14px;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(20, 2, 5, 0.95), rgba(40, 5, 10, 0.95));
+            border-left: 1px solid rgba(196, 36, 50, 0.3);
+            border-right: 1px solid rgba(196, 36, 50, 0.3);
+            z-index: 1;
+        }
+
+        .locked-caption {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 16px;
+            color: var(--muted);
+            margin-top: 8px;
+            max-width: 320px;
+            line-height: 1.4;
+        }
+
+        .test-unlock-bar {
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-test-unlock {
+            background: transparent;
+            border: 1px dashed rgba(212, 163, 115, 0.45);
+            color: var(--gold);
+            font-family: 'Karla', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-test-unlock:hover {
+            background: rgba(212, 163, 115, 0.12);
+            border-color: var(--gold-bright);
+            color: var(--gold-bright);
+        }
+
+        /* ==================== STATE: ALBUM_OPEN ==================== */
+        #openView {
+            position: fixed;
+            inset: 0;
+            z-index: 12;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #openView.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 3D Book Stage */
+        .book-viewport {
+            perspective: 2000px;
+            perspective-origin: 50% 50%;
+            width: calc(var(--page-width) * 2);
+            height: var(--page-height);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-container {
+            width: calc(var(--page-width) * 2);
+            height: var(--page-height);
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85);
+            border-radius: 4px 10px 10px 4px;
+        }
+
+        /* Spine shadow */
+        .book-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, 
+                rgba(0,0,0,0.4) 0%, 
+                rgba(0,0,0,0.85) 48%, 
+                rgba(0,0,0,0.95) 50%, 
+                rgba(0,0,0,0.85) 52%, 
+                rgba(0,0,0,0.4) 100%);
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        /* Single Page Sheet */
+        .sheet {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: var(--page-width);
+            height: var(--page-height);
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform 0.9s cubic-bezier(0.25, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .sheet.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        .page-face {
+            position: absolute;
+            inset: 0;
+            background: var(--paper-bg);
+            color: var(--paper-ink);
+            backface-visibility: hidden;
+            border-radius: 0 6px 6px 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 32px 36px;
+            box-shadow: inset 20px 0 30px rgba(0, 0, 0, 0.08), 
+                        inset -2px 0 5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .page-face.back {
+            transform: rotateY(180deg);
+            border-radius: 6px 0 0 6px;
+            box-shadow: inset -20px 0 30px rgba(0, 0, 0, 0.08), 
+                        inset 2px 0 5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Botanical & Plate Content Styling */
+        .plate-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(108, 78, 83, 0.25);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+
+        .plate-num {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--crimson);
+        }
+
+        .plate-date {
+            font-size: 10px;
+            font-style: italic;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: var(--paper-sub);
+        }
+
+        .plate-art {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, rgba(240, 225, 218, 0.7), transparent 75%);
+            border-radius: 4px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .plate-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .plate-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 24px;
+            font-weight: 600;
+            color: #2b0f14;
+            line-height: 1.15;
+            margin-bottom: 4px;
+        }
+
+        .plate-latin {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 13px;
+            color: var(--crimson);
+            margin-bottom: 8px;
+        }
+
+        .plate-body {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14.5px;
+            line-height: 1.5;
+            color: #3b282c;
+        }
+
+        .plate-signature {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--paper-sub);
+            padding-top: 10px;
+            border-top: 1px dashed rgba(108, 78, 83, 0.2);
+        }
+
+        /* Dedication Page Special */
+        .dedication-page {
+            background: linear-gradient(160deg, #fbf7f2 0%, #f1e6dc 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .dedication-ornament {
+            font-size: 24px;
+            color: var(--crimson);
+            margin-bottom: 16px;
+        }
+
+        .dedication-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 32px;
+            font-weight: 600;
+            color: #28070e;
+            margin-bottom: 18px;
+            line-height: 1.1;
+        }
+
+        .dedication-text {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 17px;
+            line-height: 1.65;
+            color: #3f2228;
+            margin-bottom: 24px;
+        }
+
+        /* Controls under flipbook */
+        .book-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 25;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(18, 9, 13, 0.88);
+            border: 1px solid rgba(196, 36, 50, 0.35);
+            padding: 8px 20px;
+            border-radius: 2px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .btn-page-turn {
+            background: transparent;
+            border: none;
+            color: var(--ink);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-page-turn:hover:not(:disabled) {
+            color: var(--crimson-glow);
+            transform: scale(1.15);
+        }
+
+        .btn-page-turn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Page click helpers */
+        .page-click-zone {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            z-index: 40;
+            cursor: pointer;
+        }
+
+        .click-prev { left: 0; }
+        .click-next { right: 0; }
+
+        @media (max-width: 768px) {
+            :root {
+                --page-width: min(320px, 86vw);
+                --page-height: min(480px, 64vh);
+            }
+
+            .book-viewport {
+                width: var(--page-width);
+            }
+
+            .book-container {
+                width: var(--page-width);
+            }
+
+            .book-spine {
+                display: none;
+            }
+
+            .sheet {
+                left: 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bgCanvas"></canvas>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+
+    <!-- Navigation Header -->
+    <header class="top-bar">
+        <a class="brand" href="index.html">
+            <div class="brand-seal">R</div>
+            <div class="brand-text">
+                <h1>The Night Garden</h1>
+                <span>Botanical Folio · Volume I</span>
+            </div>
+        </a>
+        <nav class="nav-links">
+            <a class="btn-nav" href="index.html">← The Gift Box</a>
+            <a class="btn-nav" href="wish.html">Make a Wish ✨</a>
+            <button class="btn-nav" id="btnAudioToggle" type="button" aria-pressed="false">Sound · Off</button>
+        </nav>
+    </header>
+
+    <main id="albumApp">
+        <!-- ==================== STATE: LOCKED ==================== -->
+        <section id="lockedView" aria-label="Wax-Sealed Album">
+            <div class="album-closed-wrapper" id="albumClosedWrapper" tabindex="0" role="button"
+                aria-haspopup="dialog" aria-label="Wax-Sealed Botanical Album. Sealed until November 9, 2026.">
+                <div class="album-book-closed" id="bookClosed">
+                    <div class="seal-ribbon"></div>
+                    <div class="album-cover-title">The Night Garden</div>
+                    <div class="album-cover-sub">Botanical Plates &amp; Memories</div>
+
+                    <!-- Wax Seal Component -->
+                    <div class="wax-seal-container">
+                        <div class="wax-seal" id="waxSeal" title="Click or hover to inspect seal">
+                            <div class="wax-seal-inner">
+                                <span class="wax-seal-monogram">R</span>
+                            </div>
+                            <!-- Golden Crack SVG -->
+                            <svg class="seal-crack-svg" id="sealCrackSvg" viewBox="0 0 100 100">
+                                <path id="crackPath1" d="M50 8 L48 35 L34 45 L20 60 L12 85" />
+                                <path id="crackPath2" d="M48 35 L62 52 L78 58 L92 78" />
+                                <path id="crackPath3" d="M62 52 L52 75 L54 94" />
+                            </svg>
+                        </div>
+                        <div class="seal-tooltip" id="sealTooltip" role="status" aria-live="polite">
+                            Sealed until Nov 9, 2026 🔒
+                        </div>
+                    </div>
+
+                    <p class="locked-caption">
+                        Ceremonially sealed with crimson wax.<br>
+                        Unlocks when the birthday moment arrives.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Discrete Preview / Test Unlock Toggle -->
+            <div class="test-unlock-bar">
+                <button class="btn-test-unlock" id="btnBreakSealTest" type="button">
+                    Break Seal &amp; Preview Album ⚡
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== STATE: ALBUM_OPEN ==================== -->
+        <section id="openView" aria-label="Interactive Botanical Album">
+            <div class="book-viewport">
+                <!-- Click Zones for fast clicking -->
+                <div class="page-click-zone click-prev" id="zonePrev" title="Previous Page"></div>
+                <div class="page-click-zone click-next" id="zoneNext" title="Next Page"></div>
+
+                <div class="book-container" id="bookContainer">
+                    <div class="book-spine"></div>
+
+                    <!-- SHEET 3 (Plates V & VI) - Base / Back -->
+                    <div class="sheet" id="sheet3" style="z-index: 1;">
+                        <!-- Front Face: Plate V Posy -->
+                        <div class="page-face front">
+                            <div class="plate-header">
+                                <span class="plate-num">Plate V</span>
+                                <span class="plate-date">November 2026</span>
+                            </div>
+                            <div class="plate-art">
+                                <canvas class="plate-canvas" id="canvasPlate5"></canvas>
+                            </div>
+                            <h2 class="plate-title">The Midnight Posy</h2>
+                            <div class="plate-latin">Fasciculus Nocturnus · Hand-Tied Ribbon</div>
+                            <p class="plate-body">
+                                Eleven stems gathered into folded obsidian paper, tied in heavy silk.
+                                Kept in darkness so each bloom wakes only when held.
+                            </p>
+                            <div class="plate-signature">
+                                <span>Nocturne Herbarium</span>
+                                <span>Plate 5 of 6</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face: Plate VI Colophon & Wishes -->
+                        <div class="page-face back dedication-page">
+                            <div class="dedication-ornament">❦</div>
+                            <h2 class="dedication-title">Colophon</h2>
+                            <p class="dedication-text">
+                                Set in Cormorant Garamond &amp; Karla.<br>
+                                Rendered with procedural starlight, procedural velvet canvas, and soft acoustic bells.<br>
+                                Every petal crafted without a single white fleck.
+                            </p>
+                            <div style="margin-top: 14px;">
+                                <a class="btn-nav" href="wish.html" style="background: rgba(196,36,50,0.15); color: #fff;">
+                                    View Wishes Left in the Night ✨
+                                </a>
+                            </div>
+                            <div class="plate-signature" style="margin-top: 24px;">
+                                <span>Printed in Obsidian &amp; Red</span>
+                                <span>Finis</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SHEET 2 (Plates III & IV) - Middle -->
+                    <div class="sheet" id="sheet2" style="z-index: 2;">
+                        <!-- Front Face: Plate III Night Tulip -->
+                        <div class="page-face front">
+                            <div class="plate-header">
+                                <span class="plate-num">Plate III</span>
+                                <span class="plate-date">November 2026</span>
+                            </div>
+                            <div class="plate-art">
+                                <canvas class="plate-canvas" id="canvasPlate3"></canvas>
+                            </div>
+                            <h2 class="plate-title">The Night Tulip</h2>
+                            <div class="plate-latin">Tulipa Gesneriana · Queen of the Dark</div>
+                            <p class="plate-body">
+                                Goblet-shaped petals steeped in darkest oxblood with iridescent crimson edges.
+                                At rest they cup the quiet heat of midnight.
+                            </p>
+                            <div class="plate-signature">
+                                <span>Nocturne Herbarium</span>
+                                <span>Plate 3 of 6</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face: Plate IV Dedication -->
+                        <div class="page-face back dedication-page">
+                            <div class="dedication-ornament">❧</div>
+                            <h2 class="dedication-title">For You, On Your Birthday</h2>
+                            <p class="dedication-text">
+                                "May the year ahead unfurl gently, like night roses in a warm room —
+                                fearless, deep, and luminous in the dark."
+                            </p>
+                            <div style="font-family:'Cormorant Garamond', Georgia, serif; font-size: 20px; font-style: italic; color: var(--crimson);">
+                                With all my heart.
+                            </div>
+                            <div class="plate-signature" style="margin-top: 30px;">
+                                <span>Dedication</span>
+                                <span>Plate 4 of 6</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SHEET 1 (Plates I & II) - Top -->
+                    <div class="sheet" id="sheet1" style="z-index: 3;">
+                        <!-- Front Face: Plate I Damask Rose -->
+                        <div class="page-face front">
+                            <div class="plate-header">
+                                <span class="plate-num">Plate I</span>
+                                <span class="plate-date">November 2026</span>
+                            </div>
+                            <div class="plate-art">
+                                <canvas class="plate-canvas" id="canvasPlate1"></canvas>
+                            </div>
+                            <h2 class="plate-title">The Damask Rose</h2>
+                            <div class="plate-latin">Rosa Damascena · Var. Sanguinea</div>
+                            <p class="plate-body">
+                                Five nested whorls of deep crimson velvet petals deepening to near-black at the core.
+                                Painted from life in the conservatory under starlight.
+                            </p>
+                            <div class="plate-signature">
+                                <span>Nocturne Herbarium</span>
+                                <span>Plate 1 of 6</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face: Plate II Stargazer Lily -->
+                        <div class="page-face back">
+                            <div class="plate-header">
+                                <span class="plate-num">Plate II</span>
+                                <span class="plate-date">November 2026</span>
+                            </div>
+                            <div class="plate-art">
+                                <canvas class="plate-canvas" id="canvasPlate2"></canvas>
+                            </div>
+                            <h2 class="plate-title">The Stargazer Lily</h2>
+                            <div class="plate-latin">Lilium Orientalis · Star of Midnight</div>
+                            <p class="plate-body">
+                                Flared recurved petals dappled with dark garnet papillae.
+                                Golden stamens heavy with rust pollen, radiating outwards into the cool evening air.
+                            </p>
+                            <div class="plate-signature">
+                                <span>Nocturne Herbarium</span>
+                                <span>Plate 2 of 6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Navigation Toolbar -->
+            <div class="book-controls">
+                <button class="btn-page-turn" id="btnPrevPage" type="button" aria-label="Previous page" disabled>‹</button>
+                <span class="page-indicator" id="pageIndicator" aria-live="polite">Cover</span>
+                <button class="btn-page-turn" id="btnNextPage" type="button" aria-label="Next page">›</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ==========================================
+        // CONFIG & CEREMONIAL UNLOCK SPECIFICATION
+        // ==========================================
+        // Target unlock date: November 9, 2026 at 00:00:00 local time
+        const UNLOCK_TIMESTAMP = "2026-11-09T00:00:00";
+        const unlockTargetDate = new Date(UNLOCK_TIMESTAMP);
+
+        // Application State
+        let isUnlocked = false;
+        let currentSpread = 0; // 0 = closed cover, 1 = sheet1 flipped, 2 = sheet2 flipped, 3 = sheet3 flipped
+        const maxSpreads = 3;
+        const sheets = [
+            document.getElementById("sheet1"),
+            document.getElementById("sheet2"),
+            document.getElementById("sheet3")
+        ];
+
+        // Audio System: Synthesized procedural sound effects (100% offline)
+        let audioCtx = null;
+        let soundEnabled = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === "suspended") {
+                audioCtx.resume();
+            }
+        }
+
+        function playWaxCrackSound() {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                // Crack noise burst
+                const bufferSize = audioCtx.sampleRate * 0.15;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.18));
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = "bandpass";
+                filter.frequency.setValueAtTime(1400, t);
+                filter.Q.setValueAtTime(3.0, t);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.6, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(t);
+
+                // Crystal chime resonant ring
+                const osc = audioCtx.createOscillator();
+                const oscGain = audioCtx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(1864, t);
+                oscGain.gain.setValueAtTime(0.18, t);
+                oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.8);
+                osc.connect(oscGain);
+                oscGain.connect(audioCtx.destination);
+                osc.start(t);
+                osc.stop(t + 0.8);
+            } catch (e) {
+                console.warn("Audio error:", e);
+            }
+        }
+
+        function playPageTurnSound() {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                // Soft parchment rustle
+                const bufferSize = audioCtx.sampleRate * 0.25;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.sin((i / bufferSize) * Math.PI);
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = "lowpass";
+                filter.frequency.setValueAtTime(800, t);
+                filter.frequency.linearRampToValueAtTime(350, t + 0.25);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.25, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(t);
+            } catch (e) {}
+        }
+
+        // Sound toggle button
+        const btnAudioToggle = document.getElementById("btnAudioToggle");
+        btnAudioToggle.addEventListener("click", () => {
+            initAudio();
+            soundEnabled = !soundEnabled;
+            btnAudioToggle.setAttribute("aria-pressed", soundEnabled ? "true" : "false");
+            btnAudioToggle.textContent = soundEnabled ? "Sound · On" : "Sound · Off";
+        });
+
+        // ==========================================
+        // STARFIELD BACKGROUND CANVAS
+        // ==========================================
+        const bgCanvas = document.getElementById("bgCanvas");
+        const bgCtx = bgCanvas.getContext("2d");
+        let stars = [];
+
+        function resizeBg() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+            stars = [];
+            const count = Math.floor((bgCanvas.width * bgCanvas.height) / 7000);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * bgCanvas.width,
+                    y: Math.random() * bgCanvas.height,
+                    r: Math.random() * 1.3 + 0.3,
+                    alpha: Math.random() * 0.6 + 0.2,
+                    speed: Math.random() * 0.02 + 0.005,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+        window.addEventListener("resize", resizeBg);
+        resizeBg();
+
+        function renderStars(time) {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            for (let s of stars) {
+                const a = s.alpha + Math.sin(time * 0.001 * s.speed * 60 + s.phase) * 0.25;
+                bgCtx.fillStyle = `rgba(243, 229, 223, ${Math.max(0.05, Math.min(1, a))})`;
+                bgCtx.beginPath();
+                bgCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                bgCtx.fill();
+            }
+            requestAnimationFrame(renderStars);
+        }
+        requestAnimationFrame(renderStars);
+
+        // ==========================================
+        // PROCEDURAL BOTANICAL PLATE ILLUSTRATIONS
+        // ==========================================
+        function paintRosePlate(canvas) {
+            const ctx = canvas.getContext("2d");
+            canvas.width = 400;
+            canvas.height = 360;
+            const cx = 200, cy = 180;
+
+            // Dark velvet petals in concentric spirals
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Stem & sepals
+            ctx.strokeStyle = "#2c3b28";
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + 40);
+            ctx.quadraticCurveTo(cx - 15, cy + 100, cx + 5, cy + 150);
+            ctx.stroke();
+
+            // Leaves
+            ctx.fillStyle = "#33452e";
+            ctx.beginPath();
+            ctx.ellipse(cx - 25, cy + 90, 22, 9, -0.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(cx + 28, cy + 115, 20, 8, 0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Rose petals
+            const rings = [
+                { count: 7, r: 64, color: "#7a111c", stroke: "#9c1b28", rot: 0.1 },
+                { count: 6, r: 46, color: "#9c1b28", stroke: "#c42432", rot: 0.4 },
+                { count: 5, r: 32, color: "#b51a2b", stroke: "#d92b3a", rot: 0.7 },
+                { count: 4, r: 20, color: "#6a0a14", stroke: "#8a0e1b", rot: 1.1 },
+                { count: 3, r: 10, color: "#36040a", stroke: "#4f0710", rot: 1.5 }
+            ];
+
+            for (let ring of rings) {
+                for (let i = 0; i < ring.count; i++) {
+                    const angle = (i / ring.count) * Math.PI * 2 + ring.rot;
+                    const px = cx + Math.cos(angle) * (ring.r * 0.55);
+                    const py = cy + Math.sin(angle) * (ring.r * 0.45);
+
+                    ctx.save();
+                    ctx.translate(px, py);
+                    ctx.rotate(angle + Math.PI / 2);
+
+                    const grad = ctx.createRadialGradient(0, 0, 2, 0, 0, ring.r * 0.6);
+                    grad.addColorStop(0, ring.stroke);
+                    grad.addColorStop(1, ring.color);
+
+                    ctx.fillStyle = grad;
+                    ctx.strokeStyle = "rgba(220, 60, 75, 0.35)";
+                    ctx.lineWidth = 1;
+
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, ring.r * 0.45, ring.r * 0.3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        }
+
+        function paintLilyPlate(canvas) {
+            const ctx = canvas.getContext("2d");
+            canvas.width = 400;
+            canvas.height = 360;
+            const cx = 200, cy = 180;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Stem
+            ctx.strokeStyle = "#2a3824";
+            ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + 50);
+            ctx.quadraticCurveTo(cx + 10, cy + 95, cx - 10, cy + 150);
+            ctx.stroke();
+
+            // 6 large recurved petals
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+
+                const grad = ctx.createLinearGradient(0, 0, 0, 85);
+                grad.addColorStop(0, "#520710");
+                grad.addColorStop(0.5, "#a61928");
+                grad.addColorStop(1, "#da2a3b");
+
+                ctx.fillStyle = grad;
+                ctx.strokeStyle = "rgba(240, 160, 150, 0.3)";
+                ctx.lineWidth = 1;
+
+                ctx.beginPath();
+                ctx.moveTo(0, 5);
+                ctx.quadraticCurveTo(18, 45, 6, 85);
+                ctx.quadraticCurveTo(0, 92, -6, 85);
+                ctx.quadraticCurveTo(-18, 45, 0, 5);
+                ctx.fill();
+                ctx.stroke();
+
+                // Dotted papillae on lily petals
+                ctx.fillStyle = "#2d0308";
+                for (let d = 15; d < 55; d += 10) {
+                    ctx.beginPath();
+                    ctx.arc((Math.random() - 0.5) * 8, d, 1.2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            // Golden stamens
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 + 0.5;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.strokeStyle = "rgba(230, 200, 120, 0.7)";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, 50);
+                ctx.stroke();
+
+                // Anther
+                ctx.fillStyle = "#c97a2b";
+                ctx.beginPath();
+                ctx.ellipse(0, 52, 4, 1.8, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function paintTulipPlate(canvas) {
+            const ctx = canvas.getContext("2d");
+            canvas.width = 400;
+            canvas.height = 360;
+            const cx = 200, cy = 170;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Sturdy stem
+            ctx.strokeStyle = "#384732";
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + 45);
+            ctx.lineTo(cx, cy + 155);
+            ctx.stroke();
+
+            // Broad foliage
+            ctx.fillStyle = "#2b3b24";
+            ctx.beginPath();
+            ctx.moveTo(cx - 2, cy + 150);
+            ctx.quadraticCurveTo(cx - 50, cy + 110, cx - 35, cy + 60);
+            ctx.quadraticCurveTo(cx - 20, cy + 100, cx - 2, cy + 120);
+            ctx.fill();
+
+            // Tulip cup petals
+            const petals = [
+                { ox: -22, w: 28, h: 72, rot: -0.15, color1: "#87121e", color2: "#40060c" },
+                { ox: 22, w: 28, h: 72, rot: 0.15, color1: "#87121e", color2: "#40060c" },
+                { ox: 0, w: 32, h: 76, rot: 0, color1: "#ba1e2d", color2: "#610a13" }
+            ];
+
+            for (let p of petals) {
+                ctx.save();
+                ctx.translate(cx + p.ox, cy + 10);
+                ctx.rotate(p.rot);
+
+                const grad = ctx.createLinearGradient(0, -p.h / 2, 0, p.h / 2);
+                grad.addColorStop(0, p.color1);
+                grad.addColorStop(1, p.color2);
+
+                ctx.fillStyle = grad;
+                ctx.strokeStyle = "rgba(220, 60, 75, 0.4)";
+                ctx.lineWidth = 1;
+
+                ctx.beginPath();
+                ctx.ellipse(0, 0, p.w, p.h * 0.52, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function paintPosyPlate(canvas) {
+            const ctx = canvas.getContext("2d");
+            canvas.width = 400;
+            canvas.height = 360;
+            const cx = 200, cy = 180;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Wrapped black paper cone
+            ctx.fillStyle = "#150d12";
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + 120);
+            ctx.lineTo(cx - 60, cy);
+            ctx.quadraticCurveTo(cx, cy - 20, cx + 60, cy);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = "rgba(196, 36, 50, 0.4)";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Bloom heads peeking out
+            const blooms = [
+                { x: cx - 24, y: cy - 20, r: 24, c: "#9c1b28" },
+                { x: cx + 24, y: cy - 20, r: 24, c: "#ba1e2d" },
+                { x: cx, y: cy - 35, r: 28, c: "#720d18" }
+            ];
+
+            for (let b of blooms) {
+                ctx.fillStyle = b.c;
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = "rgba(255, 140, 130, 0.35)";
+                ctx.stroke();
+            }
+
+            // Silk ribbon tie
+            ctx.fillStyle = "#800f1c";
+            ctx.beginPath();
+            ctx.ellipse(cx - 15, cy + 60, 16, 7, -0.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(cx + 15, cy + 60, 16, 7, 0.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#b81c2d";
+            ctx.beginPath();
+            ctx.arc(cx, cy + 60, 6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Initialize plate drawings
+        window.addEventListener("DOMContentLoaded", () => {
+            const p1 = document.getElementById("canvasPlate1");
+            const p2 = document.getElementById("canvasPlate2");
+            const p3 = document.getElementById("canvasPlate3");
+            const p5 = document.getElementById("canvasPlate5");
+            if (p1) paintRosePlate(p1);
+            if (p2) paintLilyPlate(p2);
+            if (p3) paintTulipPlate(p3);
+            if (p5) paintPosyPlate(p5);
+        });
+
+        // ==========================================
+        // LOCK & UNLOCK INTERACTION LOGIC
+        // ==========================================
+        const lockedView = document.getElementById("lockedView");
+        const openView = document.getElementById("openView");
+        const albumClosedWrapper = document.getElementById("albumClosedWrapper");
+        const bookClosed = document.getElementById("bookClosed");
+        const waxSeal = document.getElementById("waxSeal");
+        const sealTooltip = document.getElementById("sealTooltip");
+        const sealCrackSvg = document.getElementById("sealCrackSvg");
+        const btnBreakSealTest = document.getElementById("btnBreakSealTest");
+
+        let tooltipTimer = null;
+
+        function showLockedTooltip() {
+            sealTooltip.classList.add("visible");
+            bookClosed.classList.add("seal-shake");
+            initAudio();
+
+            clearTimeout(tooltipTimer);
+            tooltipTimer = setTimeout(() => {
+                sealTooltip.classList.remove("visible");
+                bookClosed.classList.remove("seal-shake");
+            }, 2600);
+        }
+
+        // Check if date has passed or unlock requested
+        function checkUnlockTime() {
+            const now = new Date();
+            if (now >= unlockTargetDate) {
+                unlockAlbum(false);
+            }
+        }
+
+        // Hover & Click triggers tooltip in locked mode
+        albumClosedWrapper.addEventListener("mouseenter", () => {
+            if (!isUnlocked) showLockedTooltip();
+        });
+        albumClosedWrapper.addEventListener("click", () => {
+            if (!isUnlocked) showLockedTooltip();
+        });
+
+        // Trigger unlock with animation
+        function unlockAlbum(withSound = true) {
+            if (isUnlocked) return;
+            isUnlocked = true;
+            initAudio();
+
+            // Animate golden crack fracture
+            sealCrackSvg.style.opacity = "1";
+            const paths = sealCrackSvg.querySelectorAll("path");
+            paths.forEach((p, idx) => {
+                p.style.transition = `stroke-dashoffset 0.6s ${idx * 0.12}s ease`;
+                p.style.strokeDashoffset = "0";
+            });
+
+            if (withSound) playWaxCrackSound();
+
+            setTimeout(() => {
+                lockedView.classList.add("hidden");
+                setTimeout(() => {
+                    openView.classList.add("active");
+                    updateSpreads();
+                }, 400);
+            }, 750);
+        }
+
+        btnBreakSealTest.addEventListener("click", (e) => {
+            e.stopPropagation();
+            unlockAlbum(true);
+        });
+
+        // Double-click secret shortcut on seal to break seal
+        waxSeal.addEventListener("dblclick", (e) => {
+            e.stopPropagation();
+            unlockAlbum(true);
+        });
+
+        // Check time on load
+        checkUnlockTime();
+
+        // ==========================================
+        // FLIP-BOOK SPREAD NAVIGATION
+        // ==========================================
+        const btnPrevPage = document.getElementById("btnPrevPage");
+        const btnNextPage = document.getElementById("btnNextPage");
+        const pageIndicator = document.getElementById("pageIndicator");
+        const zonePrev = document.getElementById("zonePrev");
+        const zoneNext = document.getElementById("zoneNext");
+
+        const spreadTitles = [
+            "Cover · The Night Garden",
+            "Plates I & II · Damask & Stargazer",
+            "Plates III & IV · Tulip & Dedication",
+            "Plates V & VI · Posy & Colophon"
+        ];
+
+        function updateSpreads() {
+            // Update sheet flip transforms
+            sheets.forEach((sheet, idx) => {
+                if (idx < currentSpread) {
+                    sheet.classList.add("flipped");
+                    sheet.style.zIndex = idx + 1;
+                } else {
+                    sheet.classList.remove("flipped");
+                    sheet.style.zIndex = maxSpreads - idx + 1;
+                }
+            });
+
+            btnPrevPage.disabled = (currentSpread === 0);
+            btnNextPage.disabled = (currentSpread === maxSpreads);
+
+            pageIndicator.textContent = spreadTitles[currentSpread] || `Spread ${currentSpread}`;
+        }
+
+        function turnNext() {
+            if (currentSpread < maxSpreads) {
+                currentSpread++;
+                playPageTurnSound();
+                updateSpreads();
+            }
+        }
+
+        function turnPrev() {
+            if (currentSpread > 0) {
+                currentSpread--;
+                playPageTurnSound();
+                updateSpreads();
+            }
+        }
+
+        btnNextPage.addEventListener("click", turnNext);
+        btnPrevPage.addEventListener("click", turnPrev);
+        zoneNext.addEventListener("click", turnNext);
+        zonePrev.addEventListener("click", turnPrev);
+
+        // Click right sheet directly
+        sheets.forEach((sheet, idx) => {
+            sheet.addEventListener("click", (e) => {
+                e.stopPropagation();
+                if (idx === currentSpread) {
+                    turnNext();
+                } else if (idx === currentSpread - 1) {
+                    turnPrev();
+                }
+            });
+        });
+
+        // Keyboard navigation (ArrowLeft, ArrowRight)
+        window.addEventListener("keydown", (e) => {
+            if (!isUnlocked) {
+                if (e.key === "Enter" || e.key === " ") {
+                    showLockedTooltip();
+                }
+                return;
+            }
+            if (e.key === "ArrowRight" || e.key === "PageDown") {
+                turnNext();
+            } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+                turnPrev();
+            }
+        });
+
+        // Touch Swipe Navigation for mobile
+        let touchStartX = 0;
+        window.addEventListener("touchstart", (e) => {
+            if (e.touches && e.touches[0]) {
+                touchStartX = e.touches[0].clientX;
+            }
+        }, { passive: true });
+
+        window.addEventListener("touchend", (e) => {
+            if (!isUnlocked || !e.changedTouches || !e.changedTouches[0]) return;
+            const diffX = e.changedTouches[0].clientX - touchStartX;
+            if (diffX < -50) {
+                turnNext(); // Swiped left -> next
+            } else if (diffX > 50) {
+                turnPrev(); // Swiped right -> prev
+            }
+        }, { passive: true });
+
+    </script>
+</body>
+
+</html>

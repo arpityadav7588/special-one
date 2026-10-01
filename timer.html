@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>09 · 11 · 2026 — Birthday Countdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;1,400;1,600&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1b1411;
+            --ivory: #f2e8d8;
+            --muted: #95826e;
+            --dim: #5d4f42;
+            --coral: #ff6a52;
+            --line: rgba(242, 232, 216, .16);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            color-scheme: dark
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ivory);
+            font-family: "Space Mono", ui-monospace, monospace;
+            overflow: hidden;
+            overscroll-behavior: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #app,
+        #app canvas {
+            position: fixed;
+            inset: 0
+        }
+
+        #app canvas {
+            display: block;
+            opacity: 0;
+            transition: opacity 1.1s ease .1s;
+            cursor: grab;
+            touch-action: none
+        }
+
+        #app canvas.on {
+            opacity: 1
+        }
+
+        .corner {
+            position: fixed;
+            z-index: 5;
+            pointer-events: none
+        }
+
+        .tl {
+            top: 28px;
+            left: 32px;
+            max-width: min(54vw, 640px)
+        }
+
+        .tr {
+            top: 30px;
+            right: 32px;
+            text-align: right
+        }
+
+        .bl {
+            bottom: 28px;
+            left: 32px
+        }
+
+        .br {
+            right: 32px;
+            bottom: 28px;
+            display: flex;
+            gap: 10px
+        }
+
+        .eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .34em;
+            text-transform: uppercase;
+            color: var(--coral)
+        }
+
+        h1 {
+            font-family: "Fraunces", serif;
+            font-style: italic;
+            font-weight: 600;
+            font-size: clamp(30px, 4.4vw, 52px);
+            line-height: 1.05;
+            margin: 12px 0 8px;
+            color: var(--ivory)
+        }
+
+        .sub {
+            font-family: "Fraunces", serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(14px, 1.6vw, 19px);
+            color: var(--muted)
+        }
+
+        .nameInput {
+            font-family: "Fraunces", serif;
+            font-style: italic;
+            font-size: inherit;
+            color: var(--ivory);
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed rgba(242, 232, 216, .35);
+            outline: none;
+            width: 13ch;
+            padding: 0 2px;
+            pointer-events: auto;
+        }
+
+        .nameInput::placeholder {
+            color: var(--dim)
+        }
+
+        .nameInput:focus {
+            border-bottom-color: var(--coral)
+        }
+
+        .tr div {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            font-size: 10px;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            margin-bottom: 8px
+        }
+
+        .tr b {
+            font-weight: 700;
+            color: var(--ivory)
+        }
+
+        .tr span {
+            color: var(--dim)
+        }
+
+        #readout .line {
+            font-size: clamp(17px, 2.4vw, 31px);
+            font-weight: 700;
+            white-space: nowrap
+        }
+
+        #readout .sign {
+            color: var(--coral);
+            margin-right: .35em
+        }
+
+        #readout .seg b {
+            font-weight: 700;
+            color: var(--ivory);
+            transition: color .25s
+        }
+
+        #readout .seg i {
+            font-style: normal;
+            font-size: .42em;
+            letter-spacing: .1em;
+            color: var(--muted);
+            margin-left: .3em
+        }
+
+        #readout .sep {
+            color: var(--dim);
+            margin: 0 .3em
+        }
+
+        #readout .seg.lit b {
+            color: #ffa07e
+        }
+
+        .meta {
+            margin-top: 10px;
+            font-size: 10px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--dim)
+        }
+
+        .br button {
+            pointer-events: auto;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: rgba(28, 21, 16, .72);
+            border: 1px solid var(--line);
+            padding: 11px 14px;
+            cursor: pointer;
+            transition: color .25s, border-color .25s, opacity .25s;
+        }
+
+        .br button:hover {
+            color: var(--ivory);
+            border-color: rgba(255, 106, 82, .6)
+        }
+
+        .br button.on {
+            color: var(--coral);
+            border-color: rgba(255, 106, 82, .6)
+        }
+
+        .br button.busy {
+            opacity: .45;
+            pointer-events: none
+        }
+
+        #err {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: .12em;
+            text-align: center;
+            padding: 40px;
+            background: var(--bg)
+        }
+
+        #err[hidden] {
+            display: none
+        }
+
+        .corner {
+            opacity: 0;
+            transform: translateY(12px);
+            animation: rise .9s cubic-bezier(.22, .75, .25, 1) forwards
+        }
+
+        .tl {
+            animation-delay: .25s
+        }
+
+        .tr {
+            animation-delay: .45s
+        }
+
+        .br {
+            animation-delay: .6s
+        }
+
+        .bl {
+            animation-delay: .75s
+        }
+
+        @keyframes rise {
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        @media (max-width:700px) {
+            .tl {
+                top: 16px;
+                left: 18px
+            }
+
+            .tr {
+                display: none
+            }
+
+            .br {
+                top: 16px;
+                right: 16px;
+                bottom: auto;
+                flex-direction: column
+            }
+
+            .bl {
+                left: 18px;
+                bottom: 16px
+            }
+
+            .br button {
+                padding: 9px 11px;
+                background: rgba(28, 21, 16, .6)
+            }
+
+            #readout .meta {
+                font-size: 9px;
+                letter-spacing: .12em
+            }
+        }
+    </style>
+    <script>
+        // Boot guard: if the 3D module never comes up, say so instead of showing a black page.
+        setTimeout(function () {
+            if (!window.__BDAY_OK) {
+                var e = document.getElementById('err');
+                if (e) { e.textContent = 'The party could not load its 3D parts — check your connection and reload.'; e.hidden = false; }
+            }
+        }, 9000);
+    </script>
+    <script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <header class="corner tl">
+        <div class="eyebrow">Birthday countdown · 09 nov 2026</div>
+        <h1>A birthday approaches</h1>
+        <div class="sub"><span id="subText">november ninth, two thousand twenty-six — for </span><input id="nameInput"
+                class="nameInput" maxlength="24" placeholder="someone wonderful" spellcheck="false"></div>
+    </header>
+
+    <div class="corner tr" id="hints">
+        <div><b>drag</b><span>orbit</span></div>
+        <div><b>scroll</b><span>zoom</span></div>
+        <div><b>click things</b><span>pop · light · scramble</span></div>
+    </div>
+
+    <div class="corner bl" id="readout">
+        <div class="line">
+            <span class="sign" id="sign">T−</span><span class="seg" data-u="days"><b id="rd">000</b><i>d</i></span><span
+                class="sep">·</span><span class="seg" data-u="hours"><b id="rh">00</b><i>h</i></span><span
+                class="sep">·</span><span class="seg" data-u="minutes"><b id="rm">00</b><i>m</i></span><span
+                class="sep">·</span><span class="seg" data-u="seconds"><b id="rs">00.0</b><i>s</i></span>
+        </div>
+        <div class="meta" id="meta">target 2026-11-09 00:00 local · now --:--:--</div>
+    </div>
+
+    <div class="corner br">
+        <button id="btnSound" type="button" aria-pressed="false">Sound · Off</button>
+        <button id="btnPeek" type="button">Peek at the moment</button>
+        <button id="btnReset" type="button">Reset view</button>
+    </div>
+
+    <div id="err" hidden>The party could not load its 3D parts — check your connection and reload.</div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+        import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+        /* ————— the date ————— */
+        const TARGET = new Date(2026, 10, 9);   // 09 Nov 2026, local midnight
+        const T0 = TARGET.getTime();
+        const pad2 = n => String(n).padStart(2, '0');
+        const padN = (n, w) => String(n).padStart(w, '0');
+        const targetStr = `${TARGET.getFullYear()}-${pad2(TARGET.getMonth() + 1)}-${pad2(TARGET.getDate())}`;
+
+        const secsAbs = () => Math.abs(Date.now() - T0) / 1000;
+
+        /* ————— how many digits ————— */
+        const nDay = Math.max(3, String(Math.floor(secsAbs() / 86400)).length);
+        const digitUnits = [...Array(nDay).fill('days'), 'hours', 'hours', 'minutes', 'minutes', 'seconds', 'seconds'];
+
+        /* row layout: pitch inside a group, wider gaps between groups */
+        const PITCH = 0.9, GAPG = 1.6;
+        const raw = [];
+        {
+            let s = 0;
+            for (let i = 0; i < digitUnits.length; i++) {
+                if (i > 0) s += digitUnits[i] !== digitUnits[i - 1] ? GAPG : PITCH;
+                raw.push(s);
+            }
+        }
+        const rowShift = raw[raw.length - 1] / 2;
+        const digitXs = raw.map(c => c - rowShift);
+        const rowSpan = raw[raw.length - 1];
+
+        const groups = [];
+        digitUnits.forEach((u, i) => {
+            if (i === 0 || digitUnits[i - 1] !== u) groups.push({ unit: u, idx: [] });
+            groups[groups.length - 1].idx.push(i);
+        });
+
+        function digitsOf(S) {
+            const Si = Math.max(0, Math.floor(S));
+            const d = Math.floor(Si / 86400);
+            const h = Math.floor((Si - d * 86400) / 3600);
+            const m = Math.floor((Si % 3600) / 60);
+            const s = Si % 60;
+            return [
+                ...padN(d, nDay).split('').map(Number),
+                ...pad2(h).split('').map(Number),
+                ...pad2(m).split('').map(Number),
+                ...pad2(s).split('').map(Number),
+            ];
+        }
+        const countStrCacheOf = S => digitsOf(S).join('');
+        const messageStr = 'HAPPYBDAY'.padEnd(digitUnits.length, ' ');
+
+        /* ————— seven-segment patterns (digits + calculator lettering) ————— */
+        const PATTERNS = {
+            '0': 'abcdef', '1': 'bc', '2': 'abdeg', '3': 'abcdg', '4': 'bcfg', '5': 'acdfg',
+            '6': 'acdefg', '7': 'abc', '8': 'abcdefg', '9': 'abcdfg',
+            'H': 'bcefg', 'A': 'abcefg', 'P': 'abefg', 'Y': 'bcdfg', 'B': 'abcdefg', 'D': 'bcdeg', ' ': ''
+        };
+
+        /* ————— wait briefly for the fonts so canvas labels paint crisply ————— */
+        try {
+            await Promise.race([
+                Promise.all([
+                    document.fonts.load('700 40px "Space Mono"'),
+                    document.fonts.load('italic 600 40px "Fraunces"'),
+                ]),
+                new Promise(res => setTimeout(res, 1600)),
+            ]);
+        } catch (e) { /* generic fallbacks are fine */ }
+
+        /* ————— renderer / scene ————— */
+        const app = document.getElementById('app');
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        } catch (e) {
+            const err = document.getElementById('err');
+            err.textContent = 'WebGL is unavailable — the countdown needs a 3D canvas.';
+            err.hidden = false;
+            throw e;
+        }
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.1;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        app.appendChild(renderer.domElement);
+        const cv = renderer.domElement;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1b1411);
+        scene.fog = new THREE.Fog(0x1b1411, 22, 70);
+        const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.2, 260);
+
+        const pmrem = new THREE.PMREMGenerator(renderer);
+        scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+        pmrem.dispose();
+
+        scene.add(new THREE.AmbientLight(0x8a7a68, 0.5));
+        const key = new THREE.DirectionalLight(0xffe9d2, 3.1);
+        key.position.set(-9, 13, 15);
+        key.target.position.set(0, 3, 0);
+        key.castShadow = true;
+        key.shadow.mapSize.set(2048, 2048);
+        Object.assign(key.shadow.camera, { left: -11, right: 11, top: 9, bottom: -8, near: 2, far: 46 });
+        key.shadow.bias = -0.0004;
+        key.shadow.normalBias = 0.04;
+        scene.add(key, key.target);
+        const fill = new THREE.DirectionalLight(0xd8cfc4, 0.6);
+        fill.position.set(8, 5, 18); fill.target.position.set(0, 2, 0);
+        scene.add(fill, fill.target);
+        const rim = new THREE.DirectionalLight(0xffc890, 1.2);
+        rim.position.set(0, 10, -9); rim.target.position.set(0, 3, 0);
+        scene.add(rim, rim.target);
+        const candleLight = new THREE.PointLight(0xff9a4a, 0, 9, 2);
+        candleLight.position.set(0, 3.4, 0);
+        scene.add(candleLight);
+
+        /* ————— utilities ————— */
+        const { clamp, damp, lerp } = THREE.MathUtils;
+        const easeOutBack2 = t => { const c = 1.7, u = t - 1; return 1 + (c + 1) * u * u * u + c * u * u; };
+        const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        let clockT = 0;
+
+        /* ————— canvas textures ————— */
+        const redraws = [];
+        function canvasTexture(w, h, draw) {
+            const c = document.createElement('canvas');
+            c.width = w; c.height = h;
+            draw(c.getContext('2d'), w, h);
+            const t = new THREE.CanvasTexture(c);
+            t.colorSpace = THREE.SRGBColorSpace;
+            t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            redraws.push(() => { draw(c.getContext('2d'), w, h); t.needsUpdate = true; });
+            return t;
+        }
+        document.fonts.ready.then(() => {
+            if (document.fonts.check('700 40px "Space Mono"')) redraws.forEach(f => f());
+        });
+
+        /* candy stripes (poles + candles) */
+        const stripeTex = canvasTexture(256, 64, x => {
+            x.fillStyle = '#f5ead8'; x.fillRect(0, 0, 256, 64);
+            x.fillStyle = '#ff6a52'; x.fillRect(0, 0, 128, 64);
+        });
+        const poleTex = stripeTex.clone(); poleTex.wrapS = THREE.RepeatWrapping; poleTex.repeat.set(9, 1); poleTex.needsUpdate = true;
+        const candleTexS = stripeTex.clone(); candleTexS.wrapS = THREE.RepeatWrapping; candleTexS.repeat.set(6, 1); candleTexS.needsUpdate = true;
+
+        /* ————— the board ————— */
+        const BW = rowSpan + 1.2, BH = 2.85, BD = 0.45, BY = 5.02;
+        const DIGIT_Y = 5.25, FACE_Z = 0.305;
+        const content = new THREE.Group();
+        scene.add(content);
+
+        const hoverables = [];
+
+        /* board face frame + caption */
+        const faceTex = canvasTexture(2048, 560, (x, W, H) => {
+            x.clearRect(0, 0, W, H);
+            x.strokeStyle = 'rgba(255,106,82,0.55)'; x.lineWidth = 4;
+            x.beginPath();
+            if (x.roundRect) x.roundRect(26, 26, W - 52, H - 52, 30); else x.rect(26, 26, W - 52, H - 52);
+            x.stroke();
+            x.strokeStyle = 'rgba(242,232,216,0.10)'; x.lineWidth = 2;
+            x.beginPath();
+            if (x.roundRect) x.roundRect(48, 48, W - 96, H - 96, 18); else x.rect(48, 48, W - 96, H - 96);
+            x.stroke();
+            x.letterSpacing = '26px';
+            x.font = '700 30px "Space Mono", monospace';
+            x.textAlign = 'center'; x.textBaseline = 'middle';
+            x.fillStyle = 'rgba(242,232,216,0.5)';
+            x.fillText('BIRTHDAY COUNTDOWN · 09 XI MMXXVI', W / 2 + 13, H - 50);
+            x.letterSpacing = '0px';
+            x.fillStyle = 'rgba(255,106,82,0.6)';
+            for (const dx of [-720, 720]) {
+                x.save(); x.translate(W / 2 + dx, H - 50); x.rotate(Math.PI / 4); x.fillRect(-8, -8, 16, 16); x.restore();
+            }
+        });
+
+        /* unit labels under the digit groups */
+        const STRIP_W = rowSpan + 0.6;
+        const groupCenter = {};
+        groups.forEach(g => {
+            groupCenter[g.unit] = (raw[g.idx[0]] + raw[g.idx[g.idx.length - 1]]) / 2 - rowShift;
+        });
+        const labelTex = canvasTexture(2048, 80, (x, W, H) => {
+            x.clearRect(0, 0, W, H);
+            x.letterSpacing = '14px';
+            x.font = '700 34px "Space Mono", monospace';
+            x.textAlign = 'center'; x.textBaseline = 'middle';
+            x.fillStyle = 'rgba(242,232,216,0.55)';
+            const map = wx => (wx + STRIP_W / 2) / STRIP_W * W;
+            x.fillText('DAYS', map(groupCenter.days) + 7, H / 2);
+            x.fillText('HOURS', map(groupCenter.hours) + 7, H / 2);
+            x.fillText('MINUTES', map(groupCenter.minutes) + 7, H / 2);
+            x.fillText('SECONDS', map(groupCenter.seconds) + 7, H / 2);
+        });
+
+        /* ————— segment geometry ————— */
+        function segGeo(L, T, vertical) {
+            const s = new THREE.Shape();
+            s.moveTo(-L / 2, 0);
+            s.lineTo(-L / 2 + T / 2, T / 2);
+            s.lineTo(L / 2 - T / 2, T / 2);
+            s.lineTo(L / 2, 0);
+            s.lineTo(L / 2 - T / 2, -T / 2);
+            s.lineTo(-L / 2 + T / 2, -T / 2);
+            s.closePath();
+            const g = new THREE.ExtrudeGeometry(s, {
+                depth: 0.085, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 1
+            });
+            g.translate(0, 0, -0.0425);
+            if (vertical) g.rotateZ(Math.PI / 2);
+            return g;
+        }
+        const DGW = 0.78, DGH = 1.32, SGT = 0.17;
+        const geoH = segGeo(DGW - SGT, SGT, false);
+        const geoV = segGeo(0.345, SGT, true);
+        const SEG_POS = {
+            a: [0, 0.575], b: [0.305, 0.2875], c: [0.305, -0.2875],
+            d: [0, -0.575], e: [-0.305, -0.2875], f: [-0.305, 0.2875], g: [0, 0]
+        };
+        const bezelGeo = new THREE.PlaneGeometry(DGW + 0.16, DGH + 0.16);
+        const matBezel = new THREE.MeshStandardMaterial({ color: 0x191009, roughness: 0.8, metalness: 0.2 });
+
+        const digits = [];
+        class Digit {
+            constructor(i) {
+                this.i = i;
+                this.unit = digitUnits[i];
+                this.group = new THREE.Group();
+                this.group.position.set(digitXs[i], DIGIT_Y, FACE_Z);
+                const bez = new THREE.Mesh(bezelGeo, matBezel);
+                bez.position.z = -0.076;
+                this.group.add(bez);
+                this.segs = {};
+                for (const id in SEG_POS) {
+                    const [sx, sy] = SEG_POS[id];
+                    const vert = 'bcef'.includes(id);
+                    const mat = new THREE.MeshStandardMaterial({
+                        color: 0x2e241d, emissive: 0xff8046, emissiveIntensity: 0.05,
+                        roughness: 0.4, metalness: 0.1
+                    });
+                    const m = new THREE.Mesh(vert ? geoV : geoH, mat);
+                    m.position.set(sx, sy, 0);
+                    m.castShadow = true;
+                    m.userData = { type: 'seg', digit: this, unit: this.unit };
+                    this.group.add(m);
+                    hoverables.push(m);
+                    const smat = new THREE.MeshBasicMaterial({
+                        color: 0xff9a5e, transparent: true, opacity: 0,
+                        blending: THREE.AdditiveBlending, depthWrite: false
+                    });
+                    const shell = new THREE.Mesh(vert ? geoV : geoH, smat);
+                    shell.scale.set(1.16, 1.16, 0.5);
+                    shell.position.set(sx, sy, 0.09);
+                    shell.renderOrder = 5;
+                    this.group.add(shell);
+                    this.segs[id] = { mat, smat, cur: 0, target: 0 };
+                }
+                this.char = ' ';
+                this.scramble = null;
+                content.add(this.group);
+            }
+            setChar(c) {
+                if (c === this.char) return;
+                this.char = c;
+                const pat = PATTERNS[c] || '';
+                for (const id in this.segs) this.segs[id].target = pat.includes(id) ? 1 : 0;
+            }
+            scrambleTo(c, dur) { this.scramble = { until: clockT + dur, final: c, next: 0 }; }
+            update(dt) {
+                if (this.scramble) {
+                    const s = this.scramble;
+                    if (clockT >= s.until) { this.setChar(s.final); this.scramble = null; }
+                    else if (clockT >= s.next) { this.setChar(String((Math.random() * 10) | 0)); s.next = clockT + 0.065; }
+                }
+                const hb = hoverBonus[this.unit] || 0;
+                const k = Math.min(1, dt * 13);
+                for (const id in this.segs) {
+                    const s = this.segs[id];
+                    s.cur += (s.target - s.cur) * k;
+                    s.mat.emissiveIntensity = 0.05 + s.cur * 2.2 + hb * 0.35;
+                    s.smat.opacity = s.cur * 0.3 + hb * 0.06;
+                }
+            }
+        }
+        for (let i = 0; i < digitUnits.length; i++) digits.push(new Digit(i));
+
+        /* colon dots (they fade away when a message takes over the board) */
+        const colonGeo = new THREE.SphereGeometry(0.075, 20, 14);
+        const colonMat = new THREE.MeshBasicMaterial({ color: 0xff8046, transparent: true, opacity: 0.5 });
+        const colons = [];
+        for (let gi = 0; gi < groups.length - 1; gi++) {
+            const a = groups[gi], b = groups[gi + 1];
+            const bx = (raw[a.idx[a.idx.length - 1]] + raw[b.idx[0]]) / 2 - rowShift;
+            for (const dy of [0.19, -0.19]) {
+                const dot = new THREE.Mesh(colonGeo, colonMat);
+                dot.position.set(bx, DIGIT_Y + dy, FACE_Z);
+                content.add(dot);
+                colons.push(dot);
+            }
+        }
+
+        /* slab, frame, labels, screws, LED */
+        const matBoard = new THREE.MeshStandardMaterial({ color: 0x261b13, roughness: 0.5, metalness: 0.3, envMapIntensity: 0.5 });
+        const slab = new THREE.Mesh(new RoundedBoxGeometry(BW, BH, BD, 4, 0.1), matBoard);
+        slab.position.set(0, BY, 0);
+        slab.castShadow = slab.receiveShadow = true;
+        slab.userData = { type: 'board' };
+        content.add(slab);
+        hoverables.push(slab);
+
+        const facePlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(BW - 0.3, BH - 0.13),
+            new THREE.MeshBasicMaterial({ map: faceTex, transparent: true })
+        );
+        facePlane.position.set(0, BY, 0.2265);
+        content.add(facePlane);
+
+        const labelPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(STRIP_W, STRIP_W / 2048 * 80),
+            new THREE.MeshBasicMaterial({ map: labelTex, transparent: true })
+        );
+        labelPlane.position.set(0, 4.3, 0.232);
+        content.add(labelPlane);
+
+        const matBrass = new THREE.MeshStandardMaterial({ color: 0xd9a44a, roughness: 0.35, metalness: 0.9, envMapIntensity: 1.0 });
+        const screwGeo = new THREE.CylinderGeometry(0.045, 0.045, 0.03, 12); screwGeo.rotateX(Math.PI / 2);
+        for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
+            const sc = new THREE.Mesh(screwGeo, matBrass);
+            sc.position.set(sx * (BW / 2 - 0.65), BY + sy * (BH / 2 - 0.22), 0.23);
+            content.add(sc);
+        }
+        const ledMat = new THREE.MeshBasicMaterial({ color: 0xff5a40, transparent: true, opacity: 0.8 });
+        const led = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 10), ledMat);
+        led.position.set(BW / 2 - 1.2, BY - BH / 2 + 0.18, 0.24);
+        content.add(led);
+
+        /* ————— the party table, cake, candles ————— */
+        const matCloth = new THREE.MeshStandardMaterial({ color: 0xcfc1ab, roughness: 0.9, metalness: 0, side: THREE.DoubleSide, envMapIntensity: 0.3 });
+        const skirt = new THREE.Mesh(new THREE.CylinderGeometry(4.0, 4.28, 1.44, 48, 1, true), matCloth);
+        skirt.position.y = 0.72;
+        content.add(skirt);
+        const hem = new THREE.Mesh(new THREE.CylinderGeometry(4.31, 4.31, 0.12, 48),
+            new THREE.MeshStandardMaterial({ color: 0xff6a52, roughness: 0.7, envMapIntensity: 0.3 }));
+        hem.position.y = 0.1;
+        content.add(hem);
+        const matWood = new THREE.MeshStandardMaterial({ color: 0x4a3226, roughness: 0.55, metalness: 0.05, envMapIntensity: 0.4 });
+        const tabletop = new THREE.Mesh(new THREE.CylinderGeometry(4.45, 4.45, 0.16, 64), matWood);
+        tabletop.position.y = 1.5;
+        tabletop.castShadow = tabletop.receiveShadow = true;
+        content.add(tabletop);
+
+        const matPlate = new THREE.MeshStandardMaterial({ color: 0xc9a35a, roughness: 0.3, metalness: 0.85, envMapIntensity: 1.0 });
+        const plate = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 1.9, 0.07, 48), matPlate);
+        plate.position.y = 1.615;
+        plate.castShadow = plate.receiveShadow = true;
+        content.add(plate);
+
+        const matCream = new THREE.MeshStandardMaterial({ color: 0xf2e4cd, roughness: 0.65, metalness: 0, envMapIntensity: 0.35 });
+        const matCoral = new THREE.MeshStandardMaterial({ color: 0xff6a52, roughness: 0.55, metalness: 0, envMapIntensity: 0.35 });
+        function cakePart(r, h, y, mat) {
+            const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 48), mat);
+            m.position.y = y;
+            m.castShadow = m.receiveShadow = true;
+            content.add(m);
+            return m;
+        }
+        cakePart(1.45, 0.62, 1.96, matCream);   // bottom tier
+        cakePart(1.47, 0.10, 2.32, matCoral);   // filling
+        cakePart(0.98, 0.50, 2.62, matCream);   // top tier
+        cakePart(1.00, 0.09, 2.915, matCoral);  // icing
+
+        /* sprinkles */
+        const confColors = [0xff6a52, 0xf5ead8, 0xe6b455, 0x3f8f7a, 0xe8907e];
+        const confMats = confColors.map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.55, metalness: 0.05, side: THREE.DoubleSide }));
+        const sprinkleGeo = new THREE.BoxGeometry(0.16, 0.045, 0.045);
+        for (let i = 0; i < 28; i++) {
+            const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * 0.8;
+            const sp = new THREE.Mesh(sprinkleGeo, confMats[i % 5]);
+            sp.position.set(Math.cos(a) * r, 2.985, Math.sin(a) * r);
+            sp.rotation.y = Math.random() * Math.PI;
+            sp.rotation.x = (Math.random() - 0.5) * 0.12;
+            content.add(sp);
+        }
+
+        /* candles + flames */
+        const candleGeo = new THREE.CylinderGeometry(0.035, 0.042, 0.55, 14);
+        const matCandle = new THREE.MeshStandardMaterial({ map: candleTexS, roughness: 0.45, metalness: 0.05 });
+        const flameCoreGeo = new THREE.SphereGeometry(0.05, 12, 10);
+        const flameGlowGeo = new THREE.SphereGeometry(0.07, 12, 10);
+        function makeFlame() {
+            const g = new THREE.Group();
+            const core = new THREE.Mesh(flameCoreGeo, new THREE.MeshBasicMaterial({ color: 0xfff3c8, transparent: true, opacity: 0.95 }));
+            core.scale.set(1, 1.8, 1);
+            const glow = new THREE.Mesh(flameGlowGeo, new THREE.MeshBasicMaterial({
+                color: 0xff8c3a, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false
+            }));
+            glow.scale.set(1.5, 1.9, 1.5);
+            glow.renderOrder = 6;
+            g.add(core, glow);
+            g.visible = false;
+            return { g, glow };
+        }
+        const candles = [];
+        for (let i = 0; i < 5; i++) {
+            const a = Math.PI / 2 + i * (Math.PI * 2 / 5);
+            const x = Math.cos(a) * 0.55, z = Math.sin(a) * 0.55;
+            const m = new THREE.Mesh(candleGeo, matCandle);
+            m.position.set(x, 3.235, z);
+            m.rotation.set((Math.random() - 0.5) * 0.1, 0, (Math.random() - 0.5) * 0.1);
+            m.castShadow = true;
+            content.add(m);
+            const flame = makeFlame();
+            flame.g.position.set(x, 3.56, z);
+            content.add(flame.g);
+            const c = { mesh: m, flame, lit: false, animT: -1, phase: Math.random() * 10 };
+            m.userData = { type: 'candle', ref: c };
+            candles.push(c);
+            hoverables.push(m);
+        }
+        function setCandleLit(c, lit) {
+            if (c.lit === lit) return;
+            c.lit = lit;
+            c.animT = clockT;
+            if (lit) matchSnd(); else puffSnd();
+        }
+        function lightAllCandles(lit) {
+            candles.forEach((c, i) => setTimeout(() => setCandleLit(c, lit), i * 90));
+        }
+
+        /* candy-stripe poles holding the board */
+        const matPole = new THREE.MeshStandardMaterial({ map: poleTex, roughness: 0.45, metalness: 0.05 });
+        for (const sx of [-3.9, 3.9]) {
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 2.06, 20), matPole);
+            pole.position.set(sx, 2.61, 0);
+            pole.castShadow = true;
+            content.add(pole);
+            const ferrule = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.11, 0.09, 16), matBrass);
+            ferrule.position.set(sx, 1.63, 0);
+            content.add(ferrule);
+        }
+
+        /* ————— balloons on strings ————— */
+        const balloonGeo = new THREE.SphereGeometry(0.8, 32, 24);
+        const knotGeo = new THREE.ConeGeometry(0.09, 0.15, 12);
+        const matString = new THREE.MeshStandardMaterial({ color: 0xe8dcc6, roughness: 0.85 });
+        const BALLOON_DEFS = [
+            { anchor: [-(BW / 2 - 0.95), 6.46, 0.1], base: [-0.7, 1.15, -0.4], color: 0xff6f58 },
+            { anchor: [(BW / 2 - 0.95), 6.46, 0.1], base: [0.75, 1.05, -0.3], color: 0x3d9480 },
+            { anchor: [0.0, 6.5, -0.4], base: [0.5, 1.7, -0.7], color: 0xf2e4cf },
+            { anchor: [-1.9, 1.66, 0.4], base: [-4.4, 4.8, 0.9], color: 0xe8b45c },
+            { anchor: [1.9, 1.66, 0.4], base: [4.45, 4.9, 0.7], color: 0xec8f7a },
+        ];
+        const balloons = [];
+        BALLOON_DEFS.forEach((def, i) => {
+            const anchor = new THREE.Group();
+            anchor.position.set(def.anchor[0], def.anchor[1], def.anchor[2]);
+            content.add(anchor);
+            const mat = new THREE.MeshPhysicalMaterial({
+                color: def.color, roughness: 0.32, metalness: 0,
+                clearcoat: 1, clearcoatRoughness: 0.15, envMapIntensity: 0.9
+            });
+            const node = new THREE.Group();
+            const sph = new THREE.Mesh(balloonGeo, mat);
+            sph.scale.set(1, 1.12, 1);
+            sph.castShadow = true;
+            node.add(sph);
+            const knot = new THREE.Mesh(knotGeo, mat);
+            knot.rotation.x = Math.PI;
+            knot.position.y = -0.93;
+            node.add(knot);
+            node.position.set(def.base[0], def.base[1], def.base[2]);
+            anchor.add(node);
+            const string = new THREE.Mesh(new THREE.BufferGeometry(), matString);
+            anchor.add(string);
+            const b = {
+                def, node, sph, mat, string,
+                base: [...def.base],
+                f1: 0.24 + Math.random() * 0.2, f2: 0.2 + Math.random() * 0.18, f3: 0.26 + Math.random() * 0.2,
+                p1: Math.random() * 6.28, p2: Math.random() * 6.28, p3: Math.random() * 6.28,
+                state: 'in', spawnT: 0.55 + i * 0.2, popT: 0, respawnAt: 0,
+            };
+            b.sph.userData = { type: 'balloon', ref: b };
+            balloons.push(b);
+            hoverables.push(sph);
+        });
+
+        function popBalloon(b) {
+            if (b.state !== 'in' || clockT < b.spawnT + 0.5) return;
+            b.state = 'pop';
+            b.popT = clockT;
+            b.string.visible = false;
+            b.mat.transparent = true;
+            popSnd(1);
+            exciteBalloons(1.4);
+            const wp = new THREE.Vector3();
+            b.node.getWorldPosition(wp);
+            wp.y += 0.3;
+            confettiBurst(wp, 26, 0.75);
+        }
+
+        /* ————— confetti pool ————— */
+        const geoStrip = new THREE.BoxGeometry(0.17, 0.012, 0.11);
+        const geoDisc = new THREE.CylinderGeometry(0.028, 0.028, 0.014, 10);
+        const geoStreamer = new THREE.BoxGeometry(0.022, 0.022, 0.75);
+        const pieces = [];
+        for (let i = 0; i < 150; i++) {
+            const kind = i % 9 === 0 ? 'disc' : i % 9 === 1 ? 'streamer' : 'strip';
+            const mesh = new THREE.Mesh(kind === 'disc' ? geoDisc : kind === 'streamer' ? geoStreamer : geoStrip, confMats[i % 5]);
+            mesh.visible = false;
+            mesh.position.set(0, -5, 0);
+            scene.add(mesh);
+            pieces.push({
+                mesh, alive: false, age: 0, life: 3, phase: 0,
+                vel: new THREE.Vector3(), rot: new THREE.Vector3(),
+                baseS: 0.75 + Math.random() * 0.5,
+            });
+        }
+        function confettiBurst(p, n = 60, power = 1) {
+            let spawned = 0;
+            for (const pc of pieces) {
+                if (spawned >= n) break;
+                if (pc.alive) continue;
+                pc.alive = true;
+                spawned++;
+                pc.age = 0;
+                pc.life = 2.3 + Math.random() * 1.4;
+                pc.phase = Math.random() * Math.PI * 2;
+                pc.mesh.visible = true;
+                pc.mesh.position.set(
+                    p.x + (Math.random() - 0.5) * 0.8,
+                    p.y + (Math.random() - 0.5) * 0.5,
+                    p.z + Math.random() * 0.7
+                );
+                pc.vel.set(Math.random() - 0.5, Math.random() * 0.75 + 0.35, Math.random() - 0.5)
+                    .normalize().multiplyScalar((2.2 + Math.random() * 2.4) * power);
+                pc.rot.set((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
+                pc.mesh.scale.setScalar(pc.baseS);
+            }
+        }
+        function boardBurst(power = 1) {
+            confettiBurst(new THREE.Vector3(-(BW / 2 - 0.9), 6.6, 0.2), 34, power);
+            confettiBurst(new THREE.Vector3((BW / 2 - 0.9), 6.6, 0.2), 34, power);
+            confettiBurst(new THREE.Vector3(0, 7.0, -0.2), 40, power * 1.05);
+        }
+
+        /* floor */
+        const floor = new THREE.Mesh(new THREE.CircleGeometry(46, 64),
+            new THREE.MeshStandardMaterial({ color: 0x17110d, roughness: 0.96, metalness: 0 }));
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        /* ————— camera framing & custom orbit ————— */
+        const bb = new THREE.Box3().setFromObject(content);
+        const T = new THREE.Vector3(0, (bb.max.y + bb.min.y) / 2, 0);
+        let fitD = 16;
+        function computeFit() {
+            const aspect = innerWidth / innerHeight;
+            camera.aspect = aspect;
+            camera.fov = aspect < 1.05 ? 54 : 38;
+            const tanV = Math.tan(camera.fov * Math.PI / 360);
+            const tanH = tanV * aspect;
+            const fw = aspect < 0.9 ? BW + 2.6 : (bb.max.x - bb.min.x) * 1.16 + 1.4;
+            const fh = (bb.max.y - bb.min.y) * 1.12 + 0.9;
+            fitD = Math.max(fw / (2 * tanH), fh / (2 * tanV), 7);
+            camera.updateProjectionMatrix();
+        }
+        computeFit();
+        const clampR = v => clamp(v, fitD * 0.4, fitD * 2.0);
+
+        const clock = new THREE.Clock();
+        clock.getDelta();
+        const cam = { theta: -0.6, phi: 1.26, radius: fitD * 1.65, tTheta: -0.6, tPhi: 1.26, tRadius: fitD * 1.65 };
+        let camTween = { from: { theta: -0.6, phi: 1.26, radius: fitD * 1.65 }, to: { theta: 0, phi: 1.47, radius: fitD }, t0: 0.55, dur: 2.3 };
+        let lastInput = 0, dragging = false, userZoomed = false, idleBase = null, prevPinch = 0;
+
+        function userAct() { lastInput = clockT; idleBase = null; camTween = null; }
+        function resetView() {
+            camTween = { from: { theta: cam.theta, phi: cam.phi, radius: cam.radius }, to: { theta: 0, phi: 1.47, radius: fitD }, t0: clockT, dur: 1.0 };
+        }
+
+        const raycaster = new THREE.Raycaster();
+        const ndc = new THREE.Vector2(-2, -2);
+        const ndcPick = new THREE.Vector2();
+        function pick(cx, cy) {
+            ndcPick.set((cx / innerWidth) * 2 - 1, -(cy / innerHeight) * 2 + 1);
+            raycaster.setFromCamera(ndcPick, camera);
+            const hits = raycaster.intersectObjects(hoverables, false);
+            return hits.length ? hits[0].object.userData : null;
+        }
+
+        const pts = new Map();
+        cv.addEventListener('pointerdown', e => {
+            cv.setPointerCapture(e.pointerId);
+            pts.set(e.pointerId, { x: e.clientX, y: e.clientY, down: { x: e.clientX, y: e.clientY, t: performance.now() } });
+            dragging = true;
+            userAct();
+            cv.style.cursor = 'grabbing';
+        });
+        cv.addEventListener('pointermove', e => {
+            ndc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+            const p = pts.get(e.pointerId);
+            if (!p) return;
+            if (pts.size === 1) {
+                cam.tTheta = clamp(cam.tTheta - (e.clientX - p.x) * 0.0042, -1.25, 1.25);
+                cam.tPhi = clamp(cam.tPhi + (e.clientY - p.y) * 0.0032, 1.02, 1.55);
+            } else if (pts.size === 2) {
+                p.x = e.clientX; p.y = e.clientY;
+                const [a, b] = [...pts.values()];
+                const d = Math.hypot(a.x - b.x, a.y - b.y);
+                if (prevPinch > 0 && d > 0) {
+                    cam.tRadius = clampR(cam.tRadius * prevPinch / d);
+                    userZoomed = true;
+                }
+                prevPinch = d;
+                return;
+            }
+            p.x = e.clientX; p.y = e.clientY;
+        });
+        cv.addEventListener('pointerup', e => {
+            const p = pts.get(e.pointerId);
+            pts.delete(e.pointerId);
+            if (pts.size < 2) prevPinch = 0;
+            if (e.pointerType !== 'mouse') ndc.set(-2, -2);
+            if (pts.size === 0) {
+                dragging = false;
+                if (p && p.down) {
+                    const dx = e.clientX - p.down.x, dy = e.clientY - p.down.y;
+                    if (Math.hypot(dx, dy) < 8 && performance.now() - p.down.t < 600) handleClick(pick(e.clientX, e.clientY));
+                }
+                cv.style.cursor = 'grab';
+            }
+        });
+        cv.addEventListener('pointercancel', e => {
+            pts.delete(e.pointerId);
+            prevPinch = 0;
+            if (!pts.size) dragging = false;
+        });
+        cv.addEventListener('wheel', e => {
+            e.preventDefault();
+            userAct();
+            userZoomed = true;
+            cam.tRadius = clampR(cam.tRadius * Math.exp(e.deltaY * 0.001));
+        }, { passive: false });
+        const nameInput = document.getElementById('nameInput');
+        addEventListener('keydown', e => {
+            if (e.target === nameInput) return;
+            const k = e.key;
+            if (k === 'ArrowLeft') { userAct(); cam.tTheta = clamp(cam.tTheta - 0.14, -1.25, 1.25); }
+            else if (k === 'ArrowRight') { userAct(); cam.tTheta = clamp(cam.tTheta + 0.14, -1.25, 1.25); }
+            else if (k === 'ArrowUp') { userAct(); cam.tPhi = clamp(cam.tPhi - 0.09, 1.02, 1.55); }
+            else if (k === 'ArrowDown') { userAct(); cam.tPhi = clamp(cam.tPhi + 0.09, 1.02, 1.55); }
+            else if (k === 'r' || k === 'R') resetView();
+        });
+        addEventListener('resize', () => {
+            const prev = fitD;
+            computeFit();
+            renderer.setSize(innerWidth, innerHeight);
+            renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+            const ratio = fitD / prev;
+            cam.radius *= ratio;
+            cam.tRadius = clampR(userZoomed ? cam.tRadius * ratio : fitD);
+        });
+
+        /* ————— sound (opt-in) ————— */
+        let AC = null, noiseBuf = null, soundOn = false;
+        function ensureAudio() {
+            if (!AC) {
+                AC = new (window.AudioContext || window.webkitAudioContext)();
+                noiseBuf = AC.createBuffer(1, AC.sampleRate * 0.15 | 0, AC.sampleRate);
+                const ch = noiseBuf.getChannelData(0);
+                for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
+            }
+            if (AC.state === 'suspended') AC.resume();
+        }
+        function tone(f, at, dur, type, vol) {
+            const o = AC.createOscillator(); o.type = type; o.frequency.value = f;
+            const g = AC.createGain();
+            g.gain.setValueAtTime(0.0001, at);
+            g.gain.exponentialRampToValueAtTime(vol, at + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+            o.connect(g); g.connect(AC.destination);
+            o.start(at); o.stop(at + dur + 0.05);
+        }
+        function noiseSnd(at, dur, vol, type, freq) {
+            const src = AC.createBufferSource(); src.buffer = noiseBuf;
+            const f = AC.createBiquadFilter(); f.type = type; f.frequency.value = freq;
+            const g = AC.createGain();
+            g.gain.setValueAtTime(vol, at);
+            g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+            src.connect(f); f.connect(g); g.connect(AC.destination);
+            src.start(at); src.stop(at + dur + 0.02);
+        }
+        const guard = () => soundOn && AC && !document.hidden;
+        function tickSnd() { if (!guard()) return; tone(1560, AC.currentTime, 0.035, 'sine', 0.05); }
+        function blipSnd() { if (!guard()) return; tone(880, AC.currentTime, 0.06, 'sine', 0.08); }
+        function popSnd(vol = 1) {
+            if (!guard()) return;
+            const t = AC.currentTime;
+            noiseSnd(t, 0.09, 0.4 * vol, 'lowpass', 2600);
+            const o = AC.createOscillator(); o.type = 'sine';
+            o.frequency.setValueAtTime(480, t);
+            o.frequency.exponentialRampToValueAtTime(90, t + 0.08);
+            const g = AC.createGain();
+            g.gain.setValueAtTime(0.22 * vol, t);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+            o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + 0.1);
+        }
+        function puffSnd() { if (!guard()) return; noiseSnd(AC.currentTime, 0.22, 0.16, 'lowpass', 600); }
+        function matchSnd() { if (!guard()) return; noiseSnd(AC.currentTime, 0.06, 0.1, 'highpass', 2500); }
+        function fanfareSnd() {
+            if (!guard()) return;
+            const t = AC.currentTime;
+            [392, 523.25, 659.25, 783.99].forEach((f, i) => tone(f, t + i * 0.12, 0.5, 'triangle', 0.12));
+            tone(1046.5, t + 0.6, 1.2, 'sine', 0.1);
+            noiseSnd(t + 0.6, 0.5, 0.05, 'highpass', 5000);
+        }
+        const btnSound = document.getElementById('btnSound');
+        btnSound.addEventListener('click', () => {
+            soundOn = !soundOn;
+            if (soundOn) ensureAudio();
+            btnSound.textContent = soundOn ? 'Sound · On' : 'Sound · Off';
+            btnSound.classList.toggle('on', soundOn);
+            btnSound.setAttribute('aria-pressed', String(soundOn));
+        });
+
+        /* ————— display driver ————— */
+        let mode = Date.now() >= T0 ? 'after' : 'before';
+        let booted = false, previewActive = false, celebration = mode === 'after';
+        let displayMode = 'count';
+        let lastCountStr = '', transitionUntil = 0, colonTarget = 1, colonVis = 1;
+        let cycleState = 'msg', cycleT = 0;
+        const hoverBonus = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        let exciteUntil = -1, exciteCur = 1;
+        function exciteBalloons(sec) { exciteUntil = clockT + sec; }
+
+        function expectedChar(i) {
+            if (displayMode === 'message') return messageStr[i] || ' ';
+            return (lastCountStr || countStrCacheOf(secsAbs()))[i] || '0';
+        }
+        function setDisplayMessage() {
+            displayMode = 'message';
+            colonTarget = 0;
+            transitionUntil = clockT + 1.1;
+            digits.forEach((d, i) => d.scrambleTo(messageStr[i] || ' ', 0.45 + i * 0.045));
+        }
+        function backToCount() {
+            displayMode = 'count';
+            colonTarget = 1;
+            transitionUntil = clockT + 1.1;
+            lastCountStr = '';
+            const str = countStrCacheOf(secsAbs());
+            digits.forEach((d, i) => d.scrambleTo(str[i], 0.4 + i * 0.04));
+        }
+
+        /* ————— HTML readout & texts ————— */
+        const ro = {
+            sign: document.getElementById('sign'),
+            d: document.getElementById('rd'), h: document.getElementById('rh'),
+            m: document.getElementById('rm'), s: document.getElementById('rs'),
+            meta: document.getElementById('meta'),
+            h1: document.querySelector('h1'), subText: document.getElementById('subText'),
+        };
+        const segs = {};
+        document.querySelectorAll('#readout .seg').forEach(el => segs[el.dataset.u] = el);
+        let lastLine = '', lastSec = -1, lastTickT = -10;
+
+        function updateReadout(msAbs) {
+            const S = msAbs / 1000;
+            const days = Math.floor(S / 86400);
+            const h = Math.floor((S - days * 86400) / 3600);
+            const m = Math.floor((S % 3600) / 60);
+            const sTxt = (S % 60).toFixed(1).padStart(4, '0');
+            const line = `${days}|${h}|${m}|${sTxt}`;
+            if (line !== lastLine) {
+                lastLine = line;
+                ro.d.textContent = padN(days, nDay);
+                ro.h.textContent = pad2(h);
+                ro.m.textContent = pad2(m);
+                ro.s.textContent = sTxt;
+            }
+            const whole = Math.floor(S);
+            if (whole !== lastSec) {
+                lastSec = whole;
+                lastTickT = clockT;
+                tickSnd();
+                const n = new Date();
+                ro.meta.textContent = mode === 'before'
+                    ? `target ${targetStr} 00:00 local · now ${pad2(n.getHours())}:${pad2(n.getMinutes())}:${pad2(n.getSeconds())}`
+                    : `the birthday is here · now ${pad2(n.getHours())}:${pad2(n.getMinutes())}:${pad2(n.getSeconds())}`;
+            }
+        }
+        function setModeTexts() {
+            if (mode === 'after') {
+                ro.sign.textContent = 'T+';
+                ro.h1.textContent = 'Happy birthday!';
+                ro.subText.textContent = 'november ninth, two thousand twenty-six — the candles are lit';
+                nameInput.style.display = 'none';
+                document.getElementById('btnPeek').style.display = 'none';
+            }
+        }
+        setModeTexts();
+        try { nameInput.value = localStorage.getItem('bday-name') || ''; } catch (e) { }
+        nameInput.addEventListener('input', () => {
+            try { localStorage.setItem('bday-name', nameInput.value); } catch (e) { }
+        });
+
+        /* ————— clicks & arrival ————— */
+        function handleClick(u) {
+            if (!u || !booted) return;
+            if (u.type === 'balloon') popBalloon(u.ref);
+            else if (u.type === 'candle') setCandleLit(u.ref, !u.ref.lit);
+            else if (u.type === 'seg') { u.digit.scrambleTo(expectedChar(u.digit.i), 0.55); blipSnd(); }
+            else if (u.type === 'board') { boardBurst(0.9); popSnd(0.7); exciteBalloons(2); }
+        }
+        function onArrival() {
+            mode = 'after';
+            celebration = true;
+            setModeTexts();
+            exciteBalloons(6);
+            fanfareSnd();
+            boardBurst(1.2);
+            lightAllCandles(true);
+            cycleState = 'msg'; cycleT = 0;
+            setDisplayMessage();
+            setTimeout(() => confettiBurst(new THREE.Vector3(0, 6.8, 0.4), 60, 1.1), 1200);
+            setTimeout(() => confettiBurst(new THREE.Vector3(-3.2, 6.4, 0.5), 45, 0.95), 2300);
+        }
+
+        /* peek at the moment */
+        const btnPeek = document.getElementById('btnPeek');
+        btnPeek.addEventListener('click', () => {
+            if (!booted) return;
+            if (celebration) { fanfareSnd(); exciteBalloons(4); boardBurst(1.1); lightAllCandles(true); return; }
+            if (previewActive) return;
+            previewActive = true;
+            btnPeek.classList.add('busy');
+            exciteBalloons(4.5);
+            fanfareSnd();
+            boardBurst(1);
+            setDisplayMessage();
+            lightAllCandles(true);
+            setTimeout(() => confettiBurst(new THREE.Vector3(0, 6.6, 0.3), 70, 1.1), 1300);
+            setTimeout(() => confettiBurst(new THREE.Vector3(3.5, 6.2, 0.5), 45, 0.9), 2400);
+            setTimeout(() => {
+                previewActive = false;
+                btnPeek.classList.remove('busy');
+                backToCount();
+                if (!celebration) lightAllCandles(false);
+            }, 5200);
+        });
+        document.getElementById('btnReset').addEventListener('click', resetView);
+        if (matchMedia('(pointer: coarse)').matches) {
+            document.getElementById('hints').innerHTML =
+                '<div><b>one finger</b><span>orbit</span></div>' +
+                '<div><b>two fingers</b><span>zoom</span></div>' +
+                '<div><b>tap things</b><span>pop · light</span></div>';
+        }
+
+        /* ————— main loop ————— */
+        let frameN = 0, hoveredUnit = null;
+        function frame() {
+            requestAnimationFrame(frame);
+            const dt = Math.min(0.05, clock.getDelta());
+            clockT = clock.elapsedTime;
+            frameN++;
+
+            const now = Date.now();
+            if (mode === 'before' && now >= T0) onArrival();
+            const msAbs = Math.abs(T0 - now);
+
+            /* board content */
+            if (booted) {
+                if (celebration && !previewActive) {
+                    cycleT += dt;
+                    if (cycleState === 'msg' && cycleT > 8) {
+                        cycleState = 'count'; cycleT = 0; backToCount();
+                    } else if (cycleState === 'count' && cycleT > 11) {
+                        cycleState = 'msg'; cycleT = 0; setDisplayMessage();
+                        confettiBurst(new THREE.Vector3(0, 6.6, 0.3), 30, 0.8);
+                    }
+                }
+                if (displayMode === 'count' && clockT > transitionUntil && !previewActive) {
+                    const str = countStrCacheOf(msAbs / 1000);
+                    if (str !== lastCountStr) {
+                        lastCountStr = str;
+                        digits.forEach((d, i) => { if (!d.scramble) d.setChar(str[i]); });
+                    }
+                }
+            }
+            updateReadout(msAbs);
+
+            for (const u in hoverBonus)
+                hoverBonus[u] += ((hoveredUnit === u ? 1 : 0) - hoverBonus[u]) * Math.min(1, dt * 8);
+            digits.forEach(d => d.update(dt));
+
+            /* colons: pulse each second, fade away for messages */
+            colonVis += (colonTarget - colonVis) * Math.min(1, dt * 6);
+            const pulse = Math.exp(-5 * Math.max(0, clockT - lastTickT));
+            colonMat.opacity = colonVis * (0.4 + 0.6 * pulse);
+            const cs = 0.5 + 0.5 * colonVis;
+            colons.forEach(c => c.scale.setScalar(cs));
+
+            /* balloons */
+            exciteCur += ((clockT < exciteUntil ? 2.6 : 1) - exciteCur) * Math.min(1, dt * 3);
+            for (const b of balloons) {
+                if (b.state === 'pop') {
+                    const u = (clockT - b.popT) / 0.15;
+                    if (u >= 1) {
+                        b.state = 'gone';
+                        b.node.visible = false;
+                        b.respawnAt = clockT + 3.5;
+                        b.mat.transparent = false;
+                        b.mat.opacity = 1;
+                    } else {
+                        b.node.scale.setScalar(1 + 0.35 * u);
+                        b.mat.opacity = 1 - u;
+                    }
+                } else if (b.state === 'gone') {
+                    if (clockT >= b.respawnAt) {
+                        b.state = 'in';
+                        b.spawnT = clockT;
+                        b.base = [
+                            b.def.base[0] + (Math.random() - 0.5) * 1.0,
+                            b.def.base[1] + (Math.random() - 0.35) * 0.8,
+                            b.def.base[2] + (Math.random() - 0.5) * 0.6,
+                        ];
+                    }
+                } else {
+                    const su = clamp((clockT - b.spawnT) / 0.7, 0, 1);
+                    b.node.visible = su > 0;
+                    b.string.visible = su > 0;
+                    if (su > 0) b.node.scale.setScalar(easeOutBack2(su));
+                    b.node.position.set(
+                        b.base[0] + Math.sin(clockT * b.f1 + b.p1) * 0.13 * exciteCur,
+                        b.base[1] + Math.sin(clockT * b.f2 + b.p2) * 0.22 * exciteCur,
+                        b.base[2] + Math.sin(clockT * b.f3 + b.p3) * 0.10 * exciteCur
+                    );
+                    b.node.rotation.z = Math.sin(clockT * 0.7 + b.p1) * 0.07 * exciteCur;
+                    b.node.rotation.x = Math.cos(clockT * 0.5 + b.p2) * 0.05 * exciteCur;
+                    if (su > 0 && (frameN & 1) === 0) {
+                        const knot = b.node.position.clone();
+                        knot.y -= 0.93;
+                        const mid = knot.clone().multiplyScalar(0.5);
+                        mid.y -= 0.55;
+                        mid.x += Math.sin(clockT * 0.6 + b.p1) * 0.3;
+                        const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0, 0, 0), mid, knot);
+                        b.string.geometry.dispose();
+                        b.string.geometry = new THREE.TubeGeometry(curve, 22, 0.013, 5, false);
+                    }
+                }
+            }
+
+            /* confetti */
+            for (const pc of pieces) {
+                if (!pc.alive) continue;
+                pc.age += dt;
+                pc.vel.y -= 5.2 * dt;
+                pc.vel.multiplyScalar(Math.exp(-0.9 * dt));
+                pc.vel.x += Math.sin(clockT * 2.2 + pc.phase) * 0.35 * dt;
+                pc.mesh.position.addScaledVector(pc.vel, dt);
+                pc.mesh.rotation.x += pc.rot.x * dt;
+                pc.mesh.rotation.y += pc.rot.y * dt;
+                pc.mesh.rotation.z += pc.rot.z * dt;
+                const rem = pc.life - pc.age;
+                if (rem < 0.4) pc.mesh.scale.setScalar(pc.baseS * Math.max(0, rem / 0.4));
+                if (rem <= 0 || pc.mesh.position.y < 0.15) {
+                    pc.alive = false;
+                    pc.mesh.visible = false;
+                }
+            }
+
+            /* candle flames */
+            let litCount = 0;
+            for (const c of candles) {
+                if (c.animT < 0) { c.flame.g.visible = false; continue; }
+                const u = clamp((clockT - c.animT) / 0.22, 0, 1);
+                const on = c.lit ? Math.min(1.15, easeOutBack2(u)) : 1 - u;
+                if (on <= 0.03) {
+                    c.flame.g.visible = false;
+                } else {
+                    c.flame.g.visible = true;
+                    const fl = 1 + 0.15 * Math.sin(clockT * 21 + c.phase) + 0.06 * Math.sin(clockT * 57 + c.phase * 2);
+                    c.flame.g.scale.set(on, on * fl, on);
+                    c.flame.glow.material.opacity = 0.32 * Math.min(1, on);
+                }
+                if (c.lit && u >= 1) litCount++;
+            }
+            candleLight.intensity = (litCount / 5) * (1.3 + 0.25 * Math.sin(clockT * 15) + 0.1 * Math.sin(clockT * 39));
+            ledMat.opacity = 0.55 + 0.45 * Math.sin(clockT * 2.4);
+
+            /* camera */
+            if (camTween) {
+                const u = (clockT - camTween.t0) / camTween.dur;
+                if (u >= 0) {
+                    const e = easeInOutCubic(Math.min(1, u));
+                    cam.theta = cam.tTheta = lerp(camTween.from.theta, camTween.to.theta, e);
+                    cam.phi = cam.tPhi = lerp(camTween.from.phi, camTween.to.phi, e);
+                    cam.radius = cam.tRadius = lerp(camTween.from.radius, camTween.to.radius, e);
+                    if (u >= 1) camTween = null;
+                }
+            } else {
+                if (clockT - lastInput > 6 && !dragging) {
+                    if (!idleBase) idleBase = { th: cam.tTheta, ph: cam.tPhi, t0: clockT };
+                    cam.tTheta = clamp(idleBase.th + 0.09 * Math.sin((clockT - idleBase.t0) * 0.2), -1.25, 1.25);
+                    cam.tPhi = clamp(idleBase.ph + 0.02 * Math.sin((clockT - idleBase.t0) * 0.31), 1.02, 1.55);
+                }
+                cam.theta = damp(cam.theta, cam.tTheta, 6.5, dt);
+                cam.phi = damp(cam.phi, cam.tPhi, 6.5, dt);
+                cam.radius = damp(cam.radius, cam.tRadius, 6.5, dt);
+            }
+            camera.position.set(
+                T.x + cam.radius * Math.sin(cam.phi) * Math.sin(cam.theta),
+                T.y + cam.radius * Math.cos(cam.phi),
+                T.z + cam.radius * Math.sin(cam.phi) * Math.cos(cam.theta)
+            );
+            camera.lookAt(T);
+            scene.fog.near = cam.radius + 4;
+            scene.fog.far = cam.radius * 3 + 8;
+
+            /* hover */
+            if (!dragging && ndc.x > -1.5) {
+                const u = pick((ndc.x + 1) / 2 * innerWidth, (1 - ndc.y) / 2 * innerHeight);
+                const hu = u && u.type === 'seg' ? u.unit : null;
+                if (hu !== hoveredUnit) {
+                    hoveredUnit = hu;
+                    for (const k in segs) segs[k].classList.toggle('lit', k === hu);
+                }
+                cv.style.cursor = u ? 'pointer' : 'grab';
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        /* ————— boot: power-on scramble into the real time, balloons float up ————— */
+        setTimeout(() => {
+            const str = countStrCacheOf(secsAbs());
+            digits.forEach((d, i) => setTimeout(() => d.scrambleTo(str[i], 0.55 + Math.random() * 0.3), i * 110));
+            setTimeout(() => { booted = true; lastCountStr = ''; if (celebration) setDisplayMessage(); }, digitUnits.length * 110 + 900);
+        }, 550);
+        if (celebration) lightAllCandles(true);
+
+        renderer.render(scene, camera);
+        cv.classList.add('on');
+        window.__BDAY_OK = true;
+        frame();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Nº 09 — Countdown to November 9, 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #100f0d;
+            --ivory: #eae3d2;
+            --muted: #8d8573;
+            --dim: #5a5342;
+            --brass: #c69a58;
+            --line: rgba(234, 227, 210, .16);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            color-scheme: dark
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ivory);
+            font-family: "IBM Plex Mono", ui-monospace, monospace;
+            overflow: hidden;
+            overscroll-behavior: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #app,
+        #app canvas {
+            position: fixed;
+            inset: 0
+        }
+
+        #app canvas {
+            display: block;
+            opacity: 0;
+            transition: opacity 1.1s ease .1s;
+            cursor: grab;
+            touch-action: none
+        }
+
+        #app canvas.on {
+            opacity: 1
+        }
+
+        .corner {
+            position: fixed;
+            z-index: 5;
+            pointer-events: none
+        }
+
+        .tl {
+            top: 28px;
+            left: 32px;
+            max-width: min(52vw, 620px)
+        }
+
+        .tr {
+            top: 30px;
+            right: 32px;
+            text-align: right
+        }
+
+        .bl {
+            bottom: 28px;
+            left: 32px
+        }
+
+        .br {
+            right: 32px;
+            bottom: 28px;
+            display: flex;
+            gap: 10px
+        }
+
+        .eyebrow {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .34em;
+            text-transform: uppercase;
+            color: var(--brass)
+        }
+
+        h1 {
+            font-family: "Instrument Serif", serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(30px, 4.3vw, 50px);
+            line-height: 1.05;
+            margin: 12px 0 8px;
+            color: var(--ivory)
+        }
+
+        .sub {
+            font-family: "Instrument Serif", serif;
+            font-style: italic;
+            font-size: clamp(14px, 1.5vw, 18px);
+            color: var(--muted)
+        }
+
+        .tr div {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            font-size: 10px;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            margin-bottom: 8px
+        }
+
+        .tr b {
+            font-weight: 500;
+            color: var(--ivory)
+        }
+
+        .tr span {
+            color: var(--dim)
+        }
+
+        #readout .line {
+            font-size: clamp(17px, 2.4vw, 31px);
+            font-weight: 500;
+            white-space: nowrap
+        }
+
+        #readout .sign {
+            color: var(--brass);
+            margin-right: .35em
+        }
+
+        #readout .seg b {
+            font-weight: 500;
+            color: var(--ivory);
+            transition: color .25s
+        }
+
+        #readout .seg i {
+            font-style: normal;
+            font-size: .42em;
+            letter-spacing: .1em;
+            color: var(--muted);
+            margin-left: .3em
+        }
+
+        #readout .sep {
+            color: var(--dim);
+            margin: 0 .3em
+        }
+
+        #readout .seg.lit b {
+            color: #e9b874
+        }
+
+        .meta {
+            margin-top: 10px;
+            font-size: 10px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--dim)
+        }
+
+        .br button {
+            pointer-events: auto;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: rgba(24, 22, 17, .72);
+            border: 1px solid var(--line);
+            padding: 11px 14px;
+            cursor: pointer;
+            transition: color .25s, border-color .25s;
+        }
+
+        .br button:hover {
+            color: var(--ivory);
+            border-color: rgba(198, 154, 88, .6)
+        }
+
+        .br button.on {
+            color: var(--brass);
+            border-color: rgba(198, 154, 88, .6)
+        }
+
+        #err {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: .12em;
+            text-align: center;
+            padding: 40px;
+            background: var(--bg)
+        }
+
+        #err[hidden] {
+            display: none
+        }
+
+        .corner {
+            opacity: 0;
+            transform: translateY(12px);
+            animation: rise .9s cubic-bezier(.22, .75, .25, 1) forwards
+        }
+
+        .tl {
+            animation-delay: .25s
+        }
+
+        .tr {
+            animation-delay: .45s
+        }
+
+        .br {
+            animation-delay: .6s
+        }
+
+        .bl {
+            animation-delay: .75s
+        }
+
+        @keyframes rise {
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        @media (max-width:700px) {
+            .tl {
+                top: 16px;
+                left: 18px
+            }
+
+            .tr {
+                display: none
+            }
+
+            .br {
+                top: 16px;
+                right: 16px;
+                bottom: auto;
+                flex-direction: column
+            }
+
+            .bl {
+                left: 18px;
+                bottom: 16px
+            }
+
+            .br button {
+                padding: 9px 11px;
+                background: rgba(24, 22, 17, .6)
+            }
+
+            #readout .meta {
+                font-size: 9px;
+                letter-spacing: .12em
+            }
+        }
+    </style>
+    <script>
+        // Boot guard: if the 3D module never comes up, say so instead of showing a black page.
+        setTimeout(function () {
+            if (!window.__DRUM_OK) {
+                var e = document.getElementById('err');
+                if (e) { e.textContent = 'The apparatus could not load its 3D parts — check your connection and reload.'; e.hidden = false; }
+            }
+        }, 9000);
+    </script>
+    <script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <header class="corner tl">
+        <div class="eyebrow">Countdown apparatus · Nº 09</div>
+        <h1>The Ninth of November</h1>
+        <div class="sub">two thousand twenty-six — counting the moments until</div>
+    </header>
+
+    <div class="corner tr" id="hints">
+        <div><b>drag</b><span>orbit</span></div>
+        <div><b>scroll</b><span>zoom</span></div>
+        <div><b>click a drum</b><span>spin it</span></div>
+    </div>
+
+    <div class="corner bl" id="readout">
+        <div class="line">
+            <span class="sign" id="sign">T−</span><span class="seg" data-u="days"><b id="rd">000</b><i>d</i></span><span
+                class="sep">·</span><span class="seg" data-u="hours"><b id="rh">00</b><i>h</i></span><span
+                class="sep">·</span><span class="seg" data-u="minutes"><b id="rm">00</b><i>m</i></span><span
+                class="sep">·</span><span class="seg" data-u="seconds"><b id="rs">00.0</b><i>s</i></span>
+        </div>
+        <div class="meta" id="meta">target 2026-11-09 00:00 local · now --:--:--</div>
+    </div>
+
+    <div class="corner br">
+        <button id="btnSound" type="button" aria-pressed="false">Sound · Off</button>
+        <button id="btnReset" type="button">Reset view</button>
+    </div>
+
+    <div id="err" hidden>The apparatus could not load its 3D parts — check your connection and reload.</div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+        /* ————— target ————— */
+        const TARGET = new Date(2026, 10, 9);            // 09 Nov 2026, local midnight
+        const T0 = TARGET.getTime();
+        const pad2 = n => String(n).padStart(2, '0');
+        const padN = (n, w) => String(n).padStart(w, '0');
+        const targetStr = `${TARGET.getFullYear()}-${pad2(TARGET.getMonth() + 1)}-${pad2(TARGET.getDate())}`;
+
+        /* ————— proportions of the machine ————— */
+        const R = 11;                // radius of the drum arc
+        const DR = 0.78;              // drum radius
+        const DW = 0.5;               // drum width along its axle
+        const PITCH = 0.64;             // drum spacing inside a group
+        const GAPG = 1.35;              // spacing across group boundaries
+        const POFF = DW / 2 + 0.135;    // end-plate offset from the outer drum
+        const STEP = Math.PI / 5;       // 36° — one digit on a drum
+        const FONT = '"IBM Plex Mono", ui-monospace, Menlo, monospace';
+
+        /* ————— what the drums must show ————— */
+        const secsAbs = () => Math.abs(Date.now() - T0) / 1000;
+        const nDay = Math.max(3, String(Math.floor(secsAbs() / 86400)).length);
+        const UNITS = [
+            ...Array(nDay).fill('days'),
+            'hours', 'hours', 'minutes', 'minutes', 'seconds', 'seconds',
+        ];
+        const centers = [];
+        {
+            let s = 0;
+            for (let i = 0; i < UNITS.length; i++) {
+                if (i > 0) s += UNITS[i] !== UNITS[i - 1] ? GAPG : PITCH;
+                centers.push(s);
+            }
+            const mid = s / 2;
+            for (let i = 0; i < centers.length; i++) centers[i] -= mid;
+        }
+        const groups = [];
+        UNITS.forEach((u, i) => {
+            if (i === 0 || UNITS[i - 1] !== u) groups.push({ unit: u, idx: [] });
+            groups[groups.length - 1].idx.push(i);
+        });
+        groups.forEach(g => {
+            g.span = (g.idx.length - 1) * PITCH + DW;
+            g.sc = (centers[g.idx[0]] + centers[g.idx[g.idx.length - 1]]) / 2;
+        });
+        function digitsOf(S) {
+            const Si = Math.max(0, Math.floor(S));
+            const d = Math.floor(Si / 86400);
+            const h = Math.floor((Si - d * 86400) / 3600);
+            const m = Math.floor((Si % 3600) / 60);
+            const s = Si % 60;
+            return [
+                ...padN(d, nDay).split('').map(Number),
+                ...pad2(h).split('').map(Number),
+                ...pad2(m).split('').map(Number),
+                ...pad2(s).split('').map(Number),
+            ];
+        }
+
+        /* ————— wait briefly for the mono font so drum faces paint crisply ————— */
+        try {
+            await Promise.race([
+                Promise.all([
+                    document.fonts.load('600 200px "IBM Plex Mono"'),
+                    document.fonts.load('500 40px "IBM Plex Mono"'),
+                ]),
+                new Promise(res => setTimeout(res, 1600)),
+            ]);
+        } catch (e) { /* generic mono fallback is fine */ }
+
+        /* ————— renderer / scene ————— */
+        const app = document.getElementById('app');
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        } catch (e) {
+            const err = document.getElementById('err');
+            err.textContent = 'WebGL is unavailable — the drum machine needs a 3D canvas.';
+            err.hidden = false;
+            throw e;
+        }
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.1;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        app.appendChild(renderer.domElement);
+        const cv = renderer.domElement;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x100f0d);
+        scene.fog = new THREE.Fog(0x100f0d, 20, 60);
+        const camera = new THREE.PerspectiveCamera(34, innerWidth / innerHeight, 0.3, 300);
+
+        const pmrem = new THREE.PMREMGenerator(renderer);
+        scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+        pmrem.dispose();
+
+        scene.add(new THREE.AmbientLight(0x8a7f6c, 0.45));
+        const key = new THREE.DirectionalLight(0xffeeda, 3.0);
+        key.position.set(-7, 11, 21);
+        key.target.position.set(0, -0.4, R);
+        key.castShadow = true;
+        key.shadow.mapSize.set(2048, 2048);
+        Object.assign(key.shadow.camera, { left: -9, right: 9, top: 8, bottom: -6, near: 4, far: 42 });
+        key.shadow.bias = -0.0004;
+        key.shadow.normalBias = 0.05;
+        scene.add(key, key.target);
+        const fill = new THREE.DirectionalLight(0xd9d4c8, 0.7);
+        fill.position.set(8, 3, 26); fill.target.position.set(0, 0, R);
+        scene.add(fill, fill.target);
+        const rim = new THREE.DirectionalLight(0xffd9a6, 1.3);
+        rim.position.set(0, 9, 1); rim.target.position.set(0, 0, R);
+        scene.add(rim, rim.target);
+
+        /* ————— utilities ————— */
+        const { clamp, damp, lerp } = THREE.MathUtils;
+        const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+        const easeOutBack = t => { const c = 1.2; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+        const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        /* ————— canvas-painted textures (repainted if the font arrives late) ————— */
+        const redraws = [];
+        function canvasTexture(w, h, draw) {
+            const c = document.createElement('canvas');
+            c.width = w; c.height = h;
+            draw(c.getContext('2d'), w, h);
+            const t = new THREE.CanvasTexture(c);
+            t.colorSpace = THREE.SRGBColorSpace;
+            t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            redraws.push(() => { draw(c.getContext('2d'), w, h); t.needsUpdate = true; });
+            return t;
+        }
+        document.fonts.ready.then(() => {
+            if (document.fonts.check('600 200px "IBM Plex Mono"')) redraws.forEach(f => f());
+        });
+
+        /* The drum face: digits 0–9 wrapped around the circumference.
+           Canvas x runs around the drum (digit height), canvas y along the axle,
+           so glyphs are drawn rotated a quarter turn. */
+        const drumTex = canvasTexture(4096, 416, (x, W, H) => {
+            const SL = W / 10;
+            x.fillStyle = '#211f1a'; x.fillRect(0, 0, W, H);
+            for (let i = 0; i < 1100; i++) {                     // brushed metal along the axle
+                const a = Math.random() * 0.045;
+                x.fillStyle = Math.random() < 0.55 ? `rgba(0,0,0,${a})` : `rgba(255,246,228,${a * 0.65})`;
+                x.fillRect(Math.random() * W, 0, 1 + Math.random() * 2.5, H);
+            }
+            x.globalAlpha = 0.05; x.fillStyle = '#000';         // faint machining rings
+            for (let py = 14; py < H; py += 46) x.fillRect(0, py, W, 1);
+            x.globalAlpha = 1;
+            x.fillStyle = 'rgba(0,0,0,0.4)'; x.fillRect(0, 0, W, 22); x.fillRect(0, H - 22, W, 22);
+            x.fillStyle = 'rgba(255,244,214,0.07)'; x.fillRect(0, 22, W, 1.5); x.fillRect(0, H - 23, W, 1.5);
+            for (let k = 0; k <= 10; k++) {                      // grooves between digit rows
+                const gx = (k * SL) % W;
+                x.fillStyle = 'rgba(0,0,0,0.5)'; x.fillRect(gx - 2, 0, 3, H);
+                x.fillStyle = 'rgba(255,240,210,0.08)'; x.fillRect(gx + 1.5, 0, 1.5, H);
+                x.fillStyle = 'rgba(0,0,0,0.5)';
+                x.fillRect(gx - 10, 5, 20, 3); x.fillRect(gx - 10, H - 8, 20, 3);
+            }
+            let fs = 460;
+            x.font = `600 ${fs}px ${FONT}`;
+            const adv = x.measureText('0').width;
+            if (adv > H * 0.92) { fs = Math.floor(fs * (H * 0.92) / adv); x.font = `600 ${fs}px ${FONT}`; }
+            x.textAlign = 'center'; x.textBaseline = 'middle';
+            for (let k = 0; k < 10; k++) {
+                const cx = (k + 0.5) * SL, cy = H / 2;
+                x.save(); x.translate(cx, cy); x.rotate(-Math.PI / 2);
+                x.fillStyle = 'rgba(5,4,3,0.85)'; x.fillText(String(k), 4, 5);   // embossed shadow
+                x.fillStyle = 'rgba(255,245,220,0.12)'; x.fillText(String(k), -3, -4); // top-light edge
+                x.fillStyle = '#e9e0cc'; x.fillText(String(k), 0, 0);
+                x.font = `500 ${Math.round(fs * 0.075)}px ${FONT}`;                     // tiny slot index
+                x.fillStyle = 'rgba(198,154,88,0.55)';
+                x.fillText(String(k), 0, Math.round(fs * 0.41));
+                x.font = `600 ${fs}px ${FONT}`;
+                x.restore();
+            }
+        });
+        drumTex.wrapS = THREE.RepeatWrapping;
+
+        function labelTexture(text, aspect) {
+            const W = Math.max(320, Math.round(aspect * 96)), H = 96;
+            return canvasTexture(W, H, x => {
+                x.fillStyle = '#16130e'; x.fillRect(0, 0, W, H);
+                x.strokeStyle = 'rgba(198,154,88,0.3)'; x.lineWidth = 2;
+                x.strokeRect(6.5, 6.5, W - 13, H - 13);
+                x.letterSpacing = '14px';
+                x.font = `500 44px ${FONT}`;
+                x.textAlign = 'center'; x.textBaseline = 'middle';
+                x.fillStyle = '#c9a262';
+                x.fillText(text, W / 2 + 7, H / 2 + 2);
+            });
+        }
+        const plaqueTex = canvasTexture(1280, 176, (x, W, H) => {
+            x.fillStyle = '#b18a47'; x.fillRect(0, 0, W, H);
+            for (let i = 0; i < 260; i++) {
+                const a = Math.random() * 0.08;
+                x.fillStyle = Math.random() < 0.5 ? `rgba(60,40,10,${a})` : `rgba(255,240,200,${a})`;
+                x.fillRect(Math.random() * W, 0, 1 + Math.random() * 2, H);
+            }
+            x.strokeStyle = 'rgba(40,26,8,0.55)'; x.lineWidth = 3;
+            x.strokeRect(5.5, 5.5, W - 11, H - 11);
+            x.textAlign = 'center'; x.textBaseline = 'middle';
+            x.font = `500 30px ${FONT}`; x.fillStyle = 'rgba(46,30,10,0.75)';
+            x.fillText('T A R G E T', W / 2, 42);
+            x.font = `600 64px ${FONT}`;
+            x.fillStyle = 'rgba(255,235,190,0.28)'; x.fillText('09 · XI · MMXXVI', W / 2, 124);
+            x.fillStyle = '#2c1c08'; x.fillText('09 · XI · MMXXVI', W / 2, 120);
+        });
+
+        /* ————— materials ————— */
+        const matFlange = new THREE.MeshStandardMaterial({ color: 0x232019, roughness: 0.38, metalness: 0.8, envMapIntensity: 0.55 });
+        const matCore = new THREE.MeshStandardMaterial({ color: 0x0b0a08, roughness: 0.9, metalness: 0.1 });
+        const matPlate = new THREE.MeshStandardMaterial({ color: 0x181611, roughness: 0.55, metalness: 0.55, envMapIntensity: 0.45 });
+        const matBrass = new THREE.MeshStandardMaterial({ color: 0xb28a48, roughness: 0.32, metalness: 0.95, envMapIntensity: 0.9 });
+        const matTier1 = new THREE.MeshStandardMaterial({ color: 0x1b1813, roughness: 0.6, metalness: 0.5, envMapIntensity: 0.4 });
+        const matTier2 = new THREE.MeshStandardMaterial({ color: 0x14120e, roughness: 0.7, metalness: 0.4, envMapIntensity: 0.3 });
+        const matFloor = new THREE.MeshStandardMaterial({ color: 0x131211, roughness: 0.96, metalness: 0.0 });
+
+        /* ————— the machine ————— */
+        const machine = new THREE.Group();
+        scene.add(machine);
+        const arc = s => s / R;
+        const place = (s, y) => { const a = arc(s); return [R * Math.sin(a), y, R * Math.cos(a)]; };
+
+        const tubeGeo = new THREE.CylinderGeometry(DR, DR, DW, 72, 1, true, -STEP / 2, Math.PI * 2);
+        const coreGeo = new THREE.CylinderGeometry(DR - 0.09, DR - 0.09, DW, 48);
+        const flangeGeo = new THREE.CylinderGeometry(DR + 0.03, DR + 0.03, 0.055, 72);
+        const plateGeo = new THREE.BoxGeometry(0.16, 1.9, 1.3);
+        const hubGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.09, 32); hubGeo.rotateZ(Math.PI / 2);
+        const rivetGeo = new THREE.CylinderGeometry(0.034, 0.034, 0.07, 12); rivetGeo.rotateZ(Math.PI / 2);
+        const sphereGeo = new THREE.SphereGeometry(0.058, 24, 16);
+        const rodGeo = new THREE.CylinderGeometry(0.013, 0.013, 0.30, 8);
+
+        const drums = [];
+        const tubes = [];
+
+        for (const g of groups) {
+            const grp = new THREE.Group();
+            const a = arc(g.sc);
+            grp.position.set(R * Math.sin(a), 0, R * Math.cos(a));
+            grp.rotation.y = a;
+            machine.add(grp);
+
+            const plateOff = (g.idx.length - 1) / 2 * PITCH + POFF;
+
+            for (const side of [-1, 1]) {            // end plates, brass bearings, rivets
+                const px = side * plateOff;
+                const plate = new THREE.Mesh(plateGeo, matPlate);
+                plate.position.set(px, 0, 0);
+                plate.castShadow = plate.receiveShadow = true;
+                grp.add(plate);
+                const hub = new THREE.Mesh(hubGeo, matBrass);
+                hub.position.set(px + side * 0.125, 0, 0);
+                grp.add(hub);
+                for (const ry of [0.58, -0.58]) for (const rz of [0.46, -0.46]) {
+                    const rivet = new THREE.Mesh(rivetGeo, matBrass);
+                    rivet.position.set(px + side * 0.115, ry, rz);
+                    grp.add(rivet);
+                }
+            }
+
+            for (const i of g.idx) {                 // the drums themselves
+                const container = new THREE.Group();
+                container.position.set(centers[i] - g.sc, 0, 0);
+                grp.add(container);
+                const spinner = new THREE.Group();    // turns the cylinder axle horizontal
+                spinner.rotation.z = -Math.PI / 2;
+                container.add(spinner);
+                const reel = new THREE.Group();        // spins around the drum axle
+                spinner.add(reel);
+
+                const mat = new THREE.MeshStandardMaterial({
+                    map: drumTex, emissive: 0xffd9a4, emissiveMap: drumTex, emissiveIntensity: 0.3,
+                    roughness: 0.5, metalness: 0.42, envMapIntensity: 0.4,
+                });
+                const tube = new THREE.Mesh(tubeGeo, mat);
+                tube.castShadow = true;
+                reel.add(tube);
+                reel.add(new THREE.Mesh(coreGeo, matCore));
+                for (const fy of [0.275, -0.275]) {
+                    const fl = new THREE.Mesh(flangeGeo, matFlange);
+                    fl.position.set(0, fy, 0);
+                    fl.castShadow = true;
+                    reel.add(fl);
+                }
+                const d = { i, unit: UNITS[i], reel, mat, tube, digit: 0, steps: 0, curRot: 0, anim: null, glow: 0.3 };
+                tube.userData.drum = d;
+                drums.push(d);
+                tubes.push(tube);
+            }
+
+            const tagW = g.span + 0.28;             // engraved unit label on the platform lip
+            const tTex = labelTexture(g.unit.toUpperCase(), tagW / 0.21);
+            const back = new THREE.Mesh(new THREE.BoxGeometry(g.span + 0.34, 0.26, 0.05), matTier2);
+            back.position.set(0, -0.815, 0.834);
+            back.castShadow = true;
+            grp.add(back);
+            const face = new THREE.Mesh(
+                new THREE.PlaneGeometry(tagW, 0.21),
+                new THREE.MeshStandardMaterial({ map: tTex, emissive: 0x6a4e28, emissiveMap: tTex, emissiveIntensity: 0.4, roughness: 0.6, metalness: 0.1 })
+            );
+            face.position.set(0, -0.815, 0.865);
+            grp.add(face);
+        }
+
+        /* colon markers pulsing once a second */
+        const colonMats = [];
+        for (let gi = 0; gi < groups.length - 1; gi++) {
+            const s = (centers[groups[gi].idx[groups[gi].idx.length - 1]] + centers[groups[gi + 1].idx[0]]) / 2;
+            const [px, , pz] = place(s, 0);
+            const m = matBrass.clone();
+            m.emissive = new THREE.Color(0xffb566);
+            m.emissiveIntensity = 0.12;
+            colonMats.push(m);
+            for (const cy of [0.19, -0.19]) {
+                const sph = new THREE.Mesh(sphereGeo, m);
+                sph.position.set(px, cy, pz);
+                machine.add(sph);
+            }
+            const rod = new THREE.Mesh(rodGeo, m);
+            rod.position.set(px, 0, pz);
+            machine.add(rod);
+        }
+
+        /* curved two-tier platform */
+        const endOff = (groups[0].idx.length - 1) / 2 * PITCH + POFF + 0.08;
+        const sMin = centers[0] - endOff - 0.45;
+        const sMax = centers[centers.length - 1] + endOff + 0.45;
+        function tier(rIn, rOut, pad, depth, topY, mat) {
+            const b0 = arc(sMin) - pad - Math.PI / 2, b1 = arc(sMax) + pad - Math.PI / 2;
+            const sh = new THREE.Shape();
+            sh.absarc(0, 0, rOut, b0, b1, false);
+            sh.absarc(0, 0, rIn, b1, b0, true);
+            const geo = new THREE.ExtrudeGeometry(sh, {
+                depth, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 1, curveSegments: 64
+            });
+            geo.rotateX(-Math.PI / 2);
+            const m = new THREE.Mesh(geo, mat);
+            m.position.y = topY - depth;
+            m.castShadow = m.receiveShadow = true;
+            machine.add(m);
+        }
+        tier(R - 0.85, R + 1.15, 0.02, 0.30, -0.93, matTier1);
+        tier(R - 1.2, R + 1.55, 0.07, 0.32, -1.23, matTier2);
+
+        /* brass target plaque on the front of the platform */
+        const plaqueBack = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.27, 0.05), matPlate);
+        plaqueBack.position.set(0, -1.08, R + 1.145);
+        machine.add(plaqueBack);
+        const plaque = new THREE.Mesh(
+            new THREE.PlaneGeometry(1.62, 0.22),
+            new THREE.MeshStandardMaterial({ map: plaqueTex, emissive: 0x3a2a12, emissiveMap: plaqueTex, emissiveIntensity: 0.3, roughness: 0.45, metalness: 0.6 })
+        );
+        plaque.position.set(0, -1.08, R + 1.175);
+        machine.add(plaque);
+
+        /* floor */
+        const floor = new THREE.Mesh(new THREE.CircleGeometry(46, 64), matFloor);
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -1.553;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        /* ————— camera framing & custom orbit ————— */
+        const bb = new THREE.Box3().setFromObject(machine);
+        const fitW = (bb.max.x - bb.min.x) * 1.16 + 1.4;
+        const fitH = (bb.max.y - bb.min.y) * 1.6 + 1.0;
+        const T = new THREE.Vector3(0, (bb.max.y + bb.min.y) / 2 + 0.15, R);
+
+        let fitD = 10;
+        function computeFit() {
+            const aspect = innerWidth / innerHeight;
+            camera.aspect = aspect;
+            camera.fov = aspect < 1.05 ? 50 : 34;
+            const tanV = Math.tan(camera.fov * Math.PI / 360);
+            const tanH = tanV * aspect;
+            fitD = Math.max(fitW / (2 * tanH), fitH / (2 * tanV), 7);
+            camera.updateProjectionMatrix();
+        }
+        computeFit();
+        const clampR = v => clamp(v, fitD * 0.45, fitD * 1.9);
+
+        const clock = new THREE.Clock();
+        clock.getDelta();
+
+        const cam = { theta: -0.6, phi: 1.22, radius: fitD * 1.65, tTheta: -0.6, tPhi: 1.22, tRadius: fitD * 1.65 };
+        let camTween = { from: { theta: -0.6, phi: 1.22, radius: fitD * 1.65 }, to: { theta: 0, phi: 1.4, radius: fitD }, t0: 0.55, dur: 2.4 };
+        let lastInput = 0, dragging = false, hover = null, userZoomed = false, idleBase = null, prevPinch = 0;
+        let booted = false;
+
+        function userAct() { lastInput = clock.elapsedTime; idleBase = null; camTween = null; }
+        function resetView() {
+            camTween = { from: { theta: cam.theta, phi: cam.phi, radius: cam.radius }, to: { theta: 0, phi: 1.4, radius: fitD }, t0: clock.elapsedTime, dur: 1.0 };
+        }
+
+        const pts = new Map();
+        const ndc = new THREE.Vector2(-2, -2);
+        const raycaster = new THREE.Raycaster();
+
+        cv.addEventListener('pointerdown', e => {
+            cv.setPointerCapture(e.pointerId);
+            pts.set(e.pointerId, { x: e.clientX, y: e.clientY, down: { x: e.clientX, y: e.clientY, t: performance.now() } });
+            dragging = true;
+            userAct();
+            cv.style.cursor = 'grabbing';
+        });
+        cv.addEventListener('pointermove', e => {
+            ndc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+            const p = pts.get(e.pointerId);
+            if (!p) return;
+            if (pts.size === 1) {
+                cam.tTheta = clamp(cam.tTheta - (e.clientX - p.x) * 0.0042, -1.15, 1.15);
+                cam.tPhi = clamp(cam.tPhi + (e.clientY - p.y) * 0.0032, 0.95, 1.53);
+            } else if (pts.size === 2) {
+                p.x = e.clientX; p.y = e.clientY;
+                const [a, b] = [...pts.values()];
+                const dist = Math.hypot(a.x - b.x, a.y - b.y);
+                if (prevPinch > 0 && dist > 0) {
+                    cam.tRadius = clampR(cam.tRadius * prevPinch / dist);
+                    userZoomed = true;
+                }
+                prevPinch = dist;
+                return;
+            }
+            p.x = e.clientX; p.y = e.clientY;
+        });
+        cv.addEventListener('pointerup', e => {
+            const p = pts.get(e.pointerId);
+            pts.delete(e.pointerId);
+            if (pts.size < 2) prevPinch = 0;
+            if (e.pointerType !== 'mouse') ndc.set(-2, -2);
+            if (pts.size === 0) {
+                dragging = false;
+                cv.style.cursor = hover ? 'pointer' : 'grab';
+                if (p && p.down) {
+                    const dx = e.clientX - p.down.x, dy = e.clientY - p.down.y;
+                    if (Math.hypot(dx, dy) < 8 && performance.now() - p.down.t < 600 && hover) spinDrum(hover);
+                }
+            }
+        });
+        cv.addEventListener('pointercancel', e => {
+            pts.delete(e.pointerId);
+            prevPinch = 0;
+            if (!pts.size) dragging = false;
+        });
+        cv.addEventListener('wheel', e => {
+            e.preventDefault();
+            userAct();
+            userZoomed = true;
+            cam.tRadius = clampR(cam.tRadius * Math.exp(e.deltaY * 0.001));
+        }, { passive: false });
+
+        addEventListener('keydown', e => {
+            const k = e.key;
+            if (k === 'ArrowLeft') { userAct(); cam.tTheta = clamp(cam.tTheta - 0.14, -1.15, 1.15); }
+            else if (k === 'ArrowRight') { userAct(); cam.tTheta = clamp(cam.tTheta + 0.14, -1.15, 1.15); }
+            else if (k === 'ArrowUp') { userAct(); cam.tPhi = clamp(cam.tPhi - 0.09, 0.95, 1.53); }
+            else if (k === 'ArrowDown') { userAct(); cam.tPhi = clamp(cam.tPhi + 0.09, 0.95, 1.53); }
+            else if (k === 'r' || k === 'R') resetView();
+        });
+        addEventListener('resize', () => {
+            const prev = fitD;
+            computeFit();
+            renderer.setSize(innerWidth, innerHeight);
+            renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+            const ratio = fitD / prev;
+            cam.radius *= ratio;
+            cam.tRadius = clampR(userZoomed ? cam.tRadius * ratio : fitD);
+        });
+
+        /* ————— mechanical sound (opt-in) ————— */
+        let AC = null, noiseBuf = null, soundOn = false, lastClack = 0;
+        function ensureAudio() {
+            if (!AC) {
+                AC = new (window.AudioContext || window.webkitAudioContext)();
+                noiseBuf = AC.createBuffer(1, AC.sampleRate * 0.1 | 0, AC.sampleRate);
+                const ch = noiseBuf.getChannelData(0);
+                for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
+            }
+            if (AC.state === 'suspended') AC.resume();
+        }
+        function clack(vol = 1, pitch = 1) {
+            if (!soundOn || !AC || document.hidden) return;
+            const t = AC.currentTime;
+            if (t - lastClack < 0.07) return;
+            lastClack = t;
+            const src = AC.createBufferSource(); src.buffer = noiseBuf;
+            const bp = AC.createBiquadFilter(); bp.type = 'bandpass';
+            bp.frequency.value = (1400 + Math.random() * 600) * pitch; bp.Q.value = 7;
+            const g = AC.createGain();
+            g.gain.setValueAtTime(0.28 * vol, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+            src.connect(bp); bp.connect(g); g.connect(AC.destination);
+            src.start(t); src.stop(t + 0.07);
+            const o = AC.createOscillator(); o.type = 'triangle';
+            o.frequency.setValueAtTime(190 * pitch, t);
+            o.frequency.exponentialRampToValueAtTime(80 * pitch, t + 0.08);
+            const g2 = AC.createGain();
+            g2.gain.setValueAtTime(0.16 * vol, t);
+            g2.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+            o.connect(g2); g2.connect(AC.destination);
+            o.start(t); o.stop(t + 0.1);
+        }
+        function tickSound(d) { clack(d.unit === 'seconds' ? 0.55 : 0.9, d.unit === 'seconds' ? 1.25 : 0.85); }
+        function chord() {
+            if (!soundOn || !AC) return;
+            [220, 277.2, 329.6].forEach((f, i) => {
+                const t = AC.currentTime + i * 0.12;
+                const o = AC.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+                const g = AC.createGain();
+                g.gain.setValueAtTime(0.0001, t);
+                g.gain.exponentialRampToValueAtTime(0.14, t + 0.03);
+                g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+                o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + 1.5);
+            });
+        }
+        const btnSound = document.getElementById('btnSound');
+        btnSound.addEventListener('click', () => {
+            soundOn = !soundOn;
+            if (soundOn) ensureAudio();
+            btnSound.textContent = soundOn ? 'Sound · On' : 'Sound · Off';
+            btnSound.classList.toggle('on', soundOn);
+            btnSound.setAttribute('aria-pressed', String(soundOn));
+        });
+        document.getElementById('btnReset').addEventListener('click', resetView);
+
+        if (matchMedia('(pointer: coarse)').matches) {
+            document.getElementById('hints').innerHTML =
+                '<div><b>one finger</b><span>orbit</span></div>' +
+                '<div><b>two fingers</b><span>zoom</span></div>' +
+                '<div><b>tap a drum</b><span>spin it</span></div>';
+        }
+
+        /* ————— HTML readout ————— */
+        const ro = {
+            sign: document.getElementById('sign'),
+            d: document.getElementById('rd'), h: document.getElementById('rh'),
+            m: document.getElementById('rm'), s: document.getElementById('rs'),
+            meta: document.getElementById('meta'), sub: document.querySelector('.sub'),
+        };
+        const segs = {};
+        document.querySelectorAll('#readout .seg').forEach(el => segs[el.dataset.u] = el);
+        let lastLine = '', lastSec = -1;
+
+        let mode = Date.now() >= T0 ? 'after' : 'before';
+        function setModeTexts() {
+            if (mode === 'after') {
+                ro.sign.textContent = 'T+';
+                ro.sub.textContent = 'two thousand twenty-six — counting the moments since';
+            } else {
+                ro.sign.textContent = 'T−';
+                ro.sub.textContent = 'two thousand twenty-six — counting the moments until';
+            }
+        }
+        setModeTexts();
+
+        function updateReadout(msAbs) {
+            const S = msAbs / 1000;
+            const days = Math.floor(S / 86400);
+            const h = Math.floor((S - days * 86400) / 3600);
+            const m = Math.floor((S % 3600) / 60);
+            const sTxt = (S % 60).toFixed(1).padStart(4, '0');
+            const line = `${days}|${h}|${m}|${sTxt}`;
+            if (line !== lastLine) {
+                lastLine = line;
+                ro.d.textContent = padN(days, nDay);
+                ro.h.textContent = pad2(h);
+                ro.m.textContent = pad2(m);
+                ro.s.textContent = sTxt;
+            }
+            const whole = Math.floor(S);
+            if (whole !== lastSec) {
+                lastSec = whole;
+                const n = new Date();
+                ro.meta.textContent = mode === 'before'
+                    ? `target ${targetStr} 00:00 local · now ${pad2(n.getHours())}:${pad2(n.getMinutes())}:${pad2(n.getSeconds())}`
+                    : `arrived ${targetStr} · now ${pad2(n.getHours())}:${pad2(n.getMinutes())}:${pad2(n.getSeconds())}`;
+            }
+        }
+
+        function onArrival() {
+            mode = 'after';
+            setModeTexts();
+            drums.forEach((d, i) => setTimeout(() => {
+                d.steps += 10;
+                d.anim = { from: rotOf(d), to: -d.steps * STEP, t0: clock.elapsedTime, dur: 1.25, back: false };
+            }, i * 130));
+            chord();
+        }
+
+        /* ————— drum motion ————— */
+        function rotOf(d) {
+            if (!d.anim) return d.curRot;
+            const u = Math.min(1, (clock.elapsedTime - d.anim.t0) / d.anim.dur);
+            return d.anim.from + (d.anim.to - d.anim.from) * (d.anim.back ? easeOutBack(u) : easeOutQuart(u));
+        }
+        function stepDrums(digits) {
+            for (const d of drums) {
+                const dg = digits[d.i];
+                if (dg !== d.digit) {
+                    const delta = (dg - d.digit + 10) % 10;   // forward rolls only, like a real odometer
+                    d.steps += delta;
+                    d.digit = dg;
+                    const dur = delta === 1 ? 0.62 : delta <= 3 ? 0.82 : 1.08;
+                    d.anim = { from: rotOf(d), to: -d.steps * STEP, t0: clock.elapsedTime, dur, back: delta === 1 };
+                    tickSound(d);
+                }
+            }
+        }
+        function updateDrums(dt) {
+            for (const d of drums) {
+                let spinGlow = 0;
+                if (d.anim) {
+                    const u = Math.min(1, (clock.elapsedTime - d.anim.t0) / d.anim.dur);
+                    const e = d.anim.back ? easeOutBack(u) : easeOutQuart(u);
+                    d.curRot = d.anim.from + (d.anim.to - d.anim.from) * e;
+                    spinGlow = 0.5 * (1 - u);
+                    if (u >= 1) { d.curRot = d.anim.to; d.anim = null; }
+                }
+                d.reel.rotation.y = d.curRot;
+                const target = (hover === d ? 1.2 : 0.3) + spinGlow;
+                d.glow += (target - d.glow) * Math.min(1, dt * 9);
+                d.mat.emissiveIntensity = d.glow;
+            }
+        }
+        function spinDrum(d) {
+            if (!booted) return;
+            d.steps += 10;                                // one extra full revolution — lands on the same digit
+            d.anim = { from: rotOf(d), to: -d.steps * STEP, t0: clock.elapsedTime, dur: 1.15, back: false };
+            clack(1.6, 0.75);
+            const seg = segs[d.unit];
+            if (seg) { seg.classList.add('lit'); setTimeout(() => { if (hover !== d) seg.classList.remove('lit'); }, 700); }
+        }
+
+        /* ————— main loop ————— */
+        let lastTickT = -10, prevSecFloor = -1;
+        function frame() {
+            requestAnimationFrame(frame);
+            const dt = Math.min(0.05, clock.getDelta());
+            const t = clock.elapsedTime;
+
+            const now = Date.now();
+            if (mode === 'before' && now >= T0) onArrival();
+            const msAbs = Math.abs(T0 - now);
+
+            if (booted) stepDrums(digitsOf(msAbs / 1000));
+            updateReadout(msAbs);
+
+            const secFloor = Math.floor(msAbs / 1000);
+            if (secFloor !== prevSecFloor) { prevSecFloor = secFloor; lastTickT = t; }
+            const pulse = Math.exp(-6 * Math.max(0, t - lastTickT));
+            for (const m of colonMats) m.emissiveIntensity = 0.12 + 0.85 * pulse;
+
+            updateDrums(dt);
+
+            if (camTween) {
+                const u = (t - camTween.t0) / camTween.dur;
+                if (u >= 0) {
+                    const e = easeInOutCubic(Math.min(1, u));
+                    cam.theta = cam.tTheta = lerp(camTween.from.theta, camTween.to.theta, e);
+                    cam.phi = cam.tPhi = lerp(camTween.from.phi, camTween.to.phi, e);
+                    cam.radius = cam.tRadius = lerp(camTween.from.radius, camTween.to.radius, e);
+                    if (u >= 1) camTween = null;
+                }
+            } else {
+                if (t - lastInput > 6 && !dragging) {        // gentle drift when left alone
+                    if (!idleBase) idleBase = { th: cam.tTheta, ph: cam.tPhi, t0: t };
+                    cam.tTheta = clamp(idleBase.th + 0.085 * Math.sin((t - idleBase.t0) * 0.2), -1.15, 1.15);
+                    cam.tPhi = clamp(idleBase.ph + 0.02 * Math.sin((t - idleBase.t0) * 0.31), 0.95, 1.53);
+                }
+                cam.theta = damp(cam.theta, cam.tTheta, 6.5, dt);
+                cam.phi = damp(cam.phi, cam.tPhi, 6.5, dt);
+                cam.radius = damp(cam.radius, cam.tRadius, 6.5, dt);
+            }
+            camera.position.set(
+                T.x + cam.radius * Math.sin(cam.phi) * Math.sin(cam.theta),
+                T.y + cam.radius * Math.cos(cam.phi),
+                T.z + cam.radius * Math.sin(cam.phi) * Math.cos(cam.theta)
+            );
+            camera.lookAt(T);
+            scene.fog.near = cam.radius + 3;
+            scene.fog.far = cam.radius * 2.6 + 8;
+
+            if (!dragging && ndc.x > -1.5) {               // hover: light the drum, light the readout
+                raycaster.setFromCamera(ndc, camera);
+                const hit = raycaster.intersectObjects(tubes, false)[0];
+                const d = hit ? hit.object.userData.drum : null;
+                if (d !== hover) {
+                    hover = d;
+                    for (const u in segs) segs[u].classList.toggle('lit', !!d && d.unit === u);
+                    cv.style.cursor = d ? 'pointer' : 'grab';
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        /* ————— boot: every drum rolls from zero up to its value, staggered ————— */
+        setTimeout(() => {
+            const initial = digitsOf(secsAbs());
+            drums.forEach((d, i) => setTimeout(() => {
+                const delta = (initial[d.i] - d.digit + 10) % 10;
+                d.steps += delta;
+                d.digit = initial[d.i];
+                const dur = delta === 1 ? 0.8 : delta <= 3 ? 1.0 : 1.35;
+                d.anim = { from: rotOf(d), to: -d.steps * STEP, t0: clock.elapsedTime, dur, back: delta === 1 };
+            }, i * 95));
+            setTimeout(() => { booted = true; }, drums.length * 95 + 300);
+        }, 650);
+
+        renderer.render(scene, camera);
+        cv.classList.add('on');
+        window.__DRUM_OK = true;
+        frame();
+    </script>
+</body>
+
+</html>
