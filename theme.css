@@ -88,7 +88,7 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     padding: 9px 16px;
-    cursor: pointer;
+    cursor: var(--cursor-rose-hover);
     border-radius: var(--radius);
     transition: all var(--transition);
     text-decoration: none;
@@ -104,3 +104,124 @@
     box-shadow: 0 0 14px var(--crimson-glow);
     transform: translateY(-1px);
 }
+
+/* ==========================================================================
+   CUSTOM BOTANICAL ROSE CURSOR
+   ========================================================================== */
+
+:root {
+    --cursor-rose: url('rose-cursor.svg') 4 4, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3Cfilter id='g' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeDropShadow dx='0' dy='1' stdDeviation='0.8' flood-color='%23000' flood-opacity='0.9'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23g)'%3E%3Cpath d='M8.5 11.5 C10 14 13 17.5 17.5 21' fill='none' stroke='%23fff' stroke-width='1.2' stroke-linecap='round'/%3E%3Cpath d='M11.5 14.5 C13.5 13 16.5 13.5 17 14.5 C15.5 16 13 16.5 11.5 14.5 Z' fill='rgba(255,255,255,0.25)' stroke='%23fff' stroke-width='1' stroke-linejoin='round'/%3E%3Cpath d='M3.5 5 C3 8 4.5 10.5 7.5 11.5 C10.5 11 12 8.5 11.5 6' fill='none' stroke='%23fff' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M3 4.5 C4.5 2.5 8 2.5 10.5 4.5 C11.5 6.5 10.5 9 8 10' fill='none' stroke='%23fff' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M5.5 4 C6.5 3 8.5 3.2 9 4.8 C9.5 6.5 8 7.8 6.5 7.5 C5.5 7.2 5.5 5.8 6.8 5.2' fill='none' stroke='%23fff' stroke-width='1.1' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 4 4, auto;
+
+    --cursor-rose-hover: url('rose-cursor-hover.svg') 4 4, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3Cfilter id='hg' x='-40%25' y='-40%25' width='180%25' height='180%25'%3E%3CfeDropShadow dx='0' dy='1' stdDeviation='1' flood-color='%23000' flood-opacity='0.9'/%3E%3CfeDropShadow dx='0' dy='0' stdDeviation='1.2' flood-color='%23fff' flood-opacity='0.8'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23hg)'%3E%3Cpath d='M8.5 11.5 C10 14 13 17.5 17.5 21' fill='none' stroke='%23fff' stroke-width='1.3' stroke-linecap='round'/%3E%3Cpath d='M11.5 14.5 C13.5 13 16.5 13.5 17 14.5 C15.5 16 13 16.5 11.5 14.5 Z' fill='%23fff' stroke='%23fff' stroke-width='1' stroke-linejoin='round'/%3E%3Cpath d='M3.5 5 C3 8 4.5 10.5 7.5 11.5 C10.5 11 12 8.5 11.5 6 Z' fill='%23fff' stroke='%23fff' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M3 4.5 C4.5 2.5 8 2.5 10.5 4.5 C11.5 6.5 10.5 9 8 10 Z' fill='%23fff' stroke='%23090207' stroke-width='0.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M5.5 4 C6.5 3 8.5 3.2 9 4.8 C9.5 6.5 8 7.8 6.5 7.5 C5.5 7.2 5.5 5.8 6.8 5.2' fill='none' stroke='%23090207' stroke-width='0.9' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 4 4, pointer;
+}
+
+/* Universal Site-Wide Rose Cursor (24px, hotspot at petal tip: 4 4) */
+html,
+body,
+*,
+*::before,
+*::after {
+    cursor: var(--cursor-rose);
+}
+
+/* Interactive elements: swap to luminous blooming rose variant */
+a,
+a *,
+button,
+button *,
+[role="button"],
+[role="button"] *,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.btn-action,
+.btn-action *,
+.btn-editorial,
+.btn-editorial *,
+.btn-nav,
+.btn-nav *,
+.btn-page-turn,
+.btn-page-turn *,
+.btn-open-gift,
+.btn-open-gift *,
+.btn-submit,
+.btn-submit *,
+.btn-submit-wish,
+.btn-submit-wish *,
+.btn-test-unlock,
+.btn-test-unlock *,
+.album-card,
+.album-card *,
+.wax-seal-btn,
+.wax-seal-btn *,
+.seal-wrapper,
+.seal-wrapper *,
+.sheet,
+.sheet *,
+.modal-x,
+.modal-x *,
+.chroma-hover,
+.clickable,
+.story-tap-zone,
+.tap-zone-left,
+.tap-zone-right,
+.story-close-btn,
+.wrapped-story-card,
+.wrapped-action-btn,
+.btn-wrapped-action,
+.btn-wrapped-action *,
+.music-toggle,
+.sound-toggle,
+#lockedAlbumCompanion,
+#lockedAlbumCompanion *,
+#lidBtn,
+#lidBtn *,
+.album-closed-wrapper,
+.album-closed-wrapper *,
+.page-click-zone,
+.page-click-zone *,
+.br button,
+.br button * {
+    cursor: var(--cursor-rose-hover) !important;
+}
+
+/* Disabled elements revert to not-allowed */
+button:disabled,
+button:disabled *,
+input:disabled,
+[disabled],
+.disabled {
+    cursor: not-allowed !important;
+}
+
+/* Text fields keep familiar text editing I-beam */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input:not([type]),
+textarea {
+    cursor: text !important;
+}
+
+/* 3D WebGL Canvas: fall back to default / grabbing to prevent orbit drag lag/flicker */
+#stage canvas,
+#app canvas,
+#webglCanvas,
+.stage-canvas {
+    cursor: default;
+}
+
+#stage canvas.interactive-hover,
+#app canvas.interactive-hover,
+.stage-canvas.interactive-hover {
+    cursor: var(--cursor-rose-hover) !important;
+}
+
+#stage canvas:active,
+#app canvas:active,
+#webglCanvas:active,
+.stage-canvas:active {
+    cursor: grabbing !important;
+}
+
+

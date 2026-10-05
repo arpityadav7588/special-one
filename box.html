@@ -127,7 +127,7 @@
             letter-spacing: .28em;
             text-transform: uppercase;
             padding: 11px 20px 10px 22px;
-            cursor: pointer;
+            cursor: var(--cursor-rose-hover);
             backdrop-filter: blur(3px);
             transition: background .35s, color .35s, border-color .35s;
         }
@@ -947,7 +947,8 @@
                     raycaster.setFromCamera(ndc, camera);
                     hoverLid = raycaster.intersectObject(lidGroup, true).length > 0;
                 } else hoverLid = false;
-                cvs.style.cursor = hoverLid ? 'pointer' : 'grab';
+                cvs.classList.toggle('interactive-hover', hoverLid);
+                cvs.style.cursor = hoverLid ? 'var(--cursor-rose-hover)' : 'default';
                 const peekTarget = (lidState === 'closed' && hoverLid) ? 0.16 : 0;
                 peek += (peekTarget - peek) * Math.min(1, dt * 9);
 
