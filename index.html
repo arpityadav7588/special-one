@@ -1639,16 +1639,6 @@
         </div>
     </header>
 
-    <!-- Asymmetrical Scrapbook Pin (Pinterest Aesthetics) -->
-    <div class="aesthetic-pin hover-wobble" id="aestheticPin">
-        <div class="washi-tape"></div>
-        <div class="pin-kicker">[ VIBE CHECK ]</div>
-        <div class="pin-text">
-            <b>100% NO WHITE FLOWERS</b> 🚫🤍<br>
-            <em>strictly velvet crimson &amp; midnight silk</em>
-        </div>
-    </div>
-
     <!-- Countdown Timer HUD (Offset Tilted Scrapbook Badge) -->
     <div class="hud tr" id="countdownHUD">
         <div class="countdown-scrapbook hover-wobble">
@@ -1689,7 +1679,7 @@
         <button class="btn-action" id="btnMakeWish" type="button">drop a wish ✨</button>
         <a class="btn-action" id="btnAlbumNav" href="album.html" style="text-decoration:none;">the camera roll 🔒</a>
         <a class="btn-action" href="wish.html" style="text-decoration:none;">wishes wall ✦</a>
-        <button class="btn-action" id="btnNote" type="button">the receipt 💌</button>
+        <button class="btn-action" id="btnNote" type="button">the note 💌</button>
         <button class="btn-action" id="btnPetals" type="button">falling petals · on</button>
         <button class="btn-action" id="btnReplay" type="button">rewind ↺</button>
     </div>
@@ -1733,18 +1723,18 @@
                     <div class="story-tap-hint">tap right to continue →</div>
                 </div>
 
-                <!-- Slide 1: Botanical Aesthetic Spec -->
+                <!-- Slide 1: Botanical Palette -->
                 <div class="story-slide" data-slide="1">
                     <div class="meta-strip" style="margin-bottom:16px;">
-                        <span class="meta-tag">[ THE FLOWER COLORWAY MATRIX ]</span>
+                        <span class="meta-tag">[ THE BOTANICAL PALETTE ]</span>
                     </div>
                     <div class="giant-statement">
-                        Your exact aesthetic mandate:<br>
-                        <em>"Mostly black, deep red, no white flowers."</em>
+                        No white. Ever.<br>
+                        <em>You made that very clear.</em>
                     </div>
                     <div class="wrapped-stat-grid">
                         <div class="stat-pill"><b>11</b> RARE BLOOMS SCULPTED</div>
-                        <div class="stat-pill"><b>0.00%</b> WHITE PETALS (STRICTLY FORBIDDEN)</div>
+                        <div class="stat-pill"><b>0.00%</b> WHITE PETALS (AS PROMISED)</div>
                         <div class="stat-pill"><b>100%</b> VELVET CRIMSON &amp; MIDNIGHT SILK</div>
                     </div>
                     <div class="story-tap-hint">tap right to continue →</div>
@@ -1853,26 +1843,24 @@
         </span>
     </div>
 
-    <!-- Personal Letter Note Modal ("The Receipt") -->
+    <!-- Personal Letter Note Modal ("The Keepsake Note") -->
     <div id="noteModal" role="dialog" aria-modal="true" aria-labelledby="noteHeading">
         <div class="wish-backdrop" id="noteBackdrop"></div>
-        <div class="receipt-card">
+        <div class="receipt-card" id="noteModalCard">
             <div class="washi-tape"></div>
             <button class="modal-x" id="noteCloseX" aria-label="Close note">&times;</button>
             <div class="receipt-header-row">
-                <div class="receipt-seal">R</div>
-                <div class="receipt-meta" id="noteHeading">The Aesthetic Receipt // Keepsake</div>
+                <div class="receipt-seal">❦</div>
+                <div class="receipt-meta" id="noteHeading">A Note for You // Keepsake</div>
             </div>
-            <p style="font-family:var(--font-serif); font-style:italic; font-size:20px; line-height:1.55; color:#f5e2ea; margin-bottom:18px;">
-                &ldquo;I prefer red, mostly black &mdash; other colors are also fine, but mostly, I don&rsquo;t like
-                white. I love flowers, especially <em>roses</em>, <em>lilies</em> and <em>tulips</em>.&rdquo;
+            <p style="font-family:var(--font-serif); font-style:italic; font-size:21px; line-height:1.6; color:var(--ink-bright, #ffffff); margin-bottom:18px;">
+                No white, no soft pastels &mdash; just velvet and shadow, the way you like it. Eleven blooms, nestled in black lacquer, waiting for your day.
             </p>
-            <p style="font-size:13px; line-height:1.7; color:#b891a4; margin-bottom:24px;">
-                So it was made: eleven blooms nestled inside the handcrafted lacquer box, waiting patiently for the
-                clock to chime your day.
+            <p style="font-size:13px; line-height:1.7; color:var(--muted, #a88d9b); margin-bottom:24px;">
+                Roses, lilies, and tulips sculpted in velvet crimson and midnight silk &mdash; crafted quietly so every petal wakes only when held.
             </p>
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div style="font-family:var(--font-serif); font-style:italic; font-size:18px; color:var(--neon-pink);">— yours, always</div>
+                <div style="font-family:var(--font-serif); font-style:italic; font-size:18px; color:var(--crimson, #9e2230);">— yours, always</div>
                 <div style="display:flex; gap:8px;">
                     <button class="btn-action" id="btnCopyNote">copy note</button>
                     <button class="btn-action" id="btnNoteDone">fold note ✕</button>
